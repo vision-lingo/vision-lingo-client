@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IInteractive
 {
-    public void Hover();
-    public void Pick();
-    public void OutOfHand();
+    public void OnGaze();
+    public void OnSelect();
+    public void OnOutofEye();
 }

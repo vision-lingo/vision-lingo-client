@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour, IInteractive
 {
-    public void Hover()
+    public void OnGaze()
     {
         GetComponent<MeshRenderer>().material.color = Color.red;
     }
 
-    public void OutOfHand()
+    public void OnOutofEye()
     {
         GetComponent<MeshRenderer>().material.color = Color.gray;
     }
 
-    public void Pick()
+    public void OnSelect()
     {
         GetComponent<MeshRenderer>().material.color = Color.blue;
     }
