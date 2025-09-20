@@ -13,16 +13,12 @@ MonoBehaviour:
   m_Name: Stage_T1
   m_EditorClassIdentifier: Assembly-CSharp::Training.Config.StageConfig
   stageId: T1
-  minDistance: 1
-  maxDistance: 1
-  azimuthMode: 0
-  minAngle: -80
-  maxAngle: 80
-  azimuthOptionsDeg: []
-  elevationMode: 0
+  minDistance: 10
+  maxDistance: 15
+  minAzimuth: -60
+  maxAzimuth: 60
   minElevation: 0
   maxElevation: 0
-  elevationOptionsDeg: []
   targetLifetime: 3
   respawnDelay: 0.5
   spawnImmediatelyAtStart: 1
