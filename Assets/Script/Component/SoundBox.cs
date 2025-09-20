@@ -12,6 +12,7 @@ public class SoundBox : MonoBehaviour, IInteractive
     {
         if (!TryGetComponent(out _meshRenderer))
             Debug.LogError("_meshRenderer is not found.");
+        ToggleSound();
     }
 
     void Update()
