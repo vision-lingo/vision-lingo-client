@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.024852015, g: 0.022630999, b: 0.070224635, a: 1}
+  m_IndirectSpecularColor: {r: 0.024663454, g: 0.022453258, b: 0.06981006, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -332,7 +332,7 @@ GameObject:
   - component: {fileID: 923853262}
   - component: {fileID: 923853263}
   m_Layer: 0
-  m_Name: RandomSpawner
+  m_Name: StageSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -368,8 +368,13 @@ MonoBehaviour:
   headCamera: {fileID: 924858654}
   targetPrefab: {fileID: 2916197117217395911, guid: 632c2170e9975374b817f8d5c670aead,
     type: 3}
-  stage: {fileID: 11400000, guid: 42685583de032436894e748ee4c0578c, type: 2}
+  stageNumber: 1
+  distance: 30
+  targetLifetime: -1
+  respawnDelay: 1
+  useCameraBasis: 1
   parentUnderSpawner: 1
+  logOnSpawn: 1
 --- !u!1 &924858652
 GameObject:
   m_ObjectHideFlags: 0
