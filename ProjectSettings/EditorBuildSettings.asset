@@ -5,10 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Testfiles/Scene/VisionPro_Simulater.unity
-    guid: 5dcbf402df2b21f45b32b8451be1b2f2
-  m_configObjects: {}
+    path: Assets/Scene/Test_Merge_1.unity
+    guid: 9f85aa12e50960f4cbf6d6256b587057
+  m_configObjects:
+    UnityEditor.XR.VisionOS.VisionOSSettings: {fileID: 11400000, guid: 5a5c126f2f6304ce58e6f983ed10b793,
+      type: 2}
+    com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 8330e47649ada42539abe6ebb16c6ceb,
+      type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 7e5c40cb21d0b45b78d55a079245e30c,
+      type: 2}

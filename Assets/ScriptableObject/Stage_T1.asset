@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Stage_T1
   m_EditorClassIdentifier: Assembly-CSharp::Training.Config.StageConfig
   stageId: T1
-  minDistance: 10
-  maxDistance: 15
+  minDistance: 30
+  maxDistance: 40
   minAzimuth: -60
   maxAzimuth: 60
   minElevation: 0
