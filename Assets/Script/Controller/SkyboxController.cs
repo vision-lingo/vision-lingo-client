@@ -6,7 +6,6 @@ public class SkyboxController : MonoBehaviour
 {
     [SerializeField] private Material _skyboxMat;
     [SerializeField] private float _rotSpeed;
-
     // Update is called once per frame
     void Update()
     {
