@@ -6,34 +6,34 @@ public class StageSpawner : MonoBehaviour
 {
     [Header("Refs")]
     [Tooltip("보통 Main Camera. 비워두면 Start()에서 자동으로 찾음")]
-    public Camera headCamera;
+    public Camera HeadCamera;
 
     [Tooltip("생성할 프리팹")]
-    public GameObject targetPrefab;
+    public GameObject TargetPrefab;
 
     [Header("Stage / Spawn")]
     [Tooltip("스테이지 번호 (1~6)")]
     [Range(1, 6)]
-    public int stageNumber = 1;
+    public int StageNumber = 1;
 
     [Tooltip("타겟까지의 기본 거리")]
-    public float distance = 30.0f;
+    public float Distance = 30.0f;
 
     [Tooltip("생성된 구를 유지할 시간(초) — 0 이하면 파괴하지 않음")]
-    public float targetLifetime = -1f;
+    public float TargetLifetime = -1f;
 
     [Tooltip("세트가 모두 사라진 후 다음 세트를 띄우기 전 대기(초)")]
-    public float respawnDelay = 2f;
+    public float RespawnDelay = 2f;
 
     [Tooltip("스폰 기준을 시작 시 사용자가 바라본 방향(카메라)으로 할지, 월드 고정(Z+)로 할지")]
-    public bool useCameraBasis = true;
+    public bool UseCameraBasis = true;
 
     [Tooltip("생성된 오브젝트를 이 오브젝트의 자식으로 둘지")]
-    public bool parentUnderSpawner = true;
+    public bool ParentUnderSpawner = true;
 
     [Header("Debug")]
     [Tooltip("스폰 시 좌표/각도 로그 출력")]
-    public bool logOnSpawn = true;
+    public bool LogOnSpawn = true;
 
     private Vector3 _basePos;
     private Quaternion _baseRot;
@@ -63,30 +63,30 @@ public class StageSpawner : MonoBehaviour
 
     void Start()
     {
-        if (headCamera == null) headCamera = Camera.main;
-        if (headCamera == null)
+        if (HeadCamera == null) HeadCamera = Camera.main;
+        if (HeadCamera == null)
         {
             Debug.LogError("[StageSpawner] Head Camera를 지정하세요.");
             enabled = false;
             return;
         }
-        if (targetPrefab == null)
+        if (TargetPrefab == null)
         {
             Debug.LogError("[StageSpawner] Target Prefab을 지정하세요.");
             enabled = false;
             return;
         }
-        if (!_stagePositions.ContainsKey(stageNumber))
+        if (!_stagePositions.ContainsKey(StageNumber))
         {
-            Debug.LogError($"[StageSpawner] Stage {stageNumber}는 정의되어 있지 않습니다.");
+            Debug.LogError($"[StageSpawner] Stage {StageNumber}는 정의되어 있지 않습니다.");
             enabled = false;
             return;
         }
 
         // 시작 시점의 카메라 위치를 기준점으로 고정
         // TODO: 사용자가 정면을 맞췄을 때 (ex. 게임 시작 버튼 누름) 기준으로 고정
-        _basePos = headCamera.transform.position;
-        _baseRot = headCamera.transform.rotation;
+        _basePos = HeadCamera.transform.position;
+        _baseRot = HeadCamera.transform.rotation;
 
         // 첫 오브젝트를 생성하고, 이후부터는 코루틴으로 respawn
         SpawnSet();
@@ -100,8 +100,8 @@ public class StageSpawner : MonoBehaviour
             _instances.RemoveAll(i => i == null);
             if (_instances.Count == 0)
             {
-                if (respawnDelay > 0f)
-                    yield return new WaitForSeconds(respawnDelay);
+                if (RespawnDelay > 0f)
+                    yield return new WaitForSeconds(RespawnDelay);
                 SpawnSet();
             }
             yield return null;
@@ -110,27 +110,27 @@ public class StageSpawner : MonoBehaviour
 
     private void SpawnSet()
     {
-        var list = _stagePositions[stageNumber];
+        var list = _stagePositions[StageNumber];
 
         for (int i = 0; i < list.Count; i++)
         {
             var (az, el) = list[i];
 
             Vector3 localDir = SphericalToCartesian(1f, az, el);
-            Vector3 worldDir = useCameraBasis ? (_baseRot * localDir) : localDir;
-            Vector3 worldPos = _basePos + worldDir * distance;
+            Vector3 worldDir = UseCameraBasis ? (_baseRot * localDir) : localDir;
+            Vector3 worldPos = _basePos + worldDir * Distance;
 
-            Transform parent = parentUnderSpawner ? transform : null;
-            var obj = Instantiate(targetPrefab, worldPos, Quaternion.identity, parent);
+            Transform parent = ParentUnderSpawner ? transform : null;
+            var obj = Instantiate(TargetPrefab, worldPos, Quaternion.identity, parent);
             _instances.Add(obj);
 
-            if (targetLifetime > 0f)
-                Destroy(obj, targetLifetime);
+            if (TargetLifetime > 0f)
+                Destroy(obj, TargetLifetime);
 
-            if (logOnSpawn)
+            if (LogOnSpawn)
             {
                 Debug.Log(
-                    $"[StageSpawner] Stage {stageNumber} object idx {i} | az={az}°, el={el}°, r={distance}m " +
+                    $"[StageSpawner] Stage {StageNumber} object idx {i} | az={az}°, el={el}°, r={Distance}m " +
                     $"| localDir={localDir} | worldPos={worldPos}"
                 );
             }
