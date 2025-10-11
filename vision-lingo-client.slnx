@@ -1,5 +1,0 @@
-﻿<Solution>
-  <Project Path="Assembly-CSharp.csproj" />
-  <Project Path="com.jetxr.visionui.csproj" />
-  <Project Path="com.jetxr.visionui.editor.csproj" />
-</Solution>
