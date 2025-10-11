@@ -102,13 +102,14 @@ public class StageController : MonoBehaviour
         // 2) 소리 발생 (UI 숨김)
         UIPanel.SetActive(false);
         _correctBall = PickRandomBall(_activeBalls);
-        //_correctBall.GetComponent<TargetBall>()?.PlaySound();
+        _correctBall.GetComponent<InteractiveSphere>()?.TriggerSound();
 
         if (EnableLogging)
             Debug.Log($"[Round] Stage {stage} Round {round}: 소리 발생 - 정답 구 {_correctBall.name}");
 
         // 3) 10초 후 빛남
         yield return new WaitForSeconds(HighlightDelay);
+        _correctBall.GetComponent<InteractiveSphere>()?.MarkTimeOver();
         //_correctBall.GetComponent<TargetBall>()?.Highlight();
 
         if (EnableLogging)

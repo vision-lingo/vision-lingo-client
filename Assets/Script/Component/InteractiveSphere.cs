@@ -14,6 +14,13 @@ public class InteractiveSphere : MonoBehaviour
 
     [SerializeField]
     private SphereState currentState = SphereState.Default;
+    [SerializeField]
+    private AudioSource _audioSource;
+
+    [SerializeField]
+    private MeshRenderer _meshRenderer;
+    private Material _mat;
+
 
     public SphereState CurrentState
     {
@@ -29,11 +36,15 @@ public class InteractiveSphere : MonoBehaviour
 
     public event Action<SphereState> StateChanged;
 
+    private void Start()
+    {
+        _mat = _meshRenderer.material;
+    }
     private void OnStateChanged(SphereState newState)
     {
         Debug.Log($"[InteractiveSphere] State changed to: {newState}");
         StateChanged?.Invoke(newState);
-        
+
         // TODO: 상태별 시각/사운드 처리
         // ApplyVisualEffects(newState);
         // PlayStateSound(newState);
@@ -41,15 +52,49 @@ public class InteractiveSphere : MonoBehaviour
 
     public void SetState(SphereState newState) => CurrentState = newState;
 
-    public void OnTouched() => SetState(SphereState.Touched);
+    public void OnTouched() {
+        SetState(SphereState.Touched);
+        GetComponent<MeshRenderer>().material.color = Color.green;
+    }
 
-    public void TriggerSound() => SetState(SphereState.SoundTriggered);
+    public void TriggerSound()
+    {
+        SetState(SphereState.SoundTriggered);
+        _audioSource.Play();
+    }
 
     public void MarkWrong() => SetState(SphereState.Wrong);
 
-    public void MarkTimeOver() => SetState(SphereState.TimeOver);
+    public void MarkTimeOver()
+    {
+        SetState(SphereState.TimeOver);
+        SetEmission(true, 100);
+    }
 
-    public void ResetToDefault() => SetState(SphereState.Default);
+    public void ResetToDefault()
+    {
+        GetComponent<MeshRenderer>().material.color = Color.gray;
+        SetState(SphereState.Default);
+    }
+    public void SetEmission(bool enable, float intensity)
+    {
+        if (enable)
+        {
+            // Emission 활성화
+            _mat.EnableKeyword("_EMISSION");
+
+            // 색상 * 강도를 Emission Color 속성에 설정
+            Color finalColor = Color.red * intensity;
+            _mat.SetColor("_EmissionColor", finalColor);
+        }
+        else
+        {
+            // Emission 비활성화
+            _mat.DisableKeyword("_EMISSION");
+            // 또는 강도를 0으로 설정하여 시각적으로 끄는 방법도 가능
+            // material.SetColor(emissionColorID, Color.black);
+        }
+    }
 
 #if UNITY_EDITOR
     private SphereState lastInspectorState;
