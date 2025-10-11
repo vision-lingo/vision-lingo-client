@@ -103,3 +103,5 @@ InitTestScene*.unity*
 .vscode/
 .DS_Store
 
+# Samples
+Assets/ExternalResources/Samples/
