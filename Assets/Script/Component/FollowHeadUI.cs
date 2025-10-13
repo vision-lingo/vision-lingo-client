@@ -10,8 +10,11 @@ public class FollowHeadUI_FullLock : MonoBehaviour
     [Tooltip("UI가 눈앞에 위치할 거리 (m)")]
     public float Distance = 1.2f;
 
-    [Tooltip("UI의 높이 오프셋 (m)")]
-    public float HeightOffset = 0f;
+    [Tooltip("UI의 수직 오프셋 (m, +면 위로)")]
+    public float VerticalOffset = 0f;
+
+    [Tooltip("UI의 수평 오프셋 (m, +면 오른쪽으로)")]
+    public float HorizontalOffset = 0f;
 
     [Tooltip("부드럽게 따라오게 하려면 값 ↑ (0이면 즉시 이동)")]
     public float FollowSpeed = 20f;
@@ -32,10 +35,10 @@ public class FollowHeadUI_FullLock : MonoBehaviour
 
         if (LockAtStart && HeadCamera)
         {
-            // 첫 프레임 즉시 시야 중앙 위치로 이동
             transform.position = HeadCamera.transform.position
                                + HeadCamera.transform.forward * Distance
-                               + HeadCamera.transform.up * HeightOffset;
+                               + HeadCamera.transform.up * VerticalOffset
+                               + HeadCamera.transform.right * HorizontalOffset;
 
             transform.rotation = HeadCamera.transform.rotation;
             _initialized = true;
@@ -48,7 +51,8 @@ public class FollowHeadUI_FullLock : MonoBehaviour
 
         Vector3 targetPos = HeadCamera.transform.position
                           + HeadCamera.transform.forward * Distance
-                          + HeadCamera.transform.up * HeightOffset;
+                          + HeadCamera.transform.up * VerticalOffset
+                          + HeadCamera.transform.right * HorizontalOffset;
 
         Quaternion targetRot = HeadCamera.transform.rotation;
 

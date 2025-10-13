@@ -1427,7 +1427,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RaycastTriggerInteraction: 1
+  m_RaycastTriggerInteraction: 0
 --- !u!1 &463461209
 GameObject:
   m_ObjectHideFlags: 0
@@ -1686,48 +1686,11 @@ MonoBehaviour:
   StagePositions:
   - StageNumber: 1
     Angles:
-    - {x: -80, y: 0}
-    - {x: -60, y: 0}
-    - {x: -40, y: 0}
-    - {x: -20, y: 0}
-    - {x: 20, y: 0}
-    - {x: 40, y: 0}
-    - {x: 60, y: 0}
-    - {x: 80, y: 0}
-  - StageNumber: 2
-    Angles:
-    - {x: -45, y: -40}
-    - {x: -45, y: -10}
-    - {x: -45, y: 10}
-    - {x: -45, y: 40}
-  - StageNumber: 3
-    Angles:
-    - {x: 45, y: 40}
-    - {x: 45, y: 10}
-    - {x: 45, y: -10}
-    - {x: 45, y: -40}
-  - StageNumber: 4
-    Angles:
-    - {x: -100, y: 0}
-    - {x: -120, y: 0}
-    - {x: -140, y: 0}
-    - {x: -160, y: 0}
-    - {x: 160, y: 0}
-    - {x: 140, y: 0}
-    - {x: 120, y: 0}
-    - {x: 100, y: 0}
-  - StageNumber: 5
-    Angles:
-    - {x: -135, y: -40}
-    - {x: -135, y: -10}
-    - {x: -135, y: 10}
-    - {x: -135, y: 40}
-  - StageNumber: 6
-    Angles:
-    - {x: 135, y: -40}
-    - {x: 135, y: -10}
-    - {x: 135, y: 10}
-    - {x: 135, y: 40}
+    - {x: 0, y: 0}
+    - {x: 180, y: 0}
+    - {x: -90, y: 0}
+    - {x: 90, y: 0}
+    - {x: 0, y: 90}
 --- !u!4 &840224326
 Transform:
   m_ObjectHideFlags: 0
@@ -2302,7 +2265,7 @@ GameObject:
   - component: {fileID: 1363265657}
   - component: {fileID: 1363265656}
   m_Layer: 0
-  m_Name: Test_Merge_1Controller
+  m_Name: Test_Merge_2Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3065,8 +3028,8 @@ MonoBehaviour:
   UIPanel: {fileID: 407107403}
   UIText: {fileID: 875499086}
   FirstStage: 1
-  LastStage: 6
-  RoundsPerStage: 2
+  LastStage: 1
+  RoundsPerStage: 10
   PreSoundDelay: 4
   HighlightDelay: 10
   AnswerTimeout: 15
