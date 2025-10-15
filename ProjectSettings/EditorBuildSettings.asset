@@ -5,13 +5,19 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scene/Test_Merge_1.unity
     guid: 9f85aa12e50960f4cbf6d6256b587057
+  - enabled: 1
+    path: Assets/Testfiles/CY/Scene/InteractionTest.unity
+    guid: 56f5ccceb5ad349258e9007b1316ed9c
   m_configObjects:
     UnityEditor.XR.VisionOS.VisionOSSettings: {fileID: 11400000, guid: 5a5c126f2f6304ce58e6f983ed10b793,
       type: 2}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: f45d5add6e5b54defb5ade8a34b798b4,
+      type: 3}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 8330e47649ada42539abe6ebb16c6ceb,
       type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 7e5c40cb21d0b45b78d55a079245e30c,
       type: 2}
+  m_UseUCBPForAssetBundles: 0

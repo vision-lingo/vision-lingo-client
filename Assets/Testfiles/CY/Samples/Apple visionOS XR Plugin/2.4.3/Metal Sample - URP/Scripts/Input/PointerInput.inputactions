@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "PointerInput",
     "maps": [
         {
@@ -22,6 +23,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "EyePos",
+                    "type": "Value",
+                    "id": "8a894971-612c-436e-9d09-5a271961beb8",
+                    "expectedControlType": "Vector3",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "EyeRot",
+                    "type": "Value",
+                    "id": "bc92ca3c-4ded-4378-b5c7-c1347dab838d",
+                    "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -44,6 +63,72 @@
                     "processors": "",
                     "groups": "Default",
                     "action": "SecondaryPointer",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "948bd3ea-bffd-46fe-9b48-3be990d34d21",
+                    "path": "<XRHMD>/centerEyePosition",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EyePos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Vector 3 Fallback",
+                    "id": "8089afed-f71c-4b8a-b6f3-b4c05840bed6",
+                    "path": "Vector3Fallback",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EyePos",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "first",
+                    "id": "5dc1b8f1-9ede-4633-94cf-ae43bb7ffc44",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EyePos",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "second",
+                    "id": "51ca4b7a-ce0b-4ec0-91c1-d8961bcb2204",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EyePos",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "third",
+                    "id": "5ea32569-1c1b-4d79-82fc-5b50a8270aaa",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EyePos",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "af5b1543-c652-481a-9915-c08d108e61d6",
+                    "path": "<XRHMD>/centerEyeRotation",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EyeRot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
