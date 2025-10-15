@@ -294,7 +294,7 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
                 UpdateJoint(hand.GetVisionOSJoint(VisionOSHandJointID.ForearmWrist), ref wristPose, ref parentIndex);
                 UpdateJoint(hand.GetVisionOSJoint(VisionOSHandJointID.ForearmArm), ref wristPose, ref parentIndex);
             }
-
+            private GameObject _sphere;
             void UpdateJoint(
                 XRHandJoint joint,
                 ref Pose parentPose,
@@ -303,7 +303,14 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
             {
                 if (joint.id == XRHandJointID.Invalid)
                     return;
-
+                if(joint.id == XRHandJointID.IndexTip)
+                {
+                    int idx = joint.id.ToIndex();
+                    if(_sphere == null)
+                        _sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    _sphere.transform.localScale = Vector3.one * 0.1f;
+                    _sphere.transform.position = m_JointVisuals[idx].transform.position;
+                }
                 var jointIndex = joint.id.ToIndex();
                 var visuals = m_JointVisuals[jointIndex];
                 if (!joint.TryGetPose(out var pose))
