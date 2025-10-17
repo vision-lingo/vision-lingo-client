@@ -6,8 +6,29 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scene/Test_Merge_1.unity
-    guid: 9f85aa12e50960f4cbf6d6256b587057
+    path: Assets/Scene/VisionPro/Bootstrap.unity
+    guid: d21ff6cd090a44fa096df838eb091e67
+  - enabled: 1
+    path: Assets/Scene/VisionPro/Main.unity
+    guid: a19f8a95dcf8a4bcea3b99deec0af160
+  - enabled: 1
+    path: Assets/Scene/VisionPro/TestStageForDesigner.unity
+    guid: 6b4e971ee3eb14a74ab6783b58464e46
+  - enabled: 1
+    path: Assets/Scene/VisionPro/TrainingStage.unity
+    guid: a7b23ce67973e470cac032fb24d45f79
+  - enabled: 1
+    path: Assets/Scene/Dev/Bootstrap_Dev.unity
+    guid: 1b24cd295e74d4c1c959612c6e39d527
+  - enabled: 1
+    path: Assets/Scene/Dev/Main_Dev.unity
+    guid: 74675eb6ac7ec464caa5dce86f3b04de
+  - enabled: 1
+    path: Assets/Scene/Dev/TestStageForDesigner_Dev.unity
+    guid: 2425e108db1004b49b7f9029f8170bef
+  - enabled: 1
+    path: Assets/Scene/Dev/TrainingStage_Dev.unity
+    guid: d7137fc1fceb14b3eabdce6ded4770b4
   m_configObjects:
     UnityEditor.XR.VisionOS.VisionOSSettings: {fileID: 11400000, guid: 5a5c126f2f6304ce58e6f983ed10b793,
       type: 2}

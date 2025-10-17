@@ -33,24 +33,6 @@ public sealed class SceneLoader : MonoBehaviour
     /// <summary>
     /// Main 씬으로 이동
     /// </summary>
-    public void LoadMain() => LoadScene("Main");
+    public void LoadMain() => LoadScene(MainSystem.Instance.IsDev ? "Main_Dev" : "Main");
 
-    /// <summary>
-    /// 게임 종료
-    /// </summary>
-    public void QuitGame() => QuitGameInternal();
-
-    /// <summary>
-    /// 내부 Quit 처리
-    /// </summary>
-    private void QuitGameInternal()
-    {
-#if UNITY_EDITOR
-        // 에디터에서 실행 중일 때
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-        // 실제 빌드에서 실행될 때
-        Application.Quit();
-#endif
-    }
 }

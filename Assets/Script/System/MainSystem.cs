@@ -9,6 +9,7 @@ public class MainSystem : SingletonT<MainSystem>
     [SerializeField] private SoundController _soundController;
     [SerializeField] private Loggers _loggers;
     [SerializeField] private bool _isDebug;
+    [SerializeField] private bool _isDev;
 
     public Action Act_Pause = null;
     public Action Act_Resume = null;
@@ -25,6 +26,7 @@ public class MainSystem : SingletonT<MainSystem>
         set { _soundController.SetAudioVolume(1, value); } 
     }
     public bool IsPause { get; private set; }
+    public bool IsDev => _isDev;
 
 
 
@@ -41,6 +43,10 @@ public class MainSystem : SingletonT<MainSystem>
     {
         Init();
     }
+    /// <summary>
+    /// 게임 종료
+    /// </summary>
+    public void QuitGame() => QuitGameInternal();
 
     private void Init()
     {
@@ -58,4 +64,17 @@ public class MainSystem : SingletonT<MainSystem>
         IsPause = false;
     }
 
+    /// <summary>
+    /// 내부 Quit 처리
+    /// </summary>
+    private void QuitGameInternal()
+    {
+#if UNITY_EDITOR
+        // 에디터에서 실행 중일 때
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        // 실제 빌드에서 실행될 때
+        Application.Quit();
+#endif
+    }
 }
