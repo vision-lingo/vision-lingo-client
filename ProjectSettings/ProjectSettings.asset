@@ -13,7 +13,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: vision-lingo-client-
+  productName: interaction_test
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -144,9 +144,6 @@ PlayerSettings:
   bundleVersion: 0.1.0
   preloadedAssets:
   - {fileID: -944628639613478452, guid: f45d5add6e5b54defb5ade8a34b798b4, type: 3}
-  - {fileID: -3359334999929497026, guid: 7e5c40cb21d0b45b78d55a079245e30c, type: 2}
-  - {fileID: 11400000, guid: 8330e47649ada42539abe6ebb16c6ceb, type: 2}
-  - {fileID: 11400000, guid: 0d10700b67771437ebb8209fb065071f, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -170,7 +167,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.UnityTechnologies.com.unity.template.urpblank
     Standalone: com.Unity-Technologies.com.unity.template.urp-blank
-    VisionOS: com.onsori.visionlingo
+    VisionOS: com.onsori.visionlingo-235235
     iPhone: com.Unity-Technologies.com.unity.template.urp-blank
   buildNumber:
     Standalone: 0
@@ -534,7 +531,10 @@ PlayerSettings:
       m_SubKind: 
   - m_BuildTarget: VisionOS
     m_Icons:
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 10900, guid: 0000000000000000f000000000000000, type: 0}
+      - {fileID: 10900, guid: 0000000000000000f000000000000000, type: 0}
+      - {fileID: 10900, guid: 0000000000000000f000000000000000, type: 0}
       m_Width: 1024
       m_Height: 1024
       m_Kind: 0

@@ -306,8 +306,11 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
                 if(joint.id == XRHandJointID.IndexTip)
                 {
                     int idx = joint.id.ToIndex();
-                    if(_sphere == null)
-                        _sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    if (_sphere == null)
+                    {
+                        
+                        _sphere = Instantiate(Resources.Load<GameObject>("Finger"));
+                    }
                     _sphere.transform.localScale = Vector3.one * 0.1f;
                     _sphere.transform.position = m_JointVisuals[idx].transform.position;
                 }
