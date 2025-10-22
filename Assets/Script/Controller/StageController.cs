@@ -50,6 +50,11 @@ public class StageController : MonoBehaviour
 
     private List<GameObject> _activeBalls = new List<GameObject>();
     private GameObject _correctBall = null;
+    private GameObject _selectedBall = null;
+    private bool _isAwaitingSelection = false;
+
+    private readonly Dictionary<InteractiveSphere, System.Action<InteractiveSphere.SphereState>> _stateHandlers
+        = new Dictionary<InteractiveSphere, System.Action<InteractiveSphere.SphereState>>();
 
     void Start()
     {
@@ -61,7 +66,6 @@ public class StageController : MonoBehaviour
             return;
         }
 
-        // 진행 시작
         StartCoroutine(RunAllStages());
     }
 
@@ -97,6 +101,8 @@ public class StageController : MonoBehaviour
             yield break;
         }
 
+        AttachAndSubscribe(_activeBalls);
+
         yield return new WaitForSeconds(PreSoundDelay);
 
         // 2) 소리 발생 (UI 숨김)
@@ -110,21 +116,22 @@ public class StageController : MonoBehaviour
         // 3) 10초 후 빛남
         yield return new WaitForSeconds(HighlightDelay);
         _correctBall.GetComponent<InteractiveSphere>()?.MarkTimeOver();
-        //_correctBall.GetComponent<TargetBall>()?.Highlight();
 
         if (EnableLogging)
             Debug.Log($"[Round] Stage {stage} Round {round}: 정답 구 빛남");
 
-        // 4) 입력 대기 (현재는 랜덤 시뮬레이션)
-        yield return new WaitForSeconds(Random.Range(2f, 5f));
-        bool isCorrect = Random.value > 0.5f;
+        // 4) 선택 대기
+        yield return StartCoroutine(WaitForSelectionOrTimeout(AnswerTimeout));
+
+        bool timedOut = (_selectedBall == null);
+        bool isCorrect = !timedOut && (_selectedBall == _correctBall);
 
         // 5) 피드백
         UIPanel.SetActive(true);
-        UIText.text = isCorrect ? "맞았습니다!" : "틀렸습니다!";
+        UIText.text = timedOut ? "시간 초과!" : (isCorrect ? "맞았습니다!" : "틀렸습니다!");
 
         if (EnableLogging)
-            Debug.Log($"[Round] 결과: {(isCorrect ? "정답" : "오답")}");
+            Debug.Log($"[Round] 결과: {(timedOut ? "시간초과" : (isCorrect ? "정답" : "오답"))}");
 
         yield return new WaitForSeconds(FeedbackHold);
 
@@ -139,13 +146,64 @@ public class StageController : MonoBehaviour
         return balls[idx];
     }
 
+    private void AttachAndSubscribe(List<GameObject> balls)
+    {
+        foreach (var go in balls)
+        {
+            var sphere = go.GetComponent<InteractiveSphere>();
+            if (sphere == null) continue;
+
+            // 상태 변경 이벤트(StateChanged) 구독
+            System.Action<InteractiveSphere.SphereState> handler = null;
+            handler = (newState) =>
+            {
+                if (newState == InteractiveSphere.SphereState.Touched)
+                    OnSphereSelected(sphere);
+            };
+
+            sphere.StateChanged += handler;
+            _stateHandlers[sphere] = handler;
+        }
+    }
+
+    private void OnSphereSelected(InteractiveSphere sphere)
+    {
+        if (!_isAwaitingSelection) return;
+        _selectedBall = sphere.gameObject;
+        _isAwaitingSelection = false;
+    }
+
+    private IEnumerator WaitForSelectionOrTimeout(float timeout)
+    {
+        _selectedBall = null;
+        _isAwaitingSelection = true;
+
+        float t = 0f;
+        while (_isAwaitingSelection && t < timeout)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        _isAwaitingSelection = false;
+    }
+
     private void CleanupBalls()
     {
         foreach (var go in _activeBalls)
         {
+            var sphere = go ? go.GetComponent<InteractiveSphere>() : null;
+            if (sphere != null && _stateHandlers.TryGetValue(sphere, out var handler))
+            {
+                sphere.StateChanged -= handler;
+                _stateHandlers.Remove(sphere);
+            }
             if (go) Destroy(go);
         }
+
         _activeBalls.Clear();
         _correctBall = null;
+        _selectedBall = null;
+        _isAwaitingSelection = false;
     }
 }

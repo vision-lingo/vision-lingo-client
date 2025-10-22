@@ -678,8 +678,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeadCamera: {fileID: 0}
   Distance: 1.2
-  VerticalOffset: -0.15
-  HorizontalOffset: 0
+  VerticalOffset: -0.45
+  HorizontalOffset: 0.3
   FollowSpeed: 20
   LockAtStart: 1
   SmoothFollow: 0
