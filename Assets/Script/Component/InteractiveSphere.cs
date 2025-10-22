@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class InteractiveSphere : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class InteractiveSphere : MonoBehaviour
     [SerializeField]
     private MeshRenderer _meshRenderer;
     private Material _mat;
+    
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable _grab;
 
 
     public SphereState CurrentState
@@ -35,6 +38,28 @@ public class InteractiveSphere : MonoBehaviour
     }
 
     public event Action<SphereState> StateChanged;
+
+    private void Awake()
+    {
+        if (_grab == null) _grab = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+    }
+
+    private void OnEnable()
+    {
+        if (_grab != null)
+            _grab.selectEntered.AddListener(OnSelectEntered);
+    }
+
+    private void OnDisable()
+    {
+        if (_grab != null)
+            _grab.selectEntered.RemoveListener(OnSelectEntered);
+    }
+
+    private void OnSelectEntered(SelectEnterEventArgs args)
+    {
+        OnTouched();
+    }
 
     private void Start()
     {
