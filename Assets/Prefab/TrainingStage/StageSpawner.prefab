@@ -48,7 +48,7 @@ MonoBehaviour:
   TargetPrefab: {fileID: 1385124752032408476, guid: 46efdc747f8bf4a1897dadfe4a16e23f,
     type: 3}
   StageNumber: 1
-  Distance: 0.8
+  Distance: 2
   UseCameraBasis: 0
   ParentUnderSpawner: 1
   LogOnSpawn: 1
@@ -56,44 +56,34 @@ MonoBehaviour:
   - StageNumber: 1
     Angles:
     - {x: -80, y: 0}
-    - {x: -60, y: 0}
     - {x: -40, y: 0}
-    - {x: -20, y: 0}
-    - {x: 20, y: 0}
+    - {x: 0, y: 0}
     - {x: 40, y: 0}
-    - {x: 60, y: 0}
     - {x: 80, y: 0}
   - StageNumber: 2
     Angles:
     - {x: -45, y: -40}
-    - {x: -45, y: -10}
-    - {x: -45, y: 10}
+    - {x: -45, y: 0}
     - {x: -45, y: 40}
   - StageNumber: 3
     Angles:
     - {x: 45, y: 40}
-    - {x: 45, y: 10}
-    - {x: 45, y: -10}
+    - {x: 45, y: 0}
     - {x: 45, y: -40}
   - StageNumber: 4
     Angles:
     - {x: -100, y: 0}
-    - {x: -120, y: 0}
     - {x: -140, y: 0}
-    - {x: -160, y: 0}
-    - {x: 160, y: 0}
+    - {x: -180, y: 0}
     - {x: 140, y: 0}
-    - {x: 120, y: 0}
     - {x: 100, y: 0}
   - StageNumber: 5
     Angles:
     - {x: -135, y: -40}
-    - {x: -135, y: -10}
-    - {x: -135, y: 10}
+    - {x: -135, y: 0}
     - {x: -135, y: 40}
   - StageNumber: 6
     Angles:
     - {x: 135, y: -40}
-    - {x: 135, y: -10}
-    - {x: 135, y: 10}
+    - {x: 135, y: 0}
     - {x: 135, y: 40}
