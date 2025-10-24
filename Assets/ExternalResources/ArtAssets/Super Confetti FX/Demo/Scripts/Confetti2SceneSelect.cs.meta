@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 6095c242354882846b9a91818f70caca
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 152141
+  packageName: Super Confetti FX
+  packageVersion: 1.11
+  assetPath: Assets/Super Confetti FX/Demo/Scripts/Confetti2SceneSelect.cs
+  uploadId: 690288

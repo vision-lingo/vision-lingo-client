@@ -543,6 +543,11 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 329550498}
+    - target: {fileID: 5887094771840624013, guid: 26f7c075eddb142569dde73f6e34430c,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6171042937077032109, guid: 26f7c075eddb142569dde73f6e34430c,
         type: 3}
       propertyPath: m_Pivot.x
@@ -3054,6 +3059,11 @@ PrefabInstance:
       propertyPath: spawner
       value: 
       objectReference: {fileID: 1875499106}
+    - target: {fileID: 4521156938259627453, guid: 83799987bdd364ba7ac4e0d6b3ae832d,
+        type: 3}
+      propertyPath: HeadCamera
+      value: 
+      objectReference: {fileID: 329550498}
     - target: {fileID: 7264729553263883672, guid: 83799987bdd364ba7ac4e0d6b3ae832d,
         type: 3}
       propertyPath: m_Name

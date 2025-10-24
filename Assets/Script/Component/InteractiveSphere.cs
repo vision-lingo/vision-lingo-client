@@ -93,7 +93,7 @@ public class InteractiveSphere : MonoBehaviour
     public void MarkTimeOver()
     {
         SetState(SphereState.TimeOver);
-        SetEmission(true, 100);
+        SetEmission(true, 10);
     }
 
     public void ResetToDefault()
@@ -106,11 +106,11 @@ public class InteractiveSphere : MonoBehaviour
         if (enable)
         {
             // Emission 활성화
-            _mat.EnableKeyword("_EMISSION");
+            //_mat.EnableKeyword("_EMISSION");
 
             // 색상 * 강도를 Emission Color 속성에 설정
             Color finalColor = Color.red * intensity;
-            _mat.SetColor("_EmissionColor", finalColor);
+            _mat.SetColor("_emission", finalColor);
         }
         else
         {

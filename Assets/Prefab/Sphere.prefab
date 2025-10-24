@@ -69,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 4f29f6f825efe4c4fb922d28e5e0dd0e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -127,6 +127,7 @@ MonoBehaviour:
   currentState: 0
   _audioSource: {fileID: -6140524185288608985}
   _meshRenderer: {fileID: 8629351626028145610}
+  _grab: {fileID: 0}
 --- !u!54 &1265957773166572481
 Rigidbody:
   m_ObjectHideFlags: 0

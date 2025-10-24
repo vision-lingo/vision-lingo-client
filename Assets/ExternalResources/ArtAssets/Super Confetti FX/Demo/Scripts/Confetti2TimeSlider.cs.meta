@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: f3aa94028ba88c348bedd06b93194ccc
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 152141
+  packageName: Super Confetti FX
+  packageVersion: 1.11
+  assetPath: Assets/Super Confetti FX/Demo/Scripts/Confetti2TimeSlider.cs
+  uploadId: 690288
