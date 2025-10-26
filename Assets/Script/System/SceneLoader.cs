@@ -21,14 +21,19 @@ public sealed class SceneLoader : MonoBehaviour
 
     private void Start()
     {
-        // 게임 시작 시 자동으로 Main 씬으로 이동
-        LoadMain();
+        // 게임 시작 시 자동으로 Tutorial 씬으로 이동
+        LoadTutorial();
     }
 
     /// <summary>
     /// 지정된 씬으로 이동
     /// </summary>
     public void LoadScene(string sceneName) => SceneManager.LoadScene(sceneName);
+
+    /// <summary>
+    /// Tutorial 씬으로 이동
+    /// </summary>
+    public void LoadTutorial() => LoadScene(MainSystem.Instance.IsDev ? "Tutorial_Dev" : "Tutorial");
 
     /// <summary>
     /// Main 씬으로 이동
