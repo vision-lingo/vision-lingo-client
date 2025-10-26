@@ -50,10 +50,10 @@ MonoBehaviour:
   UIText: {fileID: 0}
   FirstStage: 1
   LastStage: 6
-  RoundsPerStage: 3
+  RoundsPerStage: 1
   PreSoundDelay: 4
   HighlightDelay: 10
-  AnswerTimeout: 10
-  FeedbackHold: 2
+  AnswerTimeout: 15
+  FeedbackHold: 3
   InterStageDelay: 1
   EnableLogging: 1

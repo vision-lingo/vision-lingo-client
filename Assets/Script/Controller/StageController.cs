@@ -143,10 +143,24 @@ public class StageController : MonoBehaviour
 
         // 3) 피드백
         UIPanel.SetActive(true);
-        UIText.text = timedOut ? "시간 초과!" : (isCorrect ? "맞았습니다!" : "틀렸습니다!");
+        bool isLastRound = (stage == LastStage) && (round == RoundsPerStage);
+
+        if (timedOut)
+        {
+            UIText.text = "시간 초과!";
+        }
+        else if (isCorrect)
+        {
+            UIText.text = isLastRound ? "정답입니다!" : "정답입니다! 다음 문제가 곧 진행됩니다.";
+        }
+        else
+        {
+            UIText.text = "실패하였습니다. 다른 공을 선택해주세요.";
+        }
 
         if (EnableLogging)
             Debug.Log($"[Round] 결과: {(timedOut ? "시간초과" : (isCorrect ? "정답" : "오답"))}");
+
 
         yield return new WaitForSeconds(FeedbackHold);
 

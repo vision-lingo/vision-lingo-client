@@ -63,12 +63,10 @@ MonoBehaviour:
   - StageNumber: 2
     Angles:
     - {x: -45, y: -40}
-    - {x: -45, y: 0}
     - {x: -45, y: 40}
   - StageNumber: 3
     Angles:
     - {x: 45, y: 40}
-    - {x: 45, y: 0}
     - {x: 45, y: -40}
   - StageNumber: 4
     Angles:
@@ -80,10 +78,8 @@ MonoBehaviour:
   - StageNumber: 5
     Angles:
     - {x: -135, y: -40}
-    - {x: -135, y: 0}
     - {x: -135, y: 40}
   - StageNumber: 6
     Angles:
     - {x: 135, y: -40}
-    - {x: 135, y: 0}
     - {x: 135, y: 40}
