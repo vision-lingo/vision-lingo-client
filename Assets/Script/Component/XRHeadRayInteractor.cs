@@ -12,7 +12,7 @@ public class XRHeadRayInteractor : MonoBehaviour
     [SerializeField] private Transform cameraOffset;
     [SerializeField] private Vector3 _rayPosOffset;
     private PointerInput _pointerInput;
-    private IXRHeadInteractable _lastInteractable;
+    private IXRHeadInteractable _lastInteractable = null;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void OnEnable()
     {
@@ -50,9 +50,12 @@ public class XRHeadRayInteractor : MonoBehaviour
         if (hit)
         {
             Debug.Log($"[EYETEST]::::hitInfo: {hitInfo.transform.gameObject.name}");
-            if(hitInfo.transform.TryGetComponent(out _lastInteractable))
+            if(_lastInteractable == null)
             {
-                _lastInteractable.OnRayOver();
+                if(hitInfo.transform.TryGetComponent(out _lastInteractable))
+                {
+                    _lastInteractable.OnRayOver();
+                }
             }
             
         }
@@ -76,9 +79,12 @@ public class XRHeadRayInteractor : MonoBehaviour
         if (hit)
         {
             Debug.Log($"[EYETEST]::::hitInfo: {hitInfo.transform.gameObject.name}");
-            if(hitInfo.transform.TryGetComponent(out _lastInteractable))
+            if(_lastInteractable == null)
             {
-                _lastInteractable.OnRayOver();
+                if(hitInfo.transform.TryGetComponent(out _lastInteractable))
+                {
+                    _lastInteractable.OnRayOver();
+                }
             }
         }
         else
