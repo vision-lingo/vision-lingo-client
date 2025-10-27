@@ -1187,6 +1187,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 735101520858726763}
+  - component: {fileID: 7802646349299977941}
   m_Layer: 0
   m_Name: XRHeadRay
   m_TagString: Untagged
@@ -1210,6 +1211,21 @@ Transform:
   - {fileID: 1482916246583774267}
   m_Father: {fileID: 3783406054765476091}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7802646349299977941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4921372370670151867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 130dc94dcebb54bc687db5f4c7312eaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rayDebugTransform: {fileID: 1482916246583774267}
+  cameraOffset: {fileID: 3783406054765476091}
+  _rayPosOffset: {x: 0, y: -0.1, z: 0}
 --- !u!1 &6144132876744167280
 GameObject:
   m_ObjectHideFlags: 0
