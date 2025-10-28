@@ -35,12 +35,10 @@ public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
     public void OnRayOut()
     {
         _img_button.color += _gray;
-        Debug.Log($"XRUIInteractor::::OnRayOut");
     }
 
     public void OnRayOver()
     {
         _img_button.color -= _gray;
-         Debug.Log($"XRUIInteractor::::OnRayOver");
     }
 }
