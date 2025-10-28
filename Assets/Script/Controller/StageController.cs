@@ -32,11 +32,11 @@ public class StageController : MonoBehaviour
     [Tooltip("안내 UI 유지시간 (소리 전까지)")]
     public float PreSoundDelay = 4f;
 
-    [Tooltip("소리 발생 후 빛나기까지의 지연")]
+    [Tooltip("소리 발생 후 하이라이트가 켜지기까지의 지연")]
     public float HighlightDelay = 10f;
 
-    [Tooltip("하이라이트 후 선택 제한시간")]
-    public float AnswerTimeout = 10f;
+    [Tooltip("소리 직후부터의 총 선택 제한시간 (예: 15초)")]
+    public float AnswerTimeout = 15f;
 
     [Tooltip("피드백 유지시간")]
     public float FeedbackHold = 2f;
@@ -113,29 +113,58 @@ public class StageController : MonoBehaviour
         if (EnableLogging)
             Debug.Log($"[Round] Stage {stage} Round {round}: 소리 발생 - 정답 구 {_correctBall.name}");
 
-        // 3) 10초 후 빛남
-        yield return new WaitForSeconds(HighlightDelay);
-        _correctBall.GetComponent<InteractiveSphere>()?.MarkTimeOver();
+        // 소리 발생 직후부터 선택 가능
+        _selectedBall = null;
+        _isAwaitingSelection = true;
 
-        if (EnableLogging)
-            Debug.Log($"[Round] Stage {stage} Round {round}: 정답 구 빛남");
+        float elapsed = 0f;
+        bool highlighted = false;
 
-        // 4) 선택 대기
-        yield return StartCoroutine(WaitForSelectionOrTimeout(AnswerTimeout));
+        while (_isAwaitingSelection && elapsed < AnswerTimeout)
+        {
+            elapsed += Time.deltaTime;
+
+            // HighlightDelay 지나면 공 하이라이트 시작
+            if (!highlighted && elapsed >= HighlightDelay)
+            {
+                highlighted = true;
+                _correctBall.GetComponent<InteractiveSphere>()?.MarkTimeOver();
+                if (EnableLogging)
+                    Debug.Log("[Round] 정답 구 빛남");
+            }
+
+            yield return null;
+        }
+
+        _isAwaitingSelection = false;
 
         bool timedOut = (_selectedBall == null);
         bool isCorrect = !timedOut && (_selectedBall == _correctBall);
 
-        // 5) 피드백
+        // 3) 피드백
         UIPanel.SetActive(true);
-        UIText.text = timedOut ? "시간 초과!" : (isCorrect ? "맞았습니다!" : "틀렸습니다!");
+        bool isLastRound = (stage == LastStage) && (round == RoundsPerStage);
+
+        if (timedOut)
+        {
+            UIText.text = "시간 초과!";
+        }
+        else if (isCorrect)
+        {
+            UIText.text = isLastRound ? "정답입니다!" : "정답입니다! 다음 문제가 곧 진행됩니다.";
+        }
+        else
+        {
+            UIText.text = "실패하였습니다. 다른 공을 선택해주세요.";
+        }
 
         if (EnableLogging)
             Debug.Log($"[Round] 결과: {(timedOut ? "시간초과" : (isCorrect ? "정답" : "오답"))}");
 
+
         yield return new WaitForSeconds(FeedbackHold);
 
-        // 6) 정리
+        // 4) 정리
         UIPanel.SetActive(false);
         CleanupBalls();
     }
@@ -170,21 +199,6 @@ public class StageController : MonoBehaviour
     {
         if (!_isAwaitingSelection) return;
         _selectedBall = sphere.gameObject;
-        _isAwaitingSelection = false;
-    }
-
-    private IEnumerator WaitForSelectionOrTimeout(float timeout)
-    {
-        _selectedBall = null;
-        _isAwaitingSelection = true;
-
-        float t = 0f;
-        while (_isAwaitingSelection && t < timeout)
-        {
-            t += Time.deltaTime;
-            yield return null;
-        }
-
         _isAwaitingSelection = false;
     }
 

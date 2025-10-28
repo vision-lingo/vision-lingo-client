@@ -15,14 +15,17 @@ public class InteractiveSphere : MonoBehaviour
 
     [SerializeField]
     private SphereState currentState = SphereState.Default;
-    [SerializeField]
-    private AudioSource _audioSource;
 
     [SerializeField]
     private MeshRenderer _meshRenderer;
     private Material _mat;
     
     [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable _grab;
+
+    private AudioSource _audioSource;
+
+    [Header("Random Audio Loop")]
+    [SerializeField] private AudioClip[] clips;
 
 
     public SphereState CurrentState
@@ -42,6 +45,7 @@ public class InteractiveSphere : MonoBehaviour
     private void Awake()
     {
         if (_grab == null) _grab = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+        if (_audioSource == null) _audioSource = GetComponent<AudioSource>(); 
     }
 
     private void OnEnable()
@@ -85,6 +89,10 @@ public class InteractiveSphere : MonoBehaviour
     public void TriggerSound()
     {
         SetState(SphereState.SoundTriggered);
+        
+        var pick = UnityEngine.Random.Range(0, clips.Length);
+        _audioSource.loop = true;
+        _audioSource.clip = clips[pick];
         _audioSource.Play();
     }
 

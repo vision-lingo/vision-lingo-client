@@ -125,9 +125,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentState: 0
-  _audioSource: {fileID: -6140524185288608985}
   _meshRenderer: {fileID: 8629351626028145610}
   _grab: {fileID: 0}
+  clips:
+  - {fileID: 8300000, guid: de4141fe9c7e941a69e489eb8e051a4b, type: 3}
+  - {fileID: 8300000, guid: 5af4c51363cfe47edae2da43c37647bd, type: 3}
+  - {fileID: 8300000, guid: 0938f71c0cd144a0c92308d6b765c8a9, type: 3}
+  - {fileID: 8300000, guid: 74bd65aa0ab7841c0af37f425a132843, type: 3}
+  - {fileID: 8300000, guid: 89873425a53be41d39d4fe4a2ae118e0, type: 3}
+  - {fileID: 8300000, guid: a9e32cf318acb42f09a0cb51593836e8, type: 3}
+  - {fileID: 8300000, guid: d0fb9437cd87747c9b5e7fc12b6ce38f, type: 3}
+  - {fileID: 8300000, guid: 93825a4e6234344f5a0061f1c6d4d088, type: 3}
+  - {fileID: 8300000, guid: e4c8c560cf215405993b49df7ae9c346, type: 3}
+  - {fileID: 8300000, guid: a393e7e679e7f4e33aa18b8ca1db6a25, type: 3}
+  - {fileID: 8300000, guid: 2520b064666b0416191ad0b7eaaaea16, type: 3}
+  - {fileID: 8300000, guid: 36786f66ace214347828c7a8dd971409, type: 3}
+  - {fileID: 8300000, guid: f719d561c872f4c558730970ca3476d4, type: 3}
+  - {fileID: 8300000, guid: ebefc73c6cc7d495fbb42133ecfe99c2, type: 3}
+  - {fileID: 8300000, guid: 95d77d94da8b540f890e0afa3acd6fe1, type: 3}
+  - {fileID: 8300000, guid: 274a3659575e34183a73abf3042c044d, type: 3}
+  - {fileID: 8300000, guid: 7a47b4a3667d04bc1ae455f779f68c7d, type: 3}
+  - {fileID: 8300000, guid: 153c6f389b47d443b83dbecfc1467da2, type: 3}
+  - {fileID: 8300000, guid: 8ae60dc0503514c6f9324421b2f96c09, type: 3}
+  - {fileID: 8300000, guid: 1ad26dda85603492aad170255632ace6, type: 3}
+  - {fileID: 8300000, guid: b150376731c8842809d2e13c418d572c, type: 3}
+  - {fileID: 8300000, guid: 370efef00fc474f1e91e7a52df950f86, type: 3}
+  - {fileID: 8300000, guid: 45869c43081e94143bda0076d73043f4, type: 3}
+  - {fileID: 8300000, guid: 99ef8de5a9f9043029c42a3d39d2eedb, type: 3}
 --- !u!54 &1265957773166572481
 Rigidbody:
   m_ObjectHideFlags: 0
