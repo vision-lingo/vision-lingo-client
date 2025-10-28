@@ -2,15 +2,19 @@ using UnityEngine;
 using System;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class InteractiveSphere : MonoBehaviour
+public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 {
     public enum SphereState
     {
-        Default,
-        SoundTriggered,
-        Touched,
-        Wrong,
-        TimeOver
+        None = -1,
+        Default = 0,
+        Wave = 1, // only tutorial
+        SoundTriggered = 2,
+        //Hover = 3, // hover는 상태로 두면 안될 듯.
+        Correct = 3,
+        Touched = 4,
+        Wrong = 5,
+        TimeOver = 6
     }
 
     [SerializeField]
@@ -27,7 +31,15 @@ public class InteractiveSphere : MonoBehaviour
     [Header("Random Audio Loop")]
     [SerializeField] private AudioClip[] clips;
 
+    [SerializeField] private GameObject _waveEffect;
+    [SerializeField] private float _scaleFactor;
+    [SerializeField] private Color _defaultColor;
+    [SerializeField] private Color _failColor;
+    [SerializeField] private Color _hoverColor;
+    [SerializeField] private Color _correctColor;
+    [SerializeField] private Color _timeOverColor;
 
+    private float _hoverScale;
     public SphereState CurrentState
     {
         get => currentState;
@@ -46,6 +58,8 @@ public class InteractiveSphere : MonoBehaviour
     {
         if (_grab == null) _grab = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
         if (_audioSource == null) _audioSource = GetComponent<AudioSource>(); 
+        if (_meshRenderer == null) _meshRenderer = GetComponent<MeshRenderer>();
+        _hoverScale = transform.localScale.x * _scaleFactor;
     }
 
     private void OnEnable()
@@ -68,6 +82,7 @@ public class InteractiveSphere : MonoBehaviour
     private void Start()
     {
         _mat = _meshRenderer.material;
+        ChangeColor(_defaultColor);
     }
     private void OnStateChanged(SphereState newState)
     {
@@ -81,11 +96,43 @@ public class InteractiveSphere : MonoBehaviour
 
     public void SetState(SphereState newState) => CurrentState = newState;
 
-    public void OnTouched() {
-        SetState(SphereState.Touched);
-        GetComponent<MeshRenderer>().material.color = Color.green;
+    public void OnWave()
+    {
+        SetState(SphereState.Wave);
+        _waveEffect.SetActive(true);
+    }
+    public void OffWaveEffect()
+    {
+        SetState(SphereState.Default);
+        _waveEffect.SetActive(false);
     }
 
+
+    public void OnRayOver()
+    {
+        transform.localScale += Vector3.one * _hoverScale;
+        ChangeColor(_hoverColor);
+    }
+
+    public void OnRayOut()
+    {
+        transform.localScale -= Vector3.one * _hoverScale;
+        ChangeColor(_defaultColor);
+    }
+
+    public void OnCorrect()
+    {
+        SetState(SphereState.Correct);
+        ChangeColor(_correctColor, 2f);
+    }
+
+    public void OnTouched() 
+    {
+        SetState(SphereState.Touched);
+        //GetComponent<MeshRenderer>().material.color = Color.green;
+    }
+
+    // Callback 함수는 "On" prefix가 붙어야 함.
     public void TriggerSound()
     {
         SetState(SphereState.SoundTriggered);
@@ -96,38 +143,31 @@ public class InteractiveSphere : MonoBehaviour
         _audioSource.Play();
     }
 
-    public void MarkWrong() => SetState(SphereState.Wrong);
+    public void MarkWrong()
+    { 
+        SetState(SphereState.Wrong);
+        ChangeColor(_failColor);
+    }
 
-    public void MarkTimeOver()
+    public void OnMarkTimeOver()
     {
         SetState(SphereState.TimeOver);
-        SetEmission(true, 10);
+        ChangeColor(_timeOverColor, 10);
     }
+    
 
     public void ResetToDefault()
     {
         GetComponent<MeshRenderer>().material.color = Color.gray;
         SetState(SphereState.Default);
     }
-    public void SetEmission(bool enable, float intensity)
-    {
-        if (enable)
-        {
-            // Emission 활성화
-            //_mat.EnableKeyword("_EMISSION");
 
-            // 색상 * 강도를 Emission Color 속성에 설정
-            Color finalColor = Color.red * intensity;
-            _mat.SetColor("_emission", finalColor);
-        }
-        else
-        {
-            // Emission 비활성화
-            _mat.DisableKeyword("_EMISSION");
-            // 또는 강도를 0으로 설정하여 시각적으로 끄는 방법도 가능
-            // material.SetColor(emissionColorID, Color.black);
-        }
+    public void ChangeColor(Color color, float intensity = 1)
+    {
+        Color finalColor = color * intensity;
+        _meshRenderer.material.SetColor("_emission", finalColor);
     }
+    
 
 #if UNITY_EDITOR
     private SphereState lastInspectorState;
@@ -156,12 +196,13 @@ public class InteractiveSphere : MonoBehaviour
     private void TestWrong() => MarkWrong();
 
     [ContextMenu("Test/Mark as TimeOver")]
-    private void TestTimeOver() => MarkTimeOver();
+    private void TestTimeOver() => OnMarkTimeOver();
 
     [ContextMenu("Debug/Log Current State")]
     private void DebugLogState() => Debug.Log($"[InteractiveSphere] Current State: {CurrentState}");
 
     [ContextMenu("Debug/Trigger State Changed Event")]
     private void DebugTriggerEvent() => OnStateChanged(currentState);
+
 #endif
 }
