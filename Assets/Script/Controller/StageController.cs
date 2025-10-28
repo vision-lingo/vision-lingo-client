@@ -128,7 +128,7 @@ public class StageController : MonoBehaviour
             if (!highlighted && elapsed >= HighlightDelay)
             {
                 highlighted = true;
-                _correctBall.GetComponent<InteractiveSphere>()?.MarkTimeOver();
+                _correctBall.GetComponent<InteractiveSphere>()?.OnMarkTimeOver();
                 if (EnableLogging)
                     Debug.Log("[Round] 정답 구 빛남");
             }
@@ -151,10 +151,12 @@ public class StageController : MonoBehaviour
         }
         else if (isCorrect)
         {
+            _selectedBall.GetComponent<InteractiveSphere>()?.OnCorrect();
             UIText.text = isLastRound ? "정답입니다!" : "정답입니다! 다음 문제가 곧 진행됩니다.";
         }
         else
         {
+            _selectedBall.GetComponent<InteractiveSphere>()?.MarkWrong();
             UIText.text = "실패하였습니다. 다른 공을 선택해주세요.";
         }
 
