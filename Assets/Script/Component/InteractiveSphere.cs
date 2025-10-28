@@ -110,14 +110,21 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 
     public void OnRayOver()
     {
-        transform.localScale += Vector3.one * _hoverScale;
-        ChangeColor(_hoverColor);
+        // default 상태일 때만 호버 가능
+        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered)
+        {
+            transform.localScale += Vector3.one * _hoverScale;
+            ChangeColor(_hoverColor);
+        }
     }
 
     public void OnRayOut()
     {
-        transform.localScale -= Vector3.one * _hoverScale;
-        ChangeColor(_defaultColor);
+        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered)
+        {
+            transform.localScale -= Vector3.one * _hoverScale;
+            ChangeColor(_defaultColor);
+        }
     }
 
     public void OnCorrect()
