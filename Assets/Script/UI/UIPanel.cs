@@ -8,12 +8,16 @@ public class UIPanel : MonoBehaviour
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TMP_Text messageText;
 
-    private Action onComplete; // 메시지 끝났을 때 콜백
+    private Action onComplete;
 
-    public void Show(string message, float fadeInTime = 0.8f, float displayTime = 2f, float fadeOutTime = 0.8f, Action onComplete = null)
+    public void Show(string message, Vector2 anchoredPosition, float fadeInTime = 0.8f, float displayTime = 2f, float fadeOutTime = 0.8f, Action onComplete = null)
     {
         this.onComplete = onComplete;
         messageText.text = message;
+
+        RectTransform rt = GetComponent<RectTransform>();
+        rt.anchoredPosition = anchoredPosition;
+
         canvasGroup.alpha = 0;
         gameObject.SetActive(true);
 
@@ -24,7 +28,7 @@ public class UIPanel : MonoBehaviour
            .OnComplete(() =>
            {
                gameObject.SetActive(false);
-               onComplete?.Invoke(); // 다음 메시지 처리
+               onComplete?.Invoke();
            });
     }
 }
