@@ -18,6 +18,13 @@ public class StageController : MonoBehaviour
     [Tooltip("UI 패널 내부의 TextMeshProUGUI 컴포넌트")]
     public TextMeshProUGUI UIText;
 
+    [Header("Intro/Outro UI (훈련 시작/안내/종료)")]
+    [Tooltip("인트로/아웃트로 전용 UI 패널 (새 위치)")]
+    public GameObject IntroPanel;
+    
+    [Tooltip("인트로/아웃트로용 TextMeshProUGUI")]
+    public TextMeshProUGUI IntroText;
+
     [Header("Flow Settings")]
     [Tooltip("시작 스테이지 번호")]
     public int FirstStage = 1;
@@ -38,15 +45,15 @@ public class StageController : MonoBehaviour
     [Tooltip("소리 직후부터의 총 선택 제한시간 (예: 15초)")]
     public float AnswerTimeout = 15f;
 
-    [Tooltip("피드백 유지시간")]
-    public float FeedbackHold = 2f;
-
     [Tooltip("스테이지 사이 대기시간")]
     public float InterStageDelay = 1.0f;
 
     [Header("Debug / Log")]
     [Tooltip("디버그 로그 출력 여부")]
     public bool EnableLogging = true;
+
+    [SerializeField] private CanvasGroup _uiCanvasGroup;
+    [SerializeField] private CanvasGroup _introCanvasGroup; 
 
     private List<GameObject> _activeBalls = new List<GameObject>();
     private GameObject _correctBall = null;
@@ -66,11 +73,18 @@ public class StageController : MonoBehaviour
             return;
         }
 
+        UIPanel.SetActive(false);
+        IntroPanel.SetActive(false);
         StartCoroutine(RunAllStages());
     }
 
     private IEnumerator RunAllStages()
     {
+        // 인트로
+        yield return StartCoroutine(ShowFade(IntroPanel, IntroText, "소리 위치 분별 훈련을 시작하겠습니다.", 0.4f, 3f, 0.8f));
+        yield return StartCoroutine(ShowFade(IntroPanel, IntroText, "소리가 나는 공을 찾아 선택해 주세요.", 0.4f, 3f, 0.8f));
+
+        // 스테이지 루프
         for (int stage = FirstStage; stage <= LastStage; stage++)
         {
             spawner.SetStage(stage);
@@ -84,16 +98,16 @@ public class StageController : MonoBehaviour
             yield return new WaitForSeconds(InterStageDelay);
         }
 
+        // 아웃트로
+        yield return StartCoroutine(ShowFade(IntroPanel, IntroText, "소리 위치 분별 훈련을 종료하겠습니다.", 0.4f, 3f, 0.8f));
+
         if (EnableLogging)
             Debug.Log("모든 스테이지 완료!");
     }
 
     private IEnumerator RunOneRound(int stage, int round)
     {
-        // 1) 안내 UI 표시 + 구 배치
-        UIPanel.SetActive(true);
-        UIText.text = $"스테이지 {stage}, 라운드 {round}\n소리가 나는 공을 선택해 주세요.";
-
+        // 1) 구 배치
         _activeBalls = spawner.SpawnSet();
         if (_activeBalls == null || _activeBalls.Count == 0)
         {
@@ -105,7 +119,7 @@ public class StageController : MonoBehaviour
 
         yield return new WaitForSeconds(PreSoundDelay);
 
-        // 2) 소리 발생 (UI 숨김)
+        // 2) 소리 발생
         UIPanel.SetActive(false);
         _correctBall = PickRandomBall(_activeBalls);
         _correctBall.GetComponent<InteractiveSphere>()?.TriggerSound();
@@ -142,29 +156,17 @@ public class StageController : MonoBehaviour
         bool isCorrect = !timedOut && (_selectedBall == _correctBall);
 
         // 3) 피드백
-        UIPanel.SetActive(true);
         bool isLastRound = (stage == LastStage) && (round == RoundsPerStage);
 
-        if (timedOut)
-        {
-            UIText.text = "시간 초과!";
-        }
-        else if (isCorrect)
-        {
-            _selectedBall.GetComponent<InteractiveSphere>()?.OnCorrect();
-            UIText.text = isLastRound ? "정답입니다!" : "정답입니다! 다음 문제가 곧 진행됩니다.";
-        }
-        else
-        {
-            _selectedBall.GetComponent<InteractiveSphere>()?.MarkWrong();
-            UIText.text = "실패하였습니다. 다른 공을 선택해주세요.";
-        }
-
+        string msg =
+            timedOut ? "시간 초과!"
+            : (isCorrect ? (isLastRound ? "정답입니다!" : "정답입니다! 다음 문제가 곧 진행됩니다."): "실패하였습니다. 다른 공을 선택해주세요.");
+        
         if (EnableLogging)
             Debug.Log($"[Round] 결과: {(timedOut ? "시간초과" : (isCorrect ? "정답" : "오답"))}");
 
 
-        yield return new WaitForSeconds(FeedbackHold);
+        yield return StartCoroutine(ShowFade(UIPanel, UIText, msg, 0.2f, 3f, 0.3f));
 
         // 4) 정리
         UIPanel.SetActive(false);
@@ -221,5 +223,36 @@ public class StageController : MonoBehaviour
         _correctBall = null;
         _selectedBall = null;
         _isAwaitingSelection = false;
+    }
+
+    private IEnumerator ShowFade(GameObject panel, TextMeshProUGUI text, string message, float fadeIn, float hold, float fadeOut)
+    {
+        if (!panel || !text) yield break;
+
+        var cg = panel.GetComponent<CanvasGroup>();
+        if (!cg) cg = panel.AddComponent<CanvasGroup>();
+
+        panel.SetActive(true);
+        text.text = message;
+
+        yield return StartCoroutine(FadeCanvasGroup(cg, cg.alpha, 1f, fadeIn));
+        if (hold > 0f) yield return new WaitForSeconds(hold);
+        yield return StartCoroutine(FadeCanvasGroup(cg, 1f, 0f, fadeOut));
+
+        panel.SetActive(false);
+    }
+
+    private IEnumerator FadeCanvasGroup(CanvasGroup cg, float from, float to, float duration)
+    {
+        if (duration <= 0f) { cg.alpha = to; yield break; }
+        float t = 0f;
+        cg.alpha = from;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            cg.alpha = Mathf.Lerp(from, to, t / duration);
+            yield return null;
+        }
+        cg.alpha = to;
     }
 }

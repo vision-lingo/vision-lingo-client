@@ -48,6 +48,8 @@ MonoBehaviour:
   HeadCamera: {fileID: 0}
   UIPanel: {fileID: 0}
   UIText: {fileID: 0}
+  IntroPanel: {fileID: 0}
+  IntroText: {fileID: 0}
   FirstStage: 1
   LastStage: 6
   RoundsPerStage: 1
@@ -57,3 +59,5 @@ MonoBehaviour:
   FeedbackHold: 3
   InterStageDelay: 1
   EnableLogging: 1
+  _uiCanvasGroup: {fileID: 0}
+  _introCanvasGroup: {fileID: 0}
