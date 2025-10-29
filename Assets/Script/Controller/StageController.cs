@@ -142,7 +142,7 @@ public class StageController : MonoBehaviour
             if (!highlighted && elapsed >= HighlightDelay)
             {
                 highlighted = true;
-                _correctBall.GetComponent<InteractiveSphere>()?.MarkTimeOver();
+                _correctBall.GetComponent<InteractiveSphere>()?.OnMarkTimeOver();
                 if (EnableLogging)
                     Debug.Log("[Round] 정답 구 빛남");
             }
