@@ -1,0 +1,47 @@
+using UnityEngine;
+using System.Collections;
+
+public class UIPanelFactory : MonoBehaviour
+{
+    public static UIPanelFactory Instance { get; private set; }
+
+    [SerializeField] private UIPanel panelPrefab;
+    [SerializeField] private Transform uiParent;
+
+    public bool IsIdle { get; private set; } = true;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
+    public void ShowMessage(string text, bool isCenter = false)
+    {
+        if (Instance == null || panelPrefab == null) return; // 안전 체크
+        StartCoroutine(ShowMessageCoroutine(text, isCenter));
+    }
+
+    private IEnumerator ShowMessageCoroutine(string text, bool isCenter)
+    {
+        IsIdle = false;
+
+        var panel = Instantiate(panelPrefab, uiParent);
+
+        var pos = isCenter ? UIPanelSettingsHelper.GetCenterPosition() :
+                             UIPanelSettingsHelper.GetUpperPosition();
+        var fade = UIPanelSettingsHelper.GetDefaultFadeSettings();
+
+        panel.Show(text, pos, fade.fadeInTime, fade.displayTime, fade.fadeOutTime);
+
+        while (panel.gameObject.activeSelf)
+            yield return null;
+
+        IsIdle = true;
+    }
+}
