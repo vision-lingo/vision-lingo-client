@@ -55,8 +55,8 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 0.03529412}
     - _Vector4: {r: 1, g: 1, b: 1, a: 0}
-    - _emission: {r: 0.43983597, g: 0.59882927, b: 0.99868643, a: 1}
+    - _emission: {r: 0.21205474, g: 0.20392154, b: 0.7372549, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

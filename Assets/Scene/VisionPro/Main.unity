@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 185428314}
   - component: {fileID: 185428313}
   m_Layer: 5
-  m_Name: GoToTrainingStage
+  m_Name: GoToTutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 150}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 350, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &185428310
@@ -213,7 +213,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: TrainingStage
+          m_StringArgument: Tutorial
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &185428311
@@ -229,14 +229,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5199359, g: 0.76040864, b: 0.8679245, a: 1}
+  m_Color: {r: 0.36862746, g: 0.36862746, b: 0.36862746, a: 0.2}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 54aee3e8069fff34abe7ce3f42dc5fa0, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -245,7 +245,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 3
 --- !u!222 &185428312
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -267,6 +267,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _img_button: {fileID: 0}
+  _hoverImgColor: {r: 0.36862746, g: 0.36862746, b: 0.36862746, a: 0.6}
+  _tmp_text: {fileID: 0}
+  _hoverTxtColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!65 &185428314
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -345,7 +348,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Training Stage\uC73C\uB85C \uC774\uB3D9!"
+  m_text: "\uD29C\uD1A0\uB9AC\uC5BC"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9cc0abb9042e47e1b043a88862390a6, type: 2}
   m_sharedMaterial: {fileID: 5800677245487220095, guid: a9cc0abb9042e47e1b043a88862390a6,
@@ -355,8 +358,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -440,7 +443,7 @@ GameObject:
   - component: {fileID: 326376552}
   - component: {fileID: 326376551}
   m_Layer: 5
-  m_Name: GoToTestStage
+  m_Name: GoToTrainingStage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -463,7 +466,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 150}
   m_SizeDelta: {x: 350, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &326376548
@@ -519,7 +522,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: TestStageForDesigner
+          m_StringArgument: TrainingStage
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &326376549
@@ -535,14 +538,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8588264, g: 0.8666667, b: 0.52156866, a: 1}
+  m_Color: {r: 0.36862746, g: 0.36862746, b: 0.36862746, a: 0.2}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 54aee3e8069fff34abe7ce3f42dc5fa0, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -551,7 +554,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 3
 --- !u!222 &326376550
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -573,6 +576,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _img_button: {fileID: 0}
+  _hoverImgColor: {r: 0.36862746, g: 0.36862746, b: 0.36862746, a: 0.6}
+  _tmp_text: {fileID: 0}
+  _hoverTxtColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!65 &326376552
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -675,7 +681,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -239}
+  m_AnchoredPosition: {x: 410, y: -136}
   m_SizeDelta: {x: 130, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &565483080
@@ -747,14 +753,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.9716981, g: 0.50638807, b: 0.46293163, a: 1}
+  m_Color: {r: 0.36862746, g: 0.36862746, b: 0.36862746, a: 0.29803923}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 54aee3e8069fff34abe7ce3f42dc5fa0, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -763,7 +769,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 3
 --- !u!222 &565483082
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -953,7 +959,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "TestStageForDesigner\uC73C\uB85C \uC774\uB3D9!"
+  m_text: "\uD6C8\uB828 \uC2DC\uC791"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9cc0abb9042e47e1b043a88862390a6, type: 2}
   m_sharedMaterial: {fileID: 5800677245487220095, guid: a9cc0abb9042e47e1b043a88862390a6,
@@ -963,8 +969,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1220,7 +1226,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\uB098\uAC00\uAE30"
+  m_text: "\uC885\uB8CC\uD558\uAE30"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9cc0abb9042e47e1b043a88862390a6, type: 2}
   m_sharedMaterial: {fileID: 5800677245487220095, guid: a9cc0abb9042e47e1b043a88862390a6,
@@ -1230,8 +1236,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1248,8 +1254,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
-  m_fontSizeBase: 24
+  m_fontSize: 15
+  m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1317,7 +1323,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &1969011819
 Light:
   m_ObjectHideFlags: 0

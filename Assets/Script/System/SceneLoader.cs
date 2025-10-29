@@ -22,7 +22,8 @@ public sealed class SceneLoader : MonoBehaviour
     private void Start()
     {
         // 게임 시작 시 자동으로 Tutorial 씬으로 이동
-        LoadTutorial();
+        //LoadTutorial();
+        LoadMain();
     }
 
     /// <summary>

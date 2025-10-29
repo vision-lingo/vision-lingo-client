@@ -107,7 +107,12 @@ public class StageController : MonoBehaviour
 
     private IEnumerator RunOneRound(int stage, int round)
     {
-        // 1) 구 배치
+        // 1) 안내 UI 표시 + 구 배치
+        UIPanel.SetActive(true);
+        // [임시] 강제로 알파를 1로 만듦.
+        if(UIPanel.GetComponent<CanvasGroup>() != null)
+            UIPanel.GetComponent<CanvasGroup>().alpha = 1;
+        UIText.text = $"스테이지 {stage}, 라운드 {round}\n소리가 나는 공을 선택해 주세요.";
         _activeBalls = spawner.SpawnSet();
         if (_activeBalls == null || _activeBalls.Count == 0)
         {
@@ -154,8 +159,10 @@ public class StageController : MonoBehaviour
 
         bool timedOut = (_selectedBall == null);
         bool isCorrect = !timedOut && (_selectedBall == _correctBall);
-
+        if(isCorrect) _selectedBall.GetComponent<InteractiveSphere>()?.OnCorrect();
+        else if(!timedOut) _selectedBall.GetComponent<InteractiveSphere>()?.MarkWrong();
         // 3) 피드백
+        UIPanel.SetActive(true);
         bool isLastRound = (stage == LastStage) && (round == RoundsPerStage);
 
         string msg =
