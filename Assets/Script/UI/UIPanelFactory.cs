@@ -8,6 +8,7 @@ public class UIPanelFactory : MonoBehaviour
     [SerializeField] private UIPanel panelPrefab;
     [SerializeField] private Transform uiParent;
 
+    public Transform UIParent => uiParent;
     public bool IsIdle { get; private set; } = true;
 
     private void Awake()
@@ -21,10 +22,24 @@ public class UIPanelFactory : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    
+
     public void ShowMessage(string text, bool isCenter = false)
     {
         if (Instance == null || panelPrefab == null) return; // 안전 체크
         StartCoroutine(ShowMessageCoroutine(text, isCenter));
+    }
+    // 25/10/29 CY: 마지막 메세지는 오버로드된 새로운 Show 메서드 호출
+    public GameObject ShowLastMessage(string text, bool isCenter = false)
+    {
+        if (Instance == null || panelPrefab == null) return null; // 안전 체크
+        var panel = Instantiate(panelPrefab, uiParent);
+
+        var pos = isCenter ? UIPanelSettingsHelper.GetCenterPosition() :
+                             UIPanelSettingsHelper.GetUpperPosition(0.5f);
+        var fade = UIPanelSettingsHelper.GetDefaultFadeSettings();
+        panel.Show(text, pos, fade.fadeInTime, null);
+        return panel.gameObject;
     }
 
     private IEnumerator ShowMessageCoroutine(string text, bool isCenter)
@@ -34,7 +49,7 @@ public class UIPanelFactory : MonoBehaviour
         var panel = Instantiate(panelPrefab, uiParent);
 
         var pos = isCenter ? UIPanelSettingsHelper.GetCenterPosition() :
-                             UIPanelSettingsHelper.GetUpperPosition();
+                             UIPanelSettingsHelper.GetUpperPosition(0.5f);
         var fade = UIPanelSettingsHelper.GetDefaultFadeSettings();
 
         panel.Show(text, pos, fade.fadeInTime, fade.displayTime, fade.fadeOutTime);

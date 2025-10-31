@@ -20,6 +20,6 @@ public static class UIPanelSettingsHelper
             fadeOutTime = fadeOut;
         }
     }
-
+    // TODO: 모든 UI가 활성화 시간이 2초로 돼있음. 확인 필요
     public static FadeSettings GetDefaultFadeSettings() => new FadeSettings(0.8f, 2f, 0.8f);
 }

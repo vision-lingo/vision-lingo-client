@@ -1,11 +1,16 @@
 using UnityEngine.UI;
 using UnityEngine;
 using Unity.VisualScripting;
+using TMPro;
 [RequireComponent(typeof(BoxCollider))]
 public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
 {
     [SerializeField] private Image _img_button;
-    private Color _gray = new Color(0.2f, 0.2f, 0.2f, 0.0f);
+    [SerializeField] private Color _hoverImgColor;
+    [SerializeField] private TextMeshProUGUI _tmp_text;
+    [SerializeField] private Color _hoverTxtColor;
+    private Color _defaultImgColor;
+    private Color _defaultTxtColor;
     private void Awake()
     {
         Init();
@@ -29,16 +34,27 @@ public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
             Debug.LogError("_img_button is not found");
             return;
         }
-        boxCollider.size = new Vector3(rect.sizeDelta.x, rect.sizeDelta.y, 1.0f);
+        _tmp_text = GetComponentInChildren<TextMeshProUGUI>();
+        if(_tmp_text == null)
+        {
+            Debug.LogError("_img_button is not found");
+            return;
+        }
+        boxCollider.size = new Vector3(rect.sizeDelta.x * 1.5f, rect.sizeDelta.y * 1.5f, 1.0f);
+
+        _defaultImgColor = _img_button.color;
+        _defaultTxtColor = _tmp_text.color;
     }
 
     public void OnRayOut()
     {
-        _img_button.color += _gray;
+        _img_button.color = _hoverImgColor;
+        _tmp_text.color = _hoverTxtColor;
     }
 
     public void OnRayOver()
     {
-        _img_button.color -= _gray;
+        _img_button.color = _defaultImgColor;
+        _tmp_text.color = _defaultTxtColor;
     }
 }

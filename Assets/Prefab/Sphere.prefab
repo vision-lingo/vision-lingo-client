@@ -111,7 +111,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.65
+  m_Radius: 1.2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-7754014678051161828
 MonoBehaviour:
@@ -160,6 +160,7 @@ MonoBehaviour:
   _hoverColor: {r: 0.735849, g: 0.2047882, b: 0.2880847, a: 0}
   _correctColor: {r: 0.2120547, g: 0.2039215, b: 0.7372549, a: 1}
   _timeOverColor: {r: 1, g: 0, b: 0, a: 0}
+  isHoverable: 1
 --- !u!54 &1265957773166572481
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -330,7 +331,8 @@ AudioSource:
   m_GameObject: {fileID: 1385124752032408476}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 9f0d122830ee54a94aa682001dcfa76e,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: ff19d7fa042e74fa2a7cb852da3645fe, type: 3}
   m_PlayOnAwake: 0
@@ -341,7 +343,7 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 0
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0

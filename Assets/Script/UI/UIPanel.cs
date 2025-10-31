@@ -10,6 +10,27 @@ public class UIPanel : MonoBehaviour
 
     private Action onComplete;
 
+    // 25/10/29 CY: 자동으로 비활성화 되지 않는 UI 호출 시 사용.
+    public void Show(string message, Vector2 anchoredPosition, float fadeInTime = 0.8f, Action onComplete = null)
+    {
+        this.onComplete = onComplete;
+        messageText.text = message;
+
+        RectTransform rt = GetComponent<RectTransform>();
+        rt.anchoredPosition = anchoredPosition;
+
+        canvasGroup.alpha = 0;
+        gameObject.SetActive(true);
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(canvasGroup.DOFade(1, fadeInTime))
+           .OnComplete(() =>
+           {
+               //gameObject.SetActive(false);
+               onComplete?.Invoke();
+           });
+    }
+
     public void Show(string message, Vector2 anchoredPosition, float fadeInTime = 0.8f, float displayTime = 2f, float fadeOutTime = 0.8f, Action onComplete = null)
     {
         this.onComplete = onComplete;

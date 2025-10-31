@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 using UnityEngine.XR.Interaction.Toolkit;
+using System.Collections;
+using UnityEngine.Animations;
 
 public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 {
@@ -38,7 +40,8 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     [SerializeField] private Color _hoverColor;
     [SerializeField] private Color _correctColor;
     [SerializeField] private Color _timeOverColor;
-
+    
+    [SerializeField] private bool isHoverable = true;
     private float _hoverScale;
     public SphereState CurrentState
     {
@@ -70,8 +73,15 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 
     private void OnDisable()
     {
+        Debug.Log("Sphere::::OnDisable");
         if (_grab != null)
             _grab.selectEntered.RemoveListener(OnSelectEntered);
+        
+        if(CurrentState == SphereState.Wave)
+            OffWaveEffect();
+        else
+            ResetToDefault();
+        
     }
 
     private void OnSelectEntered(SelectEnterEventArgs args)
@@ -103,13 +113,15 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     }
     public void OffWaveEffect()
     {
-        SetState(SphereState.Default);
+        //SetState(SphereState.Default);
+        ResetToDefault();
         _waveEffect.SetActive(false);
     }
 
 
     public void OnRayOver()
     {
+        if(!isHoverable) return;
         // default 상태일 때만 호버 가능
         if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered)
         {
@@ -120,6 +132,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 
     public void OnRayOut()
     {
+        if(!isHoverable) return;
         if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered)
         {
             transform.localScale -= Vector3.one * _hoverScale;
@@ -139,7 +152,6 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         //GetComponent<MeshRenderer>().material.color = Color.green;
     }
 
-    // Callback 함수는 "On" prefix가 붙어야 함.
     public void TriggerSound()
     {
         SetState(SphereState.SoundTriggered);
@@ -159,20 +171,47 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     public void OnMarkTimeOver()
     {
         SetState(SphereState.TimeOver);
-        ChangeColor(_timeOverColor, 10);
+        SequenceChangeColor(_timeOverColor, _timeOverColor * 10, 2);
+        //ChangeColor(_timeOverColor, 10);
     }
     
 
     public void ResetToDefault()
     {
-        GetComponent<MeshRenderer>().material.color = Color.gray;
+        //GetComponent<MeshRenderer>().material.color = Color.gray;
         SetState(SphereState.Default);
+        ChangeColor(_defaultColor);
     }
 
     public void ChangeColor(Color color, float intensity = 1)
     {
         Color finalColor = color * intensity;
         _meshRenderer.material.SetColor("_emission", finalColor);
+    }
+
+    private void SequenceChangeColor(Color startColor, Color endColor, float maxTime)
+    {
+        StartCoroutine(IE_SequenceChangeColor(startColor, endColor, maxTime));
+    }
+
+    /// <summary>
+    /// intensity 곱한 값을 넣어줘야 합니다.
+    /// </summary>
+    /// <param name="startColor"></param>
+    /// <param name="endColor"></param>
+    /// <returns></returns>
+    private IEnumerator IE_SequenceChangeColor(Color startColor, Color endColor, float maxTime)
+    {
+        float currTime = 0.0f;
+        Color finalColor = startColor;
+        while(maxTime > currTime)
+        {
+            yield return null;
+            currTime += Time.deltaTime;
+            finalColor = endColor * (currTime/maxTime);
+            _meshRenderer.material.SetColor("_emission", finalColor);
+        }
+        _meshRenderer.material.SetColor("_emission", endColor);
     }
     
 
