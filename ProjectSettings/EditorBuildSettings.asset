@@ -34,6 +34,9 @@ EditorBuildSettings:
     guid: d7137fc1fceb14b3eabdce6ded4770b4
   - enabled: 1
     path: Assets/Scene/Dev/Tutorial_Dev.unity
+    guid: 171743b0ca323462680dbc227ef9e998
+  - enabled: 1
+    path: Assets/Scene/Dev/Tutorial_Dev_YH.unity
     guid: 9c3d19f2355a2462a9102ae974913ff6
   m_configObjects:
     UnityEditor.XR.VisionOS.VisionOSSettings: {fileID: 11400000, guid: 5a5c126f2f6304ce58e6f983ed10b793,
