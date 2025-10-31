@@ -168,7 +168,6 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         ChangeColor(_failColor);
     }
 
-    // TODO: 점차 밝아져야 함.
     public void OnMarkTimeOver()
     {
         SetState(SphereState.TimeOver);

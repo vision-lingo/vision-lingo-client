@@ -15,7 +15,7 @@ public class TutorialSceneUI : MonoBehaviour
     [Header("Tutorial Sequence Data")]
     [SerializeField] private MessageGroupData[] tutorialSequence;
 
-
+    // 25/10/29 CY: Tutorial 에서만 쓰이는 UI를 관리합니다.
     [Header("Only Tutorial UI")]
     [SerializeField] private Button _btn_GotoTrainingScene;
     [SerializeField] private Slider _volumeSlider;
@@ -40,12 +40,11 @@ public class TutorialSceneUI : MonoBehaviour
         }
         SetTutorialUI();
         StartCoroutine(RunTutorialSequence());
-        //test
-        //PlayTestMusic();
     }
 
     private void SetTutorialUI()
     {
+        // 25/10/29 CY: 튜토리얼 Scene에서만 쓰이는 UI 액션 할당
         MainSystem.Instance.SoundController.SetAudioVolume(0, _volumeSlider.value);
         _btn_GotoTrainingScene.onClick.AddListener(GotoTrainingStage);
         _volumeSlider.onValueChanged.AddListener(OnControlVolume);
@@ -84,6 +83,8 @@ public class TutorialSceneUI : MonoBehaviour
             isLast = i >= tutorialSequence.Length - 1;
             if (tutorialSequence[i].extraContent.Length > 0)
             {
+                // 25/10/29 CY: 엑스트라 컨텐츠가 있다면 해당 컨텐츠를 활성화한다.
+                // 활성화시간은 message 활성화 시간과 동일합니다. 추후 개발이 필요할 수도 있습니다. 
                 for(int j = 0; j < tutorialSequence[i].extraContent.Length; j++)
                 {
                     SetExtraContent(tutorialSequence[i].extraContent[j].extraContent, true, 

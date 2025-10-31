@@ -10,7 +10,7 @@ public class UIPanel : MonoBehaviour
 
     private Action onComplete;
 
-    // non-disapear
+    // 25/10/29 CY: 자동으로 비활성화 되지 않는 UI 호출 시 사용.
     public void Show(string message, Vector2 anchoredPosition, float fadeInTime = 0.8f, Action onComplete = null)
     {
         this.onComplete = onComplete;

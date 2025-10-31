@@ -29,7 +29,7 @@ public class UIPanelFactory : MonoBehaviour
         if (Instance == null || panelPrefab == null) return; // 안전 체크
         StartCoroutine(ShowMessageCoroutine(text, isCenter));
     }
-
+    // 25/10/29 CY: 마지막 메세지는 오버로드된 새로운 Show 메서드 호출
     public GameObject ShowLastMessage(string text, bool isCenter = false)
     {
         if (Instance == null || panelPrefab == null) return null; // 안전 체크
