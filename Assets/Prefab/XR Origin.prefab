@@ -218,7 +218,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_JointVisualsPrefab: {fileID: 6507399986997092475, guid: 2ec558db75ef84ca8a02b07201393d56,
     type: 3}
-  _handsUi: {fileID: 1385124752032408476, guid: e6ef0ce15916c4ca38f402159c91726b,
+  _handsUi: {fileID: 1385124752032408476, guid: 6019bf90051cd49ceb3f30015f7f1252,
     type: 3}
 --- !u!1 &1937354601099732157
 GameObject:
