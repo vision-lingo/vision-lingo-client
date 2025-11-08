@@ -32,6 +32,10 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     [Header("Random Audio Loop")]
     [SerializeField] private AudioClip[] clips;
 
+    [Header("Effects")]
+    [SerializeField] private GameObject correctEffectPrefab;
+    [SerializeField] private Transform effectSpawnPoint;
+
     [SerializeField] private GameObject _waveEffect;
     [SerializeField] private float _scaleFactor;
     [SerializeField] private Color _defaultColor;
@@ -164,6 +168,10 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         SetState(SphereState.Correct);
         ChangeColor(_correctColor, 2f);
         StopSound();
+
+        Vector3 spawnPos = effectSpawnPoint ? effectSpawnPoint.position : transform.position;
+        var fx = Instantiate(correctEffectPrefab, spawnPos, Quaternion.identity);
+        Destroy(fx, 5f);
     }
 
     public void OnTouched() 

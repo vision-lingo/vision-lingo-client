@@ -112,6 +112,7 @@ public class StageController : MonoBehaviour
     {
         // 1) 구 배치
         _activeBalls = spawner.SpawnSet();
+        ToggleInteractivity(_activeBalls, false); // 소리나기 전에는 선택할 수 없도록
         if (_activeBalls == null || _activeBalls.Count == 0)
         {
             Debug.LogError("[StageController] 스폰 실패");
@@ -125,6 +126,7 @@ public class StageController : MonoBehaviour
         // 2) 소리 발생
         _correctBall = PickRandomBall(_activeBalls);
         _correctBall.GetComponent<InteractiveSphere>()?.TriggerSound();
+        ToggleInteractivity(_activeBalls, true);
 
         if (EnableLogging)
             Debug.Log($"[Round] Stage {stage} Round {round}: 소리 발생 - 정답 구 {_correctBall.name}");
@@ -280,5 +282,18 @@ public class StageController : MonoBehaviour
             yield return null;
         }
         cg.alpha = to;
+    }
+
+    private void ToggleInteractivity(List<GameObject> balls, bool on)
+    {
+        foreach (var go in balls)
+        {
+            if (!go) continue;
+            var col = go.GetComponent<Collider>();
+            if (col) col.enabled = on;
+
+            var grab = go.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+            if (grab) grab.enabled = on;
+        }
     }
 }
