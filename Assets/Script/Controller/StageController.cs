@@ -106,6 +106,8 @@ public class StageController : MonoBehaviour
 
         if (EnableLogging)
             Debug.Log("모든 스테이지 완료!");
+
+        SceneLoader.Instance.LoadMain();
     }
 
     private IEnumerator RunOneRound(int stage, int round)
