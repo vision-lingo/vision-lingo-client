@@ -25,7 +25,7 @@ public class StageController : MonoBehaviour
     [Tooltip("인트로/아웃트로용 TextMeshProUGUI")]
     public TextMeshProUGUI IntroText;
 
-    [Header("Flow Settings")]
+  [Header("Flow Settings")]
     [Tooltip("시작 스테이지 번호")]
     public int FirstStage = 1;
 
@@ -37,7 +37,7 @@ public class StageController : MonoBehaviour
 
     [Header("Timings (sec)")]
     [Tooltip("안내 UI 유지시간 (소리 전까지)")]
-    public float PreSoundDelay = 4f;
+    public float PreSoundDelay = 1f;
 
     [Tooltip("소리 발생 후 하이라이트가 켜지기까지의 지연")]
     public float HighlightDelay = 10f;
@@ -59,6 +59,9 @@ public class StageController : MonoBehaviour
     private GameObject _correctBall = null;
     private GameObject _selectedBall = null;
     private bool _isAwaitingSelection = false;
+    private bool _isShowingWrongMsg = false;
+
+    private Coroutine _hintCo;
 
     private readonly Dictionary<InteractiveSphere, System.Action<InteractiveSphere.SphereState>> _stateHandlers
         = new Dictionary<InteractiveSphere, System.Action<InteractiveSphere.SphereState>>();
@@ -107,12 +110,7 @@ public class StageController : MonoBehaviour
 
     private IEnumerator RunOneRound(int stage, int round)
     {
-        // 1) 안내 UI 표시 + 구 배치
-        UIPanel.SetActive(true);
-        // [임시] 강제로 알파를 1로 만듦.
-        if(UIPanel.GetComponent<CanvasGroup>() != null)
-            UIPanel.GetComponent<CanvasGroup>().alpha = 1;
-        UIText.text = $"스테이지 {stage}, 라운드 {round}\n소리가 나는 공을 선택해 주세요.";
+        // 1) 구 배치
         _activeBalls = spawner.SpawnSet();
         if (_activeBalls == null || _activeBalls.Count == 0)
         {
@@ -125,59 +123,51 @@ public class StageController : MonoBehaviour
         yield return new WaitForSeconds(PreSoundDelay);
 
         // 2) 소리 발생
-        UIPanel.SetActive(false);
         _correctBall = PickRandomBall(_activeBalls);
         _correctBall.GetComponent<InteractiveSphere>()?.TriggerSound();
 
         if (EnableLogging)
             Debug.Log($"[Round] Stage {stage} Round {round}: 소리 발생 - 정답 구 {_correctBall.name}");
 
-        // 소리 발생 직후부터 선택 가능
         _selectedBall = null;
         _isAwaitingSelection = true;
+        _isShowingWrongMsg = false;
 
-        float elapsed = 0f;
-        bool highlighted = false;
+        // 힌트(하이라이트)
+        if (HighlightDelay > 0f)
+            _hintCo = StartCoroutine(HintAfterDelay(_correctBall, HighlightDelay));
 
-        while (_isAwaitingSelection && elapsed < AnswerTimeout)
-        {
-            elapsed += Time.deltaTime;
-
-            // HighlightDelay 지나면 공 하이라이트 시작
-            if (!highlighted && elapsed >= HighlightDelay)
-            {
-                highlighted = true;
-                _correctBall.GetComponent<InteractiveSphere>()?.OnMarkTimeOver();
-                if (EnableLogging)
-                    Debug.Log("[Round] 정답 구 빛남");
-            }
-
+        // 정답을 선택할 때까지 대기
+        while (_isAwaitingSelection)
             yield return null;
-        }
 
-        _isAwaitingSelection = false;
+        // 힌트 코루틴 정리
+        if (_hintCo != null) { StopCoroutine(_hintCo); _hintCo = null; }
 
-        bool timedOut = (_selectedBall == null);
-        bool isCorrect = !timedOut && (_selectedBall == _correctBall);
-        if(isCorrect) _selectedBall.GetComponent<InteractiveSphere>()?.OnCorrect();
-        else if(!timedOut) _selectedBall.GetComponent<InteractiveSphere>()?.MarkWrong();
-        // 3) 피드백
+        // 3) 정답 피드백
         UIPanel.SetActive(true);
         bool isLastRound = (stage == LastStage) && (round == RoundsPerStage);
+        string msg = isLastRound ? "정답입니다!" : "정답입니다! 다음 문제가 곧 진행됩니다.";
 
-        string msg =
-            timedOut ? "시간 초과!"
-            : (isCorrect ? (isLastRound ? "정답입니다!" : "정답입니다! 다음 문제가 곧 진행됩니다."): "실패하였습니다. 다른 공을 선택해주세요.");
-        
         if (EnableLogging)
-            Debug.Log($"[Round] 결과: {(timedOut ? "시간초과" : (isCorrect ? "정답" : "오답"))}");
-
+            Debug.Log("[Round] 결과: 정답");
 
         yield return StartCoroutine(ShowFade(UIPanel, UIText, msg, 0.2f, 3f, 0.3f));
 
         // 4) 정리
         UIPanel.SetActive(false);
         CleanupBalls();
+    }
+
+    private IEnumerator HintAfterDelay(GameObject correct, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (_isAwaitingSelection && correct)
+        {
+            correct.GetComponent<InteractiveSphere>()?.OnMarkTimeOver();
+            if (EnableLogging)
+                Debug.Log("[Round] 정답 구 빛남(힌트)");
+        }
     }
 
     private GameObject PickRandomBall(List<GameObject> balls)
@@ -192,7 +182,6 @@ public class StageController : MonoBehaviour
         {
             var sphere = go.GetComponent<InteractiveSphere>();
             if (sphere == null) continue;
-
             // 상태 변경 이벤트(StateChanged) 구독
             System.Action<InteractiveSphere.SphereState> handler = null;
             handler = (newState) =>
@@ -208,9 +197,38 @@ public class StageController : MonoBehaviour
 
     private void OnSphereSelected(InteractiveSphere sphere)
     {
-        if (!_isAwaitingSelection) return;
-        _selectedBall = sphere.gameObject;
-        _isAwaitingSelection = false;
+        if (!_isAwaitingSelection || sphere == null) return;
+
+        var go = sphere.gameObject;
+        if (go == _correctBall)
+        {
+            _selectedBall = go;
+            sphere.OnCorrect();
+            _isAwaitingSelection = false;
+            return;
+        }
+
+        // 오답: UI 메시지 + 구 제거
+        if (_stateHandlers.TryGetValue(sphere, out var handler))
+        {
+            sphere.StateChanged -= handler;
+            _stateHandlers.Remove(sphere);
+        }
+        _activeBalls.Remove(go);
+
+        sphere.MarkWrongAndVanish(0.15f, 2f);
+
+        if (!_isShowingWrongMsg)
+            StartCoroutine(ShowWrongOnce());
+    }
+
+    private IEnumerator ShowWrongOnce()
+    {
+        _isShowingWrongMsg = true;
+        UIPanel.SetActive(true);
+        yield return StartCoroutine(ShowFade(UIPanel, UIText, "실패하였습니다. 다른 공을 선택해주세요.", 0.2f, 1.2f, 0.25f));
+        UIPanel.SetActive(false);
+        _isShowingWrongMsg = false;
     }
 
     private void CleanupBalls()
@@ -230,6 +248,7 @@ public class StageController : MonoBehaviour
         _correctBall = null;
         _selectedBall = null;
         _isAwaitingSelection = false;
+        _isShowingWrongMsg = false;
     }
 
     private IEnumerator ShowFade(GameObject panel, TextMeshProUGUI text, string message, float fadeIn, float hold, float fadeOut)

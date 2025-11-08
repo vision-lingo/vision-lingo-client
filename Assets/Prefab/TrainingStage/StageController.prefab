@@ -53,10 +53,9 @@ MonoBehaviour:
   FirstStage: 1
   LastStage: 6
   RoundsPerStage: 1
-  PreSoundDelay: 4
+  PreSoundDelay: 1
   HighlightDelay: 10
   AnswerTimeout: 15
-  FeedbackHold: 3
   InterStageDelay: 1
   EnableLogging: 1
   _uiCanvasGroup: {fileID: 0}

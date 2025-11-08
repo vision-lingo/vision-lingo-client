@@ -160,7 +160,9 @@ MonoBehaviour:
   _hoverColor: {r: 0.735849, g: 0.2047882, b: 0.2880847, a: 0}
   _correctColor: {r: 0.2120547, g: 0.2039215, b: 0.7372549, a: 1}
   _timeOverColor: {r: 1, g: 0, b: 0, a: 0}
+  _wrongGray: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
   isHoverable: 1
+  enableMouseClick: 1
 --- !u!54 &1265957773166572481
 Rigidbody:
   m_ObjectHideFlags: 0

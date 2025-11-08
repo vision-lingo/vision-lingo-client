@@ -12,7 +12,6 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         Default = 0,
         Wave = 1, // only tutorial
         SoundTriggered = 2,
-        //Hover = 3, // hover는 상태로 두면 안될 듯.
         Correct = 3,
         Touched = 4,
         Wrong = 5,
@@ -25,9 +24,9 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     [SerializeField]
     private MeshRenderer _meshRenderer;
     private Material _mat;
-    
-    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable _grab;
 
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable _grab;
+    
     private AudioSource _audioSource;
 
     [Header("Random Audio Loop")]
@@ -40,8 +39,13 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     [SerializeField] private Color _hoverColor;
     [SerializeField] private Color _correctColor;
     [SerializeField] private Color _timeOverColor;
-    
+    [SerializeField] private Color _wrongGray;
+
     [SerializeField] private bool isHoverable = true;
+
+    // 에디터/PC 테스트용 마우스 클릭 허용
+    [SerializeField] private bool enableMouseClick = true;
+
     private float _hoverScale;
     public SphereState CurrentState
     {
@@ -49,7 +53,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         private set
         {
             if (currentState == value) return;
-            
+
             currentState = value;
             OnStateChanged(currentState);
         }
@@ -94,6 +98,20 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         _mat = _meshRenderer.material;
         ChangeColor(_defaultColor);
     }
+
+    // 마우스 클릭으로 선택
+    private void OnMouseDown()
+    {
+        if (!enableMouseClick) return;
+
+        if (currentState == SphereState.Default 
+            || currentState == SphereState.SoundTriggered
+            || currentState == SphereState.TimeOver)
+        {
+            OnTouched();
+        }
+    }
+
     private void OnStateChanged(SphereState newState)
     {
         Debug.Log($"[InteractiveSphere] State changed to: {newState}");
@@ -111,6 +129,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         SetState(SphereState.Wave);
         _waveEffect.SetActive(true);
     }
+   
     public void OffWaveEffect()
     {
         //SetState(SphereState.Default);
@@ -144,41 +163,88 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     {
         SetState(SphereState.Correct);
         ChangeColor(_correctColor, 2f);
+        StopSound();
     }
 
     public void OnTouched() 
     {
         SetState(SphereState.Touched);
-        //GetComponent<MeshRenderer>().material.color = Color.green;
     }
 
     public void TriggerSound()
     {
         SetState(SphereState.SoundTriggered);
-        
+  
         var pick = UnityEngine.Random.Range(0, clips.Length);
         _audioSource.loop = true;
         _audioSource.clip = clips[pick];
         _audioSource.Play();
     }
 
+    public void StopSound()
+    {
+        if (_audioSource != null && _audioSource.isPlaying)
+        {
+            _audioSource.Stop();
+            _audioSource.clip = null;
+            _audioSource.loop = false;
+        }
+    }
+
     public void MarkWrong()
-    { 
+    {
         SetState(SphereState.Wrong);
         ChangeColor(_failColor);
+    }
+
+    public void MarkWrongAndVanish(float vanishDuration = 0.35f, float delay = 0f)
+    {
+        SetState(SphereState.Wrong);
+        isHoverable = false;
+
+        ChangeColor(_wrongGray);
+        DisableInteractivity();
+
+        StartCoroutine(IE_Vanish(vanishDuration, delay));
+    }
+
+    public void DisableInteractivity()
+    {
+        var col = GetComponent<Collider>();
+        if (col) col.enabled = false;
+
+        if (_grab) _grab.enabled = false;
+    }
+
+    private IEnumerator IE_Vanish(float dur, float delay)
+    {
+        // 요청한 지연 시간만큼 대기 (보이는 상태로)
+        if (delay > 0f)
+            yield return new WaitForSeconds(delay);
+
+        float t = 0f;
+        Vector3 start = transform.localScale;
+        Vector3 end = Vector3.zero;
+
+        while (t < dur)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / dur);
+            transform.localScale = Vector3.Lerp(start, end, k);
+            yield return null;
+        }
+
+        Destroy(gameObject);
     }
 
     public void OnMarkTimeOver()
     {
         SetState(SphereState.TimeOver);
         SequenceChangeColor(_timeOverColor, _timeOverColor * 10, 2);
-        //ChangeColor(_timeOverColor, 10);
     }
     
-
     public void ResetToDefault()
     {
-        //GetComponent<MeshRenderer>().material.color = Color.gray;
         SetState(SphereState.Default);
         ChangeColor(_defaultColor);
     }
@@ -194,12 +260,6 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         StartCoroutine(IE_SequenceChangeColor(startColor, endColor, maxTime));
     }
 
-    /// <summary>
-    /// intensity 곱한 값을 넣어줘야 합니다.
-    /// </summary>
-    /// <param name="startColor"></param>
-    /// <param name="endColor"></param>
-    /// <returns></returns>
     private IEnumerator IE_SequenceChangeColor(Color startColor, Color endColor, float maxTime)
     {
         float currTime = 0.0f;
@@ -213,8 +273,8 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         }
         _meshRenderer.material.SetColor("_emission", endColor);
     }
-    
 
+    
 #if UNITY_EDITOR
     private SphereState lastInspectorState;
 
@@ -249,6 +309,6 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 
     [ContextMenu("Debug/Trigger State Changed Event")]
     private void DebugTriggerEvent() => OnStateChanged(currentState);
-
+    
 #endif
 }
