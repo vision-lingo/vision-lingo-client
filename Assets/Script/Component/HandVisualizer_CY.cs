@@ -1,23 +1,25 @@
 // Requires hands package and VisionOSHandExtensions which is only compiled for visionOS and Editor
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.XR.Hands;
+using UnityEngine.XR.VisionOS;
 #if INCLUDE_UNITY_XR_HANDS && (UNITY_VISIONOS || UNITY_EDITOR)
 using System.Collections.Generic;
 using UnityEngine.XR.Hands;
 #endif
 
-namespace UnityEngine.XR.VisionOS.Samples.URP
-{
-    public class HandVisualizer : MonoBehaviour
+public class HandVisualizer_CY : MonoBehaviour
     {
         [SerializeField]
         GameObject m_JointVisualsPrefab;
-        [SerializeField] private GameObject _handsUi;
-
-        private GameObject _handsUiInstance = null;
-
-#if INCLUDE_UNITY_XR_HANDS && (UNITY_VISIONOS || UNITY_EDITOR)
+        // custom
+        [SerializeField] private GameObject _leftUIObj;
+        //private GameObject _leftUIInstance;
+        //~custom
         XRHandSubsystem m_Subsystem;
         HandGameObjects m_LeftHandGameObjects;
         HandGameObjects m_RightHandGameObjects;
+        
 
         static readonly List<XRHandSubsystem> k_SubsystemsReuse = new();
 
@@ -95,7 +97,8 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
                 m_LeftHandGameObjects = new HandGameObjects(
                     Handedness.Left,
                     transform,
-                    m_JointVisualsPrefab);
+                    m_JointVisualsPrefab,
+                    _leftUIObj);
             }
 
             if (m_RightHandGameObjects == null)
@@ -103,7 +106,8 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
                 m_RightHandGameObjects = new HandGameObjects(
                     Handedness.Right,
                     transform,
-                    m_JointVisualsPrefab);
+                    m_JointVisualsPrefab,
+                    null);
             }
 
             UpdateRenderingVisibility(m_LeftHandGameObjects, m_Subsystem.leftHand.isTracked);
@@ -189,15 +193,20 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
         {
             GameObject m_JointVisualsParent;
 
-            readonly JointVisuals[] m_JointVisuals = new JointVisuals[XRHandJointID.EndMarker.ToIndex() + VisionOSHandExtensions.NumVisionOSJoints];
+            readonly JointVisuals_CY[] m_JointVisuals = new JointVisuals_CY[XRHandJointID.EndMarker.ToIndex() + VisionOSHandExtensions.NumVisionOSJoints];
 
             static Vector3[] s_LinePointsReuse = new Vector3[2];
             const float k_LineWidth = 0.005f;
+            
+            //custom
+            GameObject _wristObj;
+            //~custom
 
             public HandGameObjects(
                 Handedness handedness,
                 Transform parent,
-                GameObject jointVisualsPrefab)
+                GameObject jointVisualsPrefab,
+                GameObject wristObj)
             {
                 void AssignJoint(
                     XRHandJointID jointID,
@@ -207,7 +216,7 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
                     var jointVisualsObject = Instantiate(jointVisualsPrefab, drawJointsParent, false);
                     var jointName = jointID < XRHandJointID.EndMarker ? jointID.ToString() : ((VisionOSHandJointID)jointID).ToString();
                     jointVisualsObject.name = $"{jointName}";
-                    var jointVisuals = jointVisualsObject.GetComponent<JointVisuals>();
+                    var jointVisuals = jointVisualsObject.GetComponent<JointVisuals_CY>();
 
                     var line = jointVisuals.Line;
                     line.startWidth = line.endWidth = k_LineWidth;
@@ -243,6 +252,11 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
 
                 AssignJoint((XRHandJointID)VisionOSHandJointID.ForearmWrist, parentTransform);
                 AssignJoint((XRHandJointID)VisionOSHandJointID.ForearmArm, parentTransform);
+
+                // custom
+                if(wristObj != null)
+                    _wristObj = Instantiate(wristObj);
+                //~custom
             }
 
             public void OnDestroy()
@@ -263,6 +277,7 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
             {
                 m_JointVisualsParent.SetActive(isActive);
             }
+            
 
             public void UpdateJoints(
                 XRHand hand,
@@ -275,7 +290,7 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
                 var parentIndex = XRHandJointID.Wrist.ToIndex();
                 UpdateJoint(hand.GetJoint(XRHandJointID.Wrist), ref wristPose, ref parentIndex);
                 UpdateJoint(hand.GetJoint(XRHandJointID.Palm), ref wristPose, ref parentIndex, false);
-
+                
                 for (var fingerIndex = (int)XRHandFingerID.Thumb;
                     fingerIndex <= (int)XRHandFingerID.Little;
                     ++fingerIndex)
@@ -297,7 +312,7 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
                 UpdateJoint(hand.GetVisionOSJoint(VisionOSHandJointID.ForearmWrist), ref wristPose, ref parentIndex);
                 UpdateJoint(hand.GetVisionOSJoint(VisionOSHandJointID.ForearmArm), ref wristPose, ref parentIndex);
             }
-            private GameObject _sphere;
+
             void UpdateJoint(
                 XRHandJoint joint,
                 ref Pose parentPose,
@@ -306,26 +321,7 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
             {
                 if (joint.id == XRHandJointID.Invalid)
                     return;
-                //if(joint.id == XRHandJointID.IndexTip)
-                //{
-                //    int idx = joint.id.ToIndex();
-                //    if (_sphere == null)
-                //    {
-                //        
-                //        _sphere = Instantiate(Resources.Load<GameObject>("Finger"));
-                //    }
-                //    _sphere.transform.localScale = Vector3.one * 0.1f;
-                //    _sphere.transform.position = m_JointVisuals[idx].transform.position;
-                //}
-                if(joint.id == XRHandJointID.Wrist)
-                {
-                    int idx = joint.id.ToIndex();
-                    if(_handsUiInstance == null)
-                    {
-                        _handsUiInstance = Instantiate(_handsUi);
-                    }
-                    _handsUiInstance.transform.position = m_JointVisuals[idx].transform.position;
-                }
+
                 var jointIndex = joint.id.ToIndex();
                 var visuals = m_JointVisuals[jointIndex];
                 if (!joint.TryGetPose(out var pose))
@@ -333,7 +329,18 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
                     visuals.gameObject.SetActive(false);
                     return;
                 }
-
+                if(joint.handedness == Handedness.Left)
+                {
+                    if (joint.id == XRHandJointID.Wrist)
+                    {
+                        Vector3 setPos = visuals.transform.position;
+                        setPos.y += 0.1f;
+                        _wristObj.transform.position = setPos;
+                        // 1. Y축으로 45도 회전하는 '델타(delta)' 쿼터니언을 만듭니다.
+                        Quaternion deltaRotation = Quaternion.Euler(0f, -60f, 0f);
+                        _wristObj.transform.rotation = visuals.transform.rotation * deltaRotation;
+                    }
+                }
                 joint.TryGetVisionOSTrackingState(out var trackingState);
                 visuals.SetIsTracked(trackingState);
                 var visualsTransform = visuals.transform;
@@ -354,6 +361,4 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
                 }
             }
         }
-#endif
     }
-}

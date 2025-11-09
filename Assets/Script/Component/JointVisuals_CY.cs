@@ -1,8 +1,6 @@
 using UnityEngine;
 
-namespace UnityEngine.XR.VisionOS.Samples.URP
-{
-    public class JointVisuals : MonoBehaviour
+    public class JointVisuals_CY : MonoBehaviour
     {
         [SerializeField]
         GameObject m_TrackedJoint;
@@ -22,4 +20,3 @@ namespace UnityEngine.XR.VisionOS.Samples.URP
             m_Line.gameObject.SetActive(isTracked);
         }
     }
-}
