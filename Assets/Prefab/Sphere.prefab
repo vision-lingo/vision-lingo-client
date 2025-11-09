@@ -153,6 +153,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 370efef00fc474f1e91e7a52df950f86, type: 3}
   - {fileID: 8300000, guid: 45869c43081e94143bda0076d73043f4, type: 3}
   - {fileID: 8300000, guid: 99ef8de5a9f9043029c42a3d39d2eedb, type: 3}
+  correctEffectPrefab: {fileID: 1820348561815808, guid: 5d8cd042b5227ad459e18563aaca69dc,
+    type: 3}
+  effectSpawnPoint: {fileID: 0}
   _waveEffect: {fileID: 4521381899148956008}
   _scaleFactor: 0.2
   _defaultColor: {r: 0.4745098, g: 0.5529412, b: 0.8679245, a: 1}
@@ -160,7 +163,9 @@ MonoBehaviour:
   _hoverColor: {r: 0.735849, g: 0.2047882, b: 0.2880847, a: 0}
   _correctColor: {r: 0.2120547, g: 0.2039215, b: 0.7372549, a: 1}
   _timeOverColor: {r: 1, g: 0, b: 0, a: 0}
+  _wrongGray: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
   isHoverable: 1
+  enableMouseClick: 1
 --- !u!54 &1265957773166572481
 Rigidbody:
   m_ObjectHideFlags: 0
