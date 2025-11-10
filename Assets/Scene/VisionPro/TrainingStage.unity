@@ -994,6 +994,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1907250210566136957, guid: 6f0ec0d14950744d0b0384847dad0822,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1963949699745543032, guid: 6f0ec0d14950744d0b0384847dad0822,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1104,6 +1109,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6256556337758719802, guid: 6f0ec0d14950744d0b0384847dad0822,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8069234935446483331, guid: 6f0ec0d14950744d0b0384847dad0822,
         type: 3}
       propertyPath: m_Camera
@@ -1113,6 +1123,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Stage Finish UI
+      objectReference: {fileID: 0}
+    - target: {fileID: 9159028307078447924, guid: 6f0ec0d14950744d0b0384847dad0822,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
