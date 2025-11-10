@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class UIPanelFactory : MonoBehaviour
 {
@@ -24,10 +25,10 @@ public class UIPanelFactory : MonoBehaviour
 
     
 
-    public void ShowMessage(string text, bool isCenter = false)
+    public void ShowMessage(string text, bool isCenter = false, Action afterAct = null)
     {
         if (Instance == null || panelPrefab == null) return; // 안전 체크
-        StartCoroutine(ShowMessageCoroutine(text, isCenter));
+        StartCoroutine(ShowMessageCoroutine(text, isCenter, afterAct));
     }
     // 25/10/29 CY: 마지막 메세지는 오버로드된 새로운 Show 메서드 호출
     public GameObject ShowLastMessage(string text, bool isCenter = false)
@@ -42,7 +43,7 @@ public class UIPanelFactory : MonoBehaviour
         return panel.gameObject;
     }
 
-    private IEnumerator ShowMessageCoroutine(string text, bool isCenter)
+    private IEnumerator ShowMessageCoroutine(string text, bool isCenter, Action afterAct = null)
     {
         IsIdle = false;
 
@@ -52,7 +53,7 @@ public class UIPanelFactory : MonoBehaviour
                              UIPanelSettingsHelper.GetUpperPosition(0.5f);
         var fade = UIPanelSettingsHelper.GetDefaultFadeSettings();
 
-        panel.Show(text, pos, fade.fadeInTime, fade.displayTime, fade.fadeOutTime);
+        panel.Show(text, pos, fade.fadeInTime, fade.displayTime, fade.fadeOutTime, afterAct);
 
         while (panel.gameObject.activeSelf)
             yield return null;
