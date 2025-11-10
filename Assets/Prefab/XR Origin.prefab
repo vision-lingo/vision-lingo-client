@@ -181,6 +181,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6577040674565385760}
+  - component: {fileID: 4129288223277682790}
   m_Layer: 0
   m_Name: XRHands
   m_TagString: Untagged
@@ -203,6 +204,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3783406054765476091}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4129288223277682790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1414015671520280577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43bf8bb14a27145468e3ebffdc8cfe7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_JointVisualsPrefab: {fileID: 6507399986997092475, guid: 2ec558db75ef84ca8a02b07201393d56,
+    type: 3}
+  _leftUIObj: {fileID: 1505370421470186890, guid: e773bf9f306ea4765bf3edb2371dc071,
+    type: 3}
 --- !u!1 &1937354601099732157
 GameObject:
   m_ObjectHideFlags: 0
