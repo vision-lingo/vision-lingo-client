@@ -564,6 +564,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 616588631054153513, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616588631054153513, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616588631054153513, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616588631054153513, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.050000012
+      objectReference: {fileID: 0}
     - target: {fileID: 2708784672705412516, guid: 43ae06e0419574d559f3ea0670c31331,
         type: 3}
       propertyPath: tutorialSequence.Array.data[1].extraContent.Array.data[0].pos.y
@@ -654,6 +674,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: TutorialUIManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5242318601555334714, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b4a302deea86b41b2a9318f333df0118,
+        type: 3}
     - target: {fileID: 7627900508211043400, guid: 43ae06e0419574d559f3ea0670c31331,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -702,6 +728,16 @@ PrefabInstance:
     - target: {fileID: 7627900508211043400, guid: 43ae06e0419574d559f3ea0670c31331,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8268006117337020635, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8268006117337020635, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
