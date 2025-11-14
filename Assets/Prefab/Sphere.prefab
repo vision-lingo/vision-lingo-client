@@ -157,13 +157,13 @@ MonoBehaviour:
     type: 3}
   effectSpawnPoint: {fileID: 0}
   _waveEffect: {fileID: 4521381899148956008}
-  _scaleFactor: 0.2
+  _scaleFactor: 0.25
   _defaultColor: {r: 0.4745098, g: 0.5529412, b: 0.8679245, a: 1}
   _failColor: {r: 0, g: 0, b: 0, a: 1}
-  _hoverColor: {r: 0.735849, g: 0.2047882, b: 0.2880847, a: 0}
+  _hoverColor: {r: 0.75538445, g: 0.78732646, b: 0.9150943, a: 0.4}
   _correctColor: {r: 0.2120547, g: 0.2039215, b: 0.7372549, a: 1}
   _timeOverColor: {r: 1, g: 0, b: 0, a: 0}
-  _wrongGray: {r: 0.41568628, g: 0.41568628, b: 0.41568628, a: 1}
+  _wrongGray: {r: 0.21916164, g: 0.22750537, b: 0.23584908, a: 1}
   isHoverable: 1
   enableMouseClick: 1
 --- !u!54 &1265957773166572481

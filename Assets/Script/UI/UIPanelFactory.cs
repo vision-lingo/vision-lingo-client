@@ -22,8 +22,22 @@ public class UIPanelFactory : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
-
-    
+    private void Start()
+    {
+        SceneLoader.Instance.SetLoadSceneAct(ClearPopup, StopUIProgress);
+    }
+    private void StopUIProgress()
+    {
+        IsIdle = false;
+    }
+    // TODO: 추후 Queue로 바꿔야 함.
+    private void ClearPopup()
+    {
+        for(int i = 0; i < uiParent.childCount; i++)
+        {
+            Destroy(uiParent.GetChild(i).gameObject);
+        }
+    }
 
     public void ShowMessage(string text, bool isCenter = false, Action afterAct = null)
     {
@@ -48,14 +62,15 @@ public class UIPanelFactory : MonoBehaviour
         IsIdle = false;
 
         var panel = Instantiate(panelPrefab, uiParent);
-
+        Debug.Log($"panel: {panel}");
         var pos = isCenter ? UIPanelSettingsHelper.GetCenterPosition() :
                              UIPanelSettingsHelper.GetUpperPosition(0.5f);
         var fade = UIPanelSettingsHelper.GetDefaultFadeSettings();
 
         panel.Show(text, pos, fade.fadeInTime, fade.displayTime, fade.fadeOutTime, afterAct);
-
-        while (panel.gameObject.activeSelf)
+        Debug.Log($"panel.gameObject: {panel.gameObject}");
+        // gameObject.activeSelf 메서드는 매우 불안정함.
+        while (/*panel.gameObject.activeSelf*/ !panel.IsCompleted)
             yield return null;
 
         IsIdle = true;

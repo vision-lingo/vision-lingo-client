@@ -20,6 +20,7 @@ public class TutorialSceneUI : MonoBehaviour
     [SerializeField] private Button _btn_GotoTrainingScene;
     [SerializeField] private Slider _volumeSlider;
     [SerializeField] private RectTransform _sliderHandle;
+    [SerializeField] private Image[] _sliderImgState;
 
     private GameObject _lastPanel = null;
     private bool _isEnd = false;
@@ -40,6 +41,19 @@ public class TutorialSceneUI : MonoBehaviour
         }
         SetTutorialUI();
         StartCoroutine(RunTutorialSequence());
+    }
+    private void Update()
+    {
+        #if UNITY_VISIONOS && !UNITY_EDITOR
+        if(XRHandStateChecker.Instance.IsLeftHandPinch)
+            _sliderImgState[0].color = Color.white;
+        else
+            _sliderImgState[0].color = new Color(1, 1, 1, 0.2f);
+        if(XRHandStateChecker.Instance.IsRightHandPinch)
+            _sliderImgState[1].color = Color.white;
+        else
+            _sliderImgState[1].color = new Color(1, 1, 1, 0.2f);
+        #endif
     }
 
     private void SetTutorialUI()

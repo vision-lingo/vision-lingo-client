@@ -195,6 +195,23 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3345585982593517272, guid: f7e488bd536334d169f0d4ba1308a2d6,
+        type: 3}
+      propertyPath: _uiHeadParent
+      value: 
+      objectReference: {fileID: 9017541909615018684, guid: 2fb6e77f3f9d24dc5a3b0b7166ebc802,
+        type: 3}
+    - target: {fileID: 3345585982593517272, guid: f7e488bd536334d169f0d4ba1308a2d6,
+        type: 3}
+      propertyPath: _followOffset.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3345585982593517272, guid: f7e488bd536334d169f0d4ba1308a2d6,
+        type: 3}
+      propertyPath: _followPanelPrefab
+      value: 
+      objectReference: {fileID: 2724450729766671442, guid: ee9a3236f73f7429ba29f66932c37c4c,
+        type: 3}
     - target: {fileID: 5083830749457938905, guid: f7e488bd536334d169f0d4ba1308a2d6,
         type: 3}
       propertyPath: m_IsActive

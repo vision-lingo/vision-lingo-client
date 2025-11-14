@@ -8,7 +8,14 @@ public class UIPanel : MonoBehaviour
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TMP_Text messageText;
 
+    /// <summary>
+    /// 팝업 지속시간이 끝나면 true
+    /// 이 boolean 값으로 컴플리트 판정 해야함. gameObject.activeself는 불안정함.
+    /// </summary>
+    public bool IsCompleted {get; private set;} = false;
+
     private Action onComplete;
+    
 
     // 25/10/29 CY: 자동으로 비활성화 되지 않는 UI 호출 시 사용.
     public void Show(string message, Vector2 anchoredPosition, float fadeInTime = 0.8f, Action onComplete = null)
@@ -28,6 +35,7 @@ public class UIPanel : MonoBehaviour
            {
                //gameObject.SetActive(false);
                onComplete?.Invoke();
+               IsCompleted = true;
            });
     }
 
@@ -50,6 +58,7 @@ public class UIPanel : MonoBehaviour
            {
                gameObject.SetActive(false);
                onComplete?.Invoke();
+               IsCompleted = true;
            });
     }
 }

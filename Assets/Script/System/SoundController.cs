@@ -21,9 +21,16 @@ public class SoundController : MonoBehaviour
     
     private void Start()
     {
+        
         LocalSFXLoad();
         LocalMusicLoad();
     }
+
+    private void Init()
+    {
+        SceneLoader.Instance.SetLoadSceneAct(StopMusic, StopMusic);
+    }
+
     /// <summary>
     /// 0 : Master(All)
     /// 1 : Music 

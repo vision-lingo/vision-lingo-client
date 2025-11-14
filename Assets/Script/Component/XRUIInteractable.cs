@@ -37,7 +37,7 @@ public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
         _tmp_text = GetComponentInChildren<TextMeshProUGUI>();
         if(_tmp_text == null)
         {
-            Debug.LogError("_img_button is not found");
+            Debug.LogError("TextMeshProUGUI is not found");
             return;
         }
         boxCollider.size = new Vector3(rect.sizeDelta.x * 1.5f, rect.sizeDelta.y * 1.5f, 1.0f);
