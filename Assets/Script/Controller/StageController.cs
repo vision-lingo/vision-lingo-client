@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -25,7 +26,7 @@ public class StageController : MonoBehaviour
     [Tooltip("인트로/아웃트로용 TextMeshProUGUI")]
     public TextMeshProUGUI IntroText;
 
-  [Header("Flow Settings")]
+    [Header("Flow Settings")]
     [Tooltip("시작 스테이지 번호")]
     public int FirstStage = 1;
 
@@ -66,6 +67,13 @@ public class StageController : MonoBehaviour
     private readonly Dictionary<InteractiveSphere, System.Action<InteractiveSphere.SphereState>> _stateHandlers
         = new Dictionary<InteractiveSphere, System.Action<InteractiveSphere.SphereState>>();
 
+    // Firebase 메트릭 전송
+    private int _wrongAttemptsThisRound = 0;   // 실패 횟수 (정답을 바로 맞추면 0)
+    private float _roundStartTime = 0f;        // 소리 재생 시각(Time.time)
+    private int _currentStage = 0;
+    private int _currentRound = 0;
+    private string _currentSessionId = string.Empty; // 스테이지 하나당 새로 생성
+
     void Start()
     {
         if (!HeadCamera) HeadCamera = Camera.main;
@@ -90,11 +98,16 @@ public class StageController : MonoBehaviour
         // 스테이지 루프
         for (int stage = FirstStage; stage <= LastStage; stage++)
         {
+            _currentStage = stage;
+            _currentSessionId = Guid.NewGuid().ToString();
+            TrainingAnalytics.LogStageSessionStart(_currentStage, _currentSessionId);
+
             spawner.SetStage(stage);
             spawner.RebaseFromCamera(HeadCamera.transform.position, HeadCamera.transform.rotation);
 
             for (int round = 1; round <= RoundsPerStage; round++)
             {
+                _currentRound = round;
                 yield return StartCoroutine(RunOneRound(stage, round));
             }
 
@@ -120,6 +133,7 @@ public class StageController : MonoBehaviour
             Debug.LogError("[StageController] 스폰 실패");
             yield break;
         }
+        _wrongAttemptsThisRound = 0;
 
         AttachAndSubscribe(_activeBalls);
 
@@ -129,6 +143,7 @@ public class StageController : MonoBehaviour
         _correctBall = PickRandomBall(_activeBalls);
         _correctBall.GetComponent<InteractiveSphere>()?.TriggerSound();
         ToggleInteractivity(_activeBalls, true);
+        _roundStartTime = Time.time;
 
         if (EnableLogging)
             Debug.Log($"[Round] Stage {stage} Round {round}: 소리 발생 - 정답 구 {_correctBall.name}");
@@ -176,7 +191,7 @@ public class StageController : MonoBehaviour
 
     private GameObject PickRandomBall(List<GameObject> balls)
     {
-        int idx = Random.Range(0, balls.Count);
+        int idx = UnityEngine.Random.Range(0, balls.Count);
         return balls[idx];
     }
 
@@ -209,10 +224,21 @@ public class StageController : MonoBehaviour
             _selectedBall = go;
             sphere.OnCorrect();
             _isAwaitingSelection = false;
+
+            float timeToCorrect = Time.time - _roundStartTime;
+            TrainingAnalytics.LogRoundSuccess(
+                _currentStage,
+                _currentRound,
+                _wrongAttemptsThisRound,
+                timeToCorrect,
+                _currentSessionId
+            );
+
             return;
         }
 
-        // 오답: UI 메시지 + 구 제거
+        _wrongAttemptsThisRound += 1;
+
         if (_stateHandlers.TryGetValue(sphere, out var handler))
         {
             sphere.StateChanged -= handler;
