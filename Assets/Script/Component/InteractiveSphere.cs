@@ -28,6 +28,8 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable _grab;
     
     private AudioSource _audioSource;
+    private ParticleController _particleController;
+
 
     [Header("Random Audio Loop")]
     [SerializeField] private AudioClip[] clips;
@@ -171,6 +173,8 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 
         Vector3 spawnPos = effectSpawnPoint ? effectSpawnPoint.position : transform.position;
         var fx = Instantiate(correctEffectPrefab, spawnPos, Quaternion.identity);
+        if(!fx.TryGetComponent(out _particleController)) 
+            MainSystem.Instance.Loggers.LogError("InteractiveSphere", "OnCorrect", $"_particleController is null");
         Destroy(fx, 5f);
     }
 
@@ -189,14 +193,18 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         _audioSource.Play();
     }
 
-    public void ResumeSound()
+    public void OnResume()
     {
         _audioSource.Play();
+        if(_particleController != null)
+            _particleController.ResumeParticles();   
     }
 
-    public void PauseSound()
+    public void OnPause()
     {
         _audioSource.Pause();
+        if(_particleController != null)
+            _particleController.PauseParticles();   
     }
 
     public void StopSound()

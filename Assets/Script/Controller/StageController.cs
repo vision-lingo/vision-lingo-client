@@ -83,28 +83,34 @@ public class StageController : MonoBehaviour
             enabled = false;
             return;
         }
-        Init();
         UIPanel.SetActive(false);
         IntroPanel.SetActive(false);
         StartCoroutine(RunAllStages());
 
 
     }
-    private void Init()
+
+    private void OnEnable()
     {
         MainSystem.Instance.Act_Pause += OnPause;
         MainSystem.Instance.Act_Resume += OnResume;
     }
+    private void OnDisable()
+    {
+        MainSystem.Instance.Act_Pause -= OnPause;
+        MainSystem.Instance.Act_Resume -= OnResume;
+    }
+
     private void OnPause()
     {
         if(_correctBall != null)
-            _correctBall.GetComponent<InteractiveSphere>()?.PauseSound();
+            _correctBall.GetComponent<InteractiveSphere>()?.OnPause();
     }
 
     private void OnResume()
     {
         if(_correctBall != null)
-            _correctBall.GetComponent<InteractiveSphere>()?.ResumeSound();
+            _correctBall.GetComponent<InteractiveSphere>()?.OnResume();
     }
 
 
