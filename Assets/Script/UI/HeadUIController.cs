@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// TODO: 추후 리팩토링 필요함.
@@ -10,6 +11,9 @@ public class HeadUIController : MonoBehaviour
     public static HeadUIController Instance {get; private set;}
     // 추후 VR 전용으로 만들어야될 수 있음.
     [SerializeField] private UIPanel _uiPanel;
+    [SerializeField] private GameObject _dimObj;
+    [SerializeField] private GameObject _volumeAdjustWindow;
+    [SerializeField] private Button _btn_SetVolume;
     [SerializeField] private Vector3 _followOffset;
 
     private IEnumerator IE_ShowMessageHandle = null;
@@ -18,11 +22,30 @@ public class HeadUIController : MonoBehaviour
     {
         Instance = this;
     }
+    private void Start()
+    {
+        _btn_SetVolume.onClick.AddListener(CloseAdjustVolumeWindow); 
+    }
+
+    public void ShowAdjustVolumeWindow()
+    {
+        _dimObj.SetActive(true);
+        MainSystem.Instance.Act_Pause?.Invoke();
+        _volumeAdjustWindow.SetActive(true);
+    }
+    public void CloseAdjustVolumeWindow()
+    {
+        _dimObj.SetActive(false);
+        MainSystem.Instance.Act_Resume?.Invoke();
+        _volumeAdjustWindow.SetActive(false);
+    }
+
 
     public void ShowMessage(string text, Vector2 pos, Action afterAct)
     {
         if(IE_ShowMessageHandle != null)
             return;
+        _dimObj.SetActive(true);
         StartCoroutine(IE_ShowMessageHandle = IE_ShowMessage(text, pos, afterAct));
     }
 
@@ -33,10 +56,10 @@ public class HeadUIController : MonoBehaviour
         _uiPanel.Show(text, pos, fade.fadeInTime, fade.displayTime, fade.fadeOutTime, afterAct);
         while(!_uiPanel.IsCompleted)
         {
-            
+            yield return null;
         }
-        yield return new WaitUntil(()=>_uiPanel.IsCompleted);
         IE_ShowMessageHandle = null;
+        _dimObj.SetActive(false);
     }
 
     private void OnDisable()
