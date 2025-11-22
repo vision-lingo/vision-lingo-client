@@ -99,8 +99,6 @@ public class StageController : MonoBehaviour
         for (int stage = FirstStage; stage <= LastStage; stage++)
         {
             _currentStage = stage;
-            _currentSessionId = Guid.NewGuid().ToString();
-            TrainingAnalytics.LogStageSessionStart(_currentStage, _currentSessionId);
 
             spawner.SetStage(stage);
             spawner.RebaseFromCamera(HeadCamera.transform.position, HeadCamera.transform.rotation);
@@ -226,13 +224,6 @@ public class StageController : MonoBehaviour
             _isAwaitingSelection = false;
 
             float timeToCorrect = Time.time - _roundStartTime;
-            TrainingAnalytics.LogRoundSuccess(
-                _currentStage,
-                _currentRound,
-                _wrongAttemptsThisRound,
-                timeToCorrect,
-                _currentSessionId
-            );
 
             return;
         }
