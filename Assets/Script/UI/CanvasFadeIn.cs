@@ -32,16 +32,27 @@ public class CanvasFadeIn : MonoBehaviour
         // 시작 지연
         if (startDelay > 0)
         {
-            yield return new WaitForSeconds(startDelay);
+            float timer = 0f;
+            while (timer < startDelay)
+            {
+                if (!MainSystem.Instance.IsPause)
+                {
+                    timer += Time.deltaTime;
+                }
+                yield return null;
+            }
         }
 
         float elapsedTime = 0f;
 
         while (elapsedTime < fadeDuration)
         {
-            elapsedTime += Time.deltaTime;
-            float normalizedTime = Mathf.Clamp01(elapsedTime / fadeDuration);
-            canvasGroup.alpha = fadeCurve.Evaluate(normalizedTime);
+            if (!MainSystem.Instance.IsPause)
+            {
+                elapsedTime += Time.deltaTime;
+                float normalizedTime = Mathf.Clamp01(elapsedTime / fadeDuration);
+                canvasGroup.alpha = fadeCurve.Evaluate(normalizedTime);
+            }
             yield return null;
         }
 

@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public sealed class MainController : MonoBehaviour
+public sealed class LobbyController : MonoBehaviour
 {
     [SerializeField] private Canvas _mainCanvas;
     [SerializeField] private Button _btnGotoTraining;

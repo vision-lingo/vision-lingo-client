@@ -10,7 +10,7 @@ public class MainSystem : SingletonT<MainSystem>
     [SerializeField] private Loggers _loggers;
     [SerializeField] private bool _isDebug;
     [SerializeField] private bool _isDev;
-
+    
     public Action Act_Pause = null;
     public Action Act_Resume = null;
     public SoundController SoundController => _soundController;
@@ -42,6 +42,40 @@ public class MainSystem : SingletonT<MainSystem>
     private void Start()
     {
         Init();
+    }
+
+    private void Update()
+    {
+
+        
+        //if(Input))
+        // 부스 운영 시 사용해야될 수도 있으므로 따로 전처리문을 작성하지 않았음.
+        if(Input.GetKeyDown(KeyCode.A))
+        {
+            Debug.Log("Input.GetKeyDown(KeyCode.Keypad0)");
+            SceneLoader.Instance.LoadLobby();
+        }
+        if(Input.GetKeyDown(KeyCode.S))
+        {
+            Debug.Log("Input.GetKeyDown(KeyCode.Keypad1)");
+            SceneLoader.Instance.LoadTutorial();
+        }
+        if(Input.GetKeyDown(KeyCode.D))
+        {
+            Debug.Log("Input.GetKeyDown(KeyCode.Keypad2)");
+            SceneLoader.Instance.LoadTraining();
+        }
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            Debug.Log("IsPause");
+            MainSystem.Instance.Act_Pause();
+        }
+        if(Input.GetKeyDown(KeyCode.W))
+        {
+            Debug.Log("IsResume");
+            MainSystem.Instance.Act_Resume();
+        }
+
     }
     /// <summary>
     /// 게임 종료

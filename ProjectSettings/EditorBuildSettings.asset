@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scene/VisionPro/Main.unity
     guid: fdf4b62dfab944f749be3be25c4ebd98
   - enabled: 1
-    path: Assets/Scene/VisionPro/TestStageForDesigner.unity
+    path: Assets/Testfiles/CY/Scene/TestStageForDesigner.unity
     guid: 6b4e971ee3eb14a74ab6783b58464e46
   - enabled: 1
     path: Assets/Scene/VisionPro/TrainingStage.unity

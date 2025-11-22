@@ -3,6 +3,7 @@ using TMPro;
 using DG.Tweening;
 using System;
 
+// TODO: Panel 일시정지 기능 구현
 public class UIPanel : MonoBehaviour
 {
     [SerializeField] private CanvasGroup canvasGroup;
@@ -15,7 +16,18 @@ public class UIPanel : MonoBehaviour
     public bool IsCompleted {get; private set;} = false;
 
     private Action onComplete;
-    
+
+    private Sequence _sequence;
+
+    public void OnPause()
+    {
+        _sequence.Pause();
+    }   
+    public void OnResume()
+    {
+        _sequence.Play();
+    }   
+
 
     // 25/10/29 CY: 자동으로 비활성화 되지 않는 UI 호출 시 사용.
     public void Show(string message, Vector2 anchoredPosition, float fadeInTime = 0.8f, Action onComplete = null)
@@ -29,8 +41,8 @@ public class UIPanel : MonoBehaviour
         canvasGroup.alpha = 0;
         gameObject.SetActive(true);
 
-        Sequence seq = DOTween.Sequence();
-        seq.Append(canvasGroup.DOFade(1, fadeInTime))
+        _sequence = DOTween.Sequence();
+        _sequence.Append(canvasGroup.DOFade(1, fadeInTime))
            .OnComplete(() =>
            {
                //gameObject.SetActive(false);
@@ -50,8 +62,8 @@ public class UIPanel : MonoBehaviour
         canvasGroup.alpha = 0;
         gameObject.SetActive(true);
 
-        Sequence seq = DOTween.Sequence();
-        seq.Append(canvasGroup.DOFade(1, fadeInTime))
+        _sequence = DOTween.Sequence();
+        _sequence.Append(canvasGroup.DOFade(1, fadeInTime))
            .AppendInterval(displayTime)
            .Append(canvasGroup.DOFade(0, fadeOutTime))
            .OnComplete(() =>
