@@ -59,6 +59,13 @@ public class TutorialSceneUI : MonoBehaviour
     private void SetTutorialUI()
     {
         // 25/10/29 CY: 튜토리얼 Scene에서만 쓰이는 UI 액션 할당
+
+        // 슬라이더 초기값을 0.7로 설정 (잘 들리는 음량)
+        if (_volumeSlider.value < 0.3f)
+        {
+            _volumeSlider.value = 0.7f;
+        }
+
         MainSystem.Instance.SoundController.SetAudioVolume(0, _volumeSlider.value);
         _btn_GotoTrainingScene.onClick.AddListener(GotoTrainingStage);
         _volumeSlider.onValueChanged.AddListener(OnControlVolume);

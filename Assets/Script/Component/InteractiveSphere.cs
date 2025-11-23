@@ -28,9 +28,12 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable _grab;
     
     private AudioSource _audioSource;
+    private Coroutine _volumeBoostCoroutine;
+    private float _originalMasterVolume; // 공 소리 시작 전 마스터 볼륨 저장
 
     [Header("Random Audio Loop")]
     [SerializeField] private AudioClip[] clips;
+    [SerializeField] private float baseVolume = 1.0f; // 기본 음량 (마스터 볼륨으로 조절)
 
     [Header("Effects")]
     [SerializeField] private GameObject correctEffectPrefab;
@@ -182,15 +185,54 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     public void TriggerSound()
     {
         SetState(SphereState.SoundTriggered);
-  
+
+        // 공 소리 시작 전 현재 마스터 볼륨 저장
+        _originalMasterVolume = MainSystem.Instance.SoundController.CurrMaxsterVolume;
+
         var pick = UnityEngine.Random.Range(0, clips.Length);
         _audioSource.loop = true;
         _audioSource.clip = clips[pick];
+        _audioSource.volume = baseVolume; // 기본 음량으로 시작
         _audioSource.Play();
+
+        // 시간별 음량 증가 시작
+        if (_volumeBoostCoroutine != null)
+            StopCoroutine(_volumeBoostCoroutine);
+        _volumeBoostCoroutine = StartCoroutine(VolumeBoostOverTime());
+    }
+
+    private IEnumerator VolumeBoostOverTime()
+    {
+        // 1~5초: 사용자 설정값 유지
+        yield return new WaitForSeconds(5f);
+
+        if (_audioSource != null && _audioSource.isPlaying)
+        {
+            // 6~10초: 마스터 볼륨 3배
+            MainSystem.Instance.SoundController.SetAudioVolume(0, _originalMasterVolume * 3f);
+        }
+
+        yield return new WaitForSeconds(5f); // 5초 더 대기 (총 10초)
+
+        if (_audioSource != null && _audioSource.isPlaying)
+        {
+            // 11초 이후: 마스터 볼륨 5배
+            MainSystem.Instance.SoundController.SetAudioVolume(0, _originalMasterVolume * 5f);
+        }
     }
 
     public void StopSound()
     {
+        // 음량 증가 코루틴 중단
+        if (_volumeBoostCoroutine != null)
+        {
+            StopCoroutine(_volumeBoostCoroutine);
+            _volumeBoostCoroutine = null;
+        }
+
+        // 마스터 볼륨을 원래 값으로 복원
+        MainSystem.Instance.SoundController.SetAudioVolume(0, _originalMasterVolume);
+
         if (_audioSource != null && _audioSource.isPlaying)
         {
             _audioSource.Stop();

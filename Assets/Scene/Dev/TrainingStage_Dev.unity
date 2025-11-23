@@ -699,6 +699,16 @@ PrefabInstance:
       propertyPath: spawner
       value: 
       objectReference: {fileID: 840224325}
+    - target: {fileID: 4521156938259627453, guid: 83799987bdd364ba7ac4e0d6b3ae832d,
+        type: 3}
+      propertyPath: IntroText
+      value: 
+      objectReference: {fileID: 875499086}
+    - target: {fileID: 4521156938259627453, guid: 83799987bdd364ba7ac4e0d6b3ae832d,
+        type: 3}
+      propertyPath: IntroPanel
+      value: 
+      objectReference: {fileID: 407107403}
     - target: {fileID: 7264729553263883672, guid: 83799987bdd364ba7ac4e0d6b3ae832d,
         type: 3}
       propertyPath: m_Name

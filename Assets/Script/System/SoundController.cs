@@ -17,7 +17,7 @@ public class SoundController : MonoBehaviour
     public AudioSource AudioMusic { get { return _audioMusic; } }
     public AudioSource AudioSfx { get { return _audioSfx; } }
 
-    public float CurrMaxsterVolume {get; private set;} 
+    public float CurrMaxsterVolume {get; private set;} = 0.7f; 
     
     private void Start()
     {

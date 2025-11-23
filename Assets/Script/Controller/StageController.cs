@@ -84,6 +84,19 @@ public class StageController : MonoBehaviour
             return;
         }
 
+        // 튜토리얼을 건너뛰고 직접 진입한 경우를 대비해 기본 음량 설정
+        if (MainSystem.Instance != null && MainSystem.Instance.SoundController != null)
+        {
+            float currentVolume = MainSystem.Instance.SoundController.CurrMaxsterVolume;
+            // 음량이 너무 작거나 설정되지 않았으면 기본값(0.7)으로 설정
+            if (currentVolume < 0.3f)
+            {
+                MainSystem.Instance.SoundController.SetAudioVolume(0, 0.7f);
+                if (EnableLogging)
+                    Debug.Log("[StageController] 기본 마스터 음량을 0.7로 설정했습니다.");
+            }
+        }
+
         UIPanel.SetActive(false);
         IntroPanel.SetActive(false);
         StartCoroutine(RunAllStages());
@@ -118,7 +131,7 @@ public class StageController : MonoBehaviour
         if (EnableLogging)
             Debug.Log("모든 스테이지 완료!");
 
-        SceneLoader.Instance.LoadMain();
+        SceneLoader.Instance.LoadLobby();
     }
 
     private IEnumerator RunOneRound(int stage, int round)
