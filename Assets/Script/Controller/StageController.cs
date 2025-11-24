@@ -83,11 +83,36 @@ public class StageController : MonoBehaviour
             enabled = false;
             return;
         }
-
         UIPanel.SetActive(false);
         IntroPanel.SetActive(false);
         StartCoroutine(RunAllStages());
+
+
     }
+
+    private void OnEnable()
+    {
+        MainSystem.Instance.Act_Pause += OnPause;
+        MainSystem.Instance.Act_Resume += OnResume;
+    }
+    private void OnDisable()
+    {
+        MainSystem.Instance.Act_Pause -= OnPause;
+        MainSystem.Instance.Act_Resume -= OnResume;
+    }
+
+    private void OnPause()
+    {
+        if(_correctBall != null)
+            _correctBall.GetComponent<InteractiveSphere>()?.OnPause();
+    }
+
+    private void OnResume()
+    {
+        if(_correctBall != null)
+            _correctBall.GetComponent<InteractiveSphere>()?.OnResume();
+    }
+
 
     private IEnumerator RunAllStages()
     {
@@ -109,7 +134,18 @@ public class StageController : MonoBehaviour
                 yield return StartCoroutine(RunOneRound(stage, round));
             }
 
-            yield return new WaitForSeconds(InterStageDelay);
+            if (InterStageDelay > 0f)
+            {
+                float timer = 0f;
+                while (timer < InterStageDelay)
+                {
+                    if (!MainSystem.Instance.IsPause)
+                    {
+                        timer += Time.deltaTime;
+                    }
+                    yield return null;
+                }
+            }
         }
 
         // 아웃트로
@@ -118,7 +154,7 @@ public class StageController : MonoBehaviour
         if (EnableLogging)
             Debug.Log("모든 스테이지 완료!");
 
-        SceneLoader.Instance.LoadMain();
+        SceneLoader.Instance.LoadLobby();
     }
 
     private IEnumerator RunOneRound(int stage, int round)
@@ -135,7 +171,18 @@ public class StageController : MonoBehaviour
 
         AttachAndSubscribe(_activeBalls);
 
-        yield return new WaitForSeconds(PreSoundDelay);
+        if (PreSoundDelay > 0f)
+        {
+            float timer = 0f;
+            while (timer < PreSoundDelay)
+            {
+                if (!MainSystem.Instance.IsPause)
+                {
+                    timer += Time.deltaTime;
+                }
+                yield return null;
+            }
+        }
 
         // 2) 소리 발생
         _correctBall = PickRandomBall(_activeBalls);
@@ -178,7 +225,18 @@ public class StageController : MonoBehaviour
 
     private IEnumerator HintAfterDelay(GameObject correct, float delay)
     {
-        yield return new WaitForSeconds(delay);
+        if (delay > 0f)
+        {
+            float timer = 0f;
+            while (timer < delay)
+            {
+                if (!MainSystem.Instance.IsPause)
+                {
+                    timer += Time.deltaTime;
+                }
+                yield return null;
+            }
+        }
         if (_isAwaitingSelection && correct)
         {
             correct.GetComponent<InteractiveSphere>()?.OnMarkTimeOver();
@@ -283,7 +341,18 @@ public class StageController : MonoBehaviour
         text.text = message;
 
         yield return StartCoroutine(FadeCanvasGroup(cg, cg.alpha, 1f, fadeIn));
-        if (hold > 0f) yield return new WaitForSeconds(hold);
+        if (hold > 0f)
+        {
+            float timer = 0f;
+            while (timer < hold)
+            {
+                if (!MainSystem.Instance.IsPause)
+                {
+                    timer += Time.deltaTime;
+                }
+                yield return null;
+            }
+        }
         yield return StartCoroutine(FadeCanvasGroup(cg, 1f, 0f, fadeOut));
 
         panel.SetActive(false);

@@ -28,6 +28,8 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable _grab;
     
     private AudioSource _audioSource;
+    private ParticleController _particleController;
+
 
     [Header("Random Audio Loop")]
     [SerializeField] private AudioClip[] clips;
@@ -171,6 +173,8 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 
         Vector3 spawnPos = effectSpawnPoint ? effectSpawnPoint.position : transform.position;
         var fx = Instantiate(correctEffectPrefab, spawnPos, Quaternion.identity);
+        if(!fx.TryGetComponent(out _particleController)) 
+            MainSystem.Instance.Loggers.LogError("InteractiveSphere", "OnCorrect", $"_particleController is null");
         Destroy(fx, 5f);
     }
 
@@ -187,6 +191,20 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         _audioSource.loop = true;
         _audioSource.clip = clips[pick];
         _audioSource.Play();
+    }
+
+    public void OnResume()
+    {
+        _audioSource.Play();
+        if(_particleController != null)
+            _particleController.ResumeParticles();   
+    }
+
+    public void OnPause()
+    {
+        _audioSource.Pause();
+        if(_particleController != null)
+            _particleController.PauseParticles();   
     }
 
     public void StopSound()
@@ -228,7 +246,17 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     {
         // 요청한 지연 시간만큼 대기 (보이는 상태로)
         if (delay > 0f)
-            yield return new WaitForSeconds(delay);
+        {
+            float timer = 0f;
+            while (timer < delay)
+            {
+                if (!MainSystem.Instance.IsPause)
+                {
+                    timer += Time.deltaTime;
+                }
+                yield return null;
+            }
+        }
 
         float t = 0f;
         Vector3 start = transform.localScale;
@@ -236,9 +264,13 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 
         while (t < dur)
         {
-            t += Time.deltaTime;
-            float k = Mathf.Clamp01(t / dur);
-            transform.localScale = Vector3.Lerp(start, end, k);
+            if (!MainSystem.Instance.IsPause)
+            {
+                t += Time.deltaTime;
+                float k = Mathf.Clamp01(t / dur);
+                transform.localScale = Vector3.Lerp(start, end, k);
+            }
+            
             yield return null;
         }
 
