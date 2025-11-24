@@ -5,6 +5,7 @@ using TMPro;
 [RequireComponent(typeof(BoxCollider))]
 public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
 {
+    [SerializeField] private Button _btn_interaction;
     [SerializeField] private Image _img_button;
     [SerializeField] private Color _hoverImgColor;
     [SerializeField] private TextMeshProUGUI _tmp_text;
@@ -29,9 +30,14 @@ public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
             Debug.LogError("boxCollider is not found");
             return;
         }
-        if(!TryGetComponent(out _img_button))
+        if(!TryGetComponent(out rect))
         {
-            Debug.LogError("_img_button is not found");
+            Debug.LogError("Rect Transform is not found");
+            return;
+        }
+        if(!TryGetComponent(out _btn_interaction))
+        {
+            Debug.LogError("_btn_interaction is not found");
             return;
         }
         _tmp_text = GetComponentInChildren<TextMeshProUGUI>();
@@ -60,6 +66,7 @@ public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
 
     public void OnSelect()
     {
-        MainSystem.Instance.Loggers.LogInfo("XRUIInteractable", "OnSelect", "OnSelect Called.");
+        if(_btn_interaction != null)
+            _btn_interaction.onClick?.Invoke();
     }
 }
