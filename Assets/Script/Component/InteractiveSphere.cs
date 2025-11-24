@@ -165,6 +165,11 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         }
     }
 
+    public void OnSelect()
+    {
+        OnTouched();
+    }
+
     public void OnCorrect()
     {
         SetState(SphereState.Correct);
@@ -349,6 +354,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 
     [ContextMenu("Debug/Trigger State Changed Event")]
     private void DebugTriggerEvent() => OnStateChanged(currentState);
-    
+
+
 #endif
 }

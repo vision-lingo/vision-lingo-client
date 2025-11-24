@@ -11,6 +11,10 @@ public class XRHeadRayInteractor : MonoBehaviour
     [SerializeField] private Transform _rayDebugTransform;
     [SerializeField] private Transform cameraOffset;
     [SerializeField] private Vector3 _rayPosOffset;
+    [SerializeField] private float _rayTime = 1.0f;
+    private bool _isRayOver;
+    private float _currRayTime = 0.0f;
+
     private PointerInput _pointerInput;
     private IXRHeadInteractable _lastInteractable = null;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -28,6 +32,24 @@ public class XRHeadRayInteractor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(_isRayOver)
+        {
+            _currRayTime += Time.deltaTime;
+            if(_currRayTime > _rayTime)
+            {
+                if(_lastInteractable != null)
+                {
+                    _lastInteractable.OnSelect();
+                    _lastInteractable = null;
+                }
+                _currRayTime = 0.0f;
+                _isRayOver = false;
+            }
+        }
+        else
+        {
+            _currRayTime = 0.0f;
+        }
         var defaultActions = _pointerInput.Default;
         #if UNITY_EDITOR
         Debug_RayCast();
@@ -55,6 +77,7 @@ public class XRHeadRayInteractor : MonoBehaviour
                 if(hitInfo.transform.TryGetComponent(out _lastInteractable))
                 {
                     _lastInteractable.OnRayOver();
+                    _isRayOver = true;
                 }
             }
             
@@ -64,6 +87,7 @@ public class XRHeadRayInteractor : MonoBehaviour
             if(_lastInteractable != null)
             {
                 _lastInteractable.OnRayOut();
+                _isRayOver = false;
                 _lastInteractable = null;
             }
         }

@@ -57,4 +57,9 @@ public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
         _img_button.color = _defaultImgColor;
         _tmp_text.color = _defaultTxtColor;
     }
+
+    public void OnSelect()
+    {
+        MainSystem.Instance.Loggers.LogInfo("XRUIInteractable", "OnSelect", "OnSelect Called.");
+    }
 }
