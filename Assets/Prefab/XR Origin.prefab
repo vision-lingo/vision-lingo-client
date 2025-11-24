@@ -1767,6 +1767,8 @@ MonoBehaviour:
   _volumeAdjustWindow: {fileID: 6082900449785056140}
   _btn_SetVolume: {fileID: 1304635567189428169}
   _followOffset: {x: 0, y: 0, z: 0}
+  _volumeSlider: {fileID: 21584932689500416}
+  _sliderHandle: {fileID: 1524468827217501174}
 --- !u!114 &6827018562299811193
 MonoBehaviour:
   m_ObjectHideFlags: 0

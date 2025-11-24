@@ -27,6 +27,7 @@ public class HandUIController : MonoBehaviour
     private void SetVolume()
     {
         HeadUIController.Instance.ShowAdjustVolumeWindow();
+        MainSystem.Instance.SoundController.PlayMusic("WhirlwindOfJoy");
     }
 
 }
