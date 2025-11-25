@@ -2,6 +2,8 @@
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.UI;
+using System;
+
 #if UNITY_EDITOR || UNITY_VISIONOS
 using UnityEngine.XR.VisionOS.InputDevices;
 #endif
@@ -12,6 +14,7 @@ public class XRHeadRayInteractor : MonoBehaviour
     [SerializeField] private Transform cameraOffset;
     [SerializeField] private Vector3 _rayPosOffset;
     [SerializeField] private float _rayTime = 1.0f;
+    public Action<float> Act_FillGauge;
     private bool _isRayOver;
     private float _currRayTime = 0.0f;
 
@@ -35,6 +38,7 @@ public class XRHeadRayInteractor : MonoBehaviour
         if(_isRayOver)
         {
             _currRayTime += Time.deltaTime;
+            Act_FillGauge?.Invoke(1 - _currRayTime / _rayTime);
             if(_currRayTime > _rayTime)
             {
                 if(_lastInteractable != null)
@@ -49,6 +53,7 @@ public class XRHeadRayInteractor : MonoBehaviour
         else
         {
             _currRayTime = 0.0f;
+            Act_FillGauge?.Invoke(0.0f);
         }
         var defaultActions = _pointerInput.Default;
         #if UNITY_EDITOR
