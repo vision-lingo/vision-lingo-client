@@ -43,10 +43,10 @@ public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
         _tmp_text = GetComponentInChildren<TextMeshProUGUI>();
         if(_tmp_text == null)
         {
-            Debug.LogError("TextMeshProUGUI is not found");
+            Debug.LogError($"({gameObject.name})_TextMeshProUGUI is not found");
             return;
         }
-        boxCollider.size = new Vector3(rect.sizeDelta.x * 1.5f, rect.sizeDelta.y * 1.5f, 1.0f);
+        boxCollider.size = new Vector3(rect.sizeDelta.x * 1.1f, rect.sizeDelta.y * 1.1f, 1.0f);
 
         _defaultImgColor = _img_button.color;
         _defaultTxtColor = _tmp_text.color;
