@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public sealed class LobbyController : MonoBehaviour
 {
-    [SerializeField] private Canvas _mainCanvas;
+    //[SerializeField] private Canvas _mainCanvas;
     [SerializeField] private Button _btnGotoTraining;
     [SerializeField] private Button _btnGotoTutorial;
     [SerializeField] private Button _btnQuitGame;
@@ -12,7 +12,6 @@ public sealed class LobbyController : MonoBehaviour
 
     private void Start()
     {
-        _mainCanvas.worldCamera = Camera.main;
         // 25/11/12 CY: button 이벤트 구독은 Scene에서 하는 것 보단 코드로 하는게 관리하기 편합니다. 
         if(_btnGotoTraining != null)
             _btnGotoTraining.onClick.AddListener(()=> OnGoToScene("TrainingStage"));

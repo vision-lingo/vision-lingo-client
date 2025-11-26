@@ -8,7 +8,7 @@ public class HandUIController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _btnSetVolume.onClick.AddListener(GotoChabgeVolumeScene);
+        _btnSetVolume.onClick.AddListener(SetVolume);
         _btnGotoLobby.onClick.AddListener(GotoLobby);
     }
     private void Update()
@@ -16,7 +16,7 @@ public class HandUIController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.H))
             GotoLobby();
         if(Input.GetKeyDown(KeyCode.J))
-            GotoChabgeVolumeScene();
+            SetVolume();
     }
 
     private void GotoLobby()
@@ -24,9 +24,10 @@ public class HandUIController : MonoBehaviour
         HeadUIController.Instance.ShowMessage("소리 위치 분별 훈련을 종료하겠습니다.", Vector2.zero, SceneLoader.Instance.LoadLobby);
     }
     // 형태가 바뀔 수 있음.
-    private void GotoChabgeVolumeScene()
+    private void SetVolume()
     {
-        SceneLoader.Instance.LoadScene("ChangeVolume");
+        HeadUIController.Instance.ShowAdjustVolumeWindow();
+        MainSystem.Instance.SoundController.PlayMusic("WhirlwindOfJoy");
     }
 
 }
