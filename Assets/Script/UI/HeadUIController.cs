@@ -17,6 +17,8 @@ public class HeadUIController : MonoBehaviour
     [SerializeField] private Vector3 _followOffset;
     [SerializeField] private Slider _volumeSlider;
     [SerializeField] private RectTransform _sliderHandle;
+    [SerializeField] private XRHeadRayInteractor _xrHeadRayInteractor;
+    [SerializeField] private Image _img_fillGauge;
 
     private IEnumerator IE_ShowMessageHandle = null;
 
@@ -28,6 +30,7 @@ public class HeadUIController : MonoBehaviour
     {
         _btn_SetVolume.onClick.AddListener(CloseAdjustVolumeWindow); 
         SetAdjustVolumeUI();
+        _xrHeadRayInteractor.Act_FillGauge = SetGazeFillGauge;
     }
     private void SetAdjustVolumeUI()
     {
@@ -46,6 +49,11 @@ public class HeadUIController : MonoBehaviour
         else
             _sliderHandle.anchoredPosition = new Vector2(-0.05f, 0f);
         MainSystem.Instance.SoundController.SetAudioVolume(0, _volume);
+    }
+
+    private void SetGazeFillGauge(float _currRayTime)
+    {
+        _img_fillGauge.fillAmount = _currRayTime;
     }
 
     public void ShowAdjustVolumeWindow()

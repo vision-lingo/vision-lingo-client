@@ -5,6 +5,7 @@ using TMPro;
 [RequireComponent(typeof(BoxCollider))]
 public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
 {
+    [SerializeField] private Button _btn_interaction;
     [SerializeField] private Image _img_button;
     [SerializeField] private Color _hoverImgColor;
     [SerializeField] private TextMeshProUGUI _tmp_text;
@@ -29,32 +30,43 @@ public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
             Debug.LogError("boxCollider is not found");
             return;
         }
-        if(!TryGetComponent(out _img_button))
+        if(!TryGetComponent(out rect))
         {
-            Debug.LogError("_img_button is not found");
+            Debug.LogError("Rect Transform is not found");
+            return;
+        }
+        if(!TryGetComponent(out _btn_interaction))
+        {
+            Debug.LogError("_btn_interaction is not found");
             return;
         }
         _tmp_text = GetComponentInChildren<TextMeshProUGUI>();
         if(_tmp_text == null)
         {
-            Debug.LogError("TextMeshProUGUI is not found");
+            Debug.LogError($"({gameObject.name})_TextMeshProUGUI is not found");
             return;
         }
-        boxCollider.size = new Vector3(rect.sizeDelta.x * 1.5f, rect.sizeDelta.y * 1.5f, 1.0f);
+        boxCollider.size = new Vector3(rect.sizeDelta.x * 1.1f, rect.sizeDelta.y * 1.1f, 1.0f);
 
         _defaultImgColor = _img_button.color;
         _defaultTxtColor = _tmp_text.color;
     }
 
-    public void OnRayOut()
+    public void OnRayOver()
     {
         _img_button.color = _hoverImgColor;
         _tmp_text.color = _hoverTxtColor;
     }
 
-    public void OnRayOver()
+    public void OnRayOut()
     {
         _img_button.color = _defaultImgColor;
         _tmp_text.color = _defaultTxtColor;
+    }
+
+    public void OnSelect()
+    {
+        if(_btn_interaction != null)
+            _btn_interaction.onClick?.Invoke();
     }
 }
