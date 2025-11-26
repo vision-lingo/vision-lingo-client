@@ -58,5 +58,8 @@ MonoBehaviour:
   AnswerTimeout: 15
   InterStageDelay: 1
   EnableLogging: 1
-  _uiCanvasGroup: {fileID: 0}
-  _introCanvasGroup: {fileID: 0}
+  RoundProgressContainer: {fileID: 0}
+  RoundDotPrefab: {fileID: 7828641925924264919, guid: 02724cd879c034148a7c5d44c26a7445,
+    type: 3}
+  FilledColor: {r: 0.15886435, g: 0.9622642, b: 0.24321885, a: 1}
+  EmptyColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}

@@ -22,7 +22,7 @@ public class StageController : MonoBehaviour
     [Header("Intro/Outro UI (훈련 시작/안내/종료)")]
     [Tooltip("인트로/아웃트로 전용 UI 패널 (새 위치)")]
     public GameObject IntroPanel;
-    
+
     [Tooltip("인트로/아웃트로용 TextMeshProUGUI")]
     public TextMeshProUGUI IntroText;
 
@@ -53,8 +53,13 @@ public class StageController : MonoBehaviour
     [Tooltip("디버그 로그 출력 여부")]
     public bool EnableLogging = true;
 
-    [SerializeField] private CanvasGroup _uiCanvasGroup;
-    [SerializeField] private CanvasGroup _introCanvasGroup; 
+    [Header("Round Progress UI")]
+    public Transform RoundProgressContainer;
+    public GameObject RoundDotPrefab;
+    public Color FilledColor = new Color(0.2f, 0.8f, 0.4f);
+    public Color EmptyColor = new Color(0.85f, 0.85f, 0.85f);
+
+    private List<GameObject> _roundDots = new List<GameObject>();
 
     private List<GameObject> _activeBalls = new List<GameObject>();
     private GameObject _correctBall = null;
@@ -62,7 +67,11 @@ public class StageController : MonoBehaviour
     private bool _isAwaitingSelection = false;
     private bool _isShowingWrongMsg = false;
 
+    private int _totalRounds;
+    private int _roundIndex;
+
     private Coroutine _hintCo;
+    private Coroutine _wrongMsgCoroutine;
 
     private readonly Dictionary<InteractiveSphere, System.Action<InteractiveSphere.SphereState>> _stateHandlers
         = new Dictionary<InteractiveSphere, System.Action<InteractiveSphere.SphereState>>();
@@ -83,11 +92,12 @@ public class StageController : MonoBehaviour
             enabled = false;
             return;
         }
+
+        InitRoundProgressUI();
+
         UIPanel.SetActive(false);
         IntroPanel.SetActive(false);
         StartCoroutine(RunAllStages());
-
-
     }
 
     private void OnEnable()
@@ -95,6 +105,7 @@ public class StageController : MonoBehaviour
         MainSystem.Instance.Act_Pause += OnPause;
         MainSystem.Instance.Act_Resume += OnResume;
     }
+
     private void OnDisable()
     {
         MainSystem.Instance.Act_Pause -= OnPause;
@@ -103,22 +114,25 @@ public class StageController : MonoBehaviour
 
     private void OnPause()
     {
-        if(_correctBall != null)
+        if (_correctBall != null)
             _correctBall.GetComponent<InteractiveSphere>()?.OnPause();
     }
 
     private void OnResume()
     {
-        if(_correctBall != null)
+        if (_correctBall != null)
             _correctBall.GetComponent<InteractiveSphere>()?.OnResume();
     }
-
 
     private IEnumerator RunAllStages()
     {
         // 인트로
         yield return StartCoroutine(ShowFade(IntroPanel, IntroText, "소리 위치 분별 훈련을 시작하겠습니다.", 0.4f, 3f, 0.8f));
         yield return StartCoroutine(ShowFade(IntroPanel, IntroText, "소리가 나는 공을 찾아 선택해 주세요.", 0.4f, 3f, 0.8f));
+
+        ShowRoundProgress(update: true);
+        yield return StartCoroutine(ShowFade(IntroPanel, IntroText, $"훈련은 총 {_totalRounds} 라운드입니다.", 0.4f, 3f, 0.8f));
+        HideRoundProgress();
 
         // 스테이지 루프
         for (int stage = FirstStage; stage <= LastStage; stage++)
@@ -149,6 +163,10 @@ public class StageController : MonoBehaviour
         }
 
         // 아웃트로
+        ShowRoundProgress(update: true);
+        yield return StartCoroutine(ShowFade(IntroPanel, IntroText, "모든 훈련이 끝났습니다.", 0.4f, 3f, 0.8f));
+
+        HideRoundProgress();
         yield return StartCoroutine(ShowFade(IntroPanel, IntroText, "소리 위치 분별 훈련을 종료하겠습니다.", 0.4f, 3f, 0.8f));
 
         if (EnableLogging)
@@ -159,6 +177,15 @@ public class StageController : MonoBehaviour
 
     private IEnumerator RunOneRound(int stage, int round)
     {
+        // 라운드 시작 시 UI 정리
+        UIPanel.SetActive(false);
+        _isShowingWrongMsg = false;
+        if (_wrongMsgCoroutine != null)
+        {
+            StopCoroutine(_wrongMsgCoroutine);
+            _wrongMsgCoroutine = null;
+        }
+
         // 1) 구 배치
         _activeBalls = spawner.SpawnSet();
         ToggleInteractivity(_activeBalls, false); // 소리나기 전에는 선택할 수 없도록
@@ -215,11 +242,11 @@ public class StageController : MonoBehaviour
 
         if (EnableLogging)
             Debug.Log("[Round] 결과: 정답");
+        ShowRoundProgress(update: true);
 
         yield return StartCoroutine(ShowFade(UIPanel, UIText, msg, 0.2f, 3f, 0.3f));
 
         // 4) 정리
-        UIPanel.SetActive(false);
         CleanupBalls();
     }
 
@@ -275,13 +302,26 @@ public class StageController : MonoBehaviour
         if (!_isAwaitingSelection || sphere == null) return;
 
         var go = sphere.gameObject;
+
         if (go == _correctBall)
         {
+            // 실패 UI가 돌고 있으면 먼저 정리
+            if (_wrongMsgCoroutine != null)
+            {
+                StopCoroutine(_wrongMsgCoroutine);
+                _wrongMsgCoroutine = null;
+            }
+            _isShowingWrongMsg = false;
+            UIPanel.SetActive(false);
+
             _selectedBall = go;
             sphere.OnCorrect();
             _isAwaitingSelection = false;
 
             float timeToCorrect = Time.time - _roundStartTime;
+
+            _roundIndex++;
+            UpdateRoundDots();
 
             return;
         }
@@ -298,7 +338,7 @@ public class StageController : MonoBehaviour
         sphere.MarkWrongAndVanish(0.15f, 2f);
 
         if (!_isShowingWrongMsg)
-            StartCoroutine(ShowWrongOnce());
+            _wrongMsgCoroutine = StartCoroutine(ShowWrongOnce());
     }
 
     private IEnumerator ShowWrongOnce()
@@ -306,12 +346,28 @@ public class StageController : MonoBehaviour
         _isShowingWrongMsg = true;
         UIPanel.SetActive(true);
         yield return StartCoroutine(ShowFade(UIPanel, UIText, "실패하였습니다. 다른 공을 선택해주세요.", 0.2f, 1.2f, 0.25f));
+
         UIPanel.SetActive(false);
         _isShowingWrongMsg = false;
+        _wrongMsgCoroutine = null;
     }
 
     private void CleanupBalls()
     {
+        // 힌트/실패 메시지 코루틴 정리
+        if (_hintCo != null)
+        {
+            StopCoroutine(_hintCo);
+            _hintCo = null;
+        }
+        if (_wrongMsgCoroutine != null)
+        {
+            StopCoroutine(_wrongMsgCoroutine);
+            _wrongMsgCoroutine = null;
+        }
+        _isShowingWrongMsg = false;
+        UIPanel.SetActive(false);
+
         foreach (var go in _activeBalls)
         {
             var sphere = go ? go.GetComponent<InteractiveSphere>() : null;
@@ -340,7 +396,8 @@ public class StageController : MonoBehaviour
         panel.SetActive(true);
         text.text = message;
 
-        yield return StartCoroutine(FadeCanvasGroup(cg, cg.alpha, 1f, fadeIn));
+        yield return FadeCanvasGroup(cg, cg.alpha, 1f, fadeIn);
+
         if (hold > 0f)
         {
             float timer = 0f;
@@ -353,7 +410,8 @@ public class StageController : MonoBehaviour
                 yield return null;
             }
         }
-        yield return StartCoroutine(FadeCanvasGroup(cg, 1f, 0f, fadeOut));
+
+        yield return FadeCanvasGroup(cg, 1f, 0f, fadeOut);
 
         panel.SetActive(false);
     }
@@ -382,6 +440,55 @@ public class StageController : MonoBehaviour
 
             var grab = go.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
             if (grab) grab.enabled = on;
+        }
+    }
+
+    private void InitRoundProgressUI()
+    {
+        _totalRounds = (LastStage - FirstStage + 1) * RoundsPerStage;
+        _roundIndex = 0;
+
+        BuildRoundDotsUI();
+        UpdateRoundDots();
+        RoundProgressContainer.gameObject.SetActive(false);
+    }
+
+    private void ShowRoundProgress(bool update = true)
+    {
+        if (update)
+            UpdateRoundDots();
+
+        RoundProgressContainer.gameObject.SetActive(true);
+    }
+
+    private void HideRoundProgress()
+    {
+        RoundProgressContainer.gameObject.SetActive(false);
+    }
+
+    private void BuildRoundDotsUI()
+    {
+        // 기존 것 제거
+        foreach (var dot in _roundDots)
+            Destroy(dot);
+        _roundDots.Clear();
+
+        for (int i = 0; i < _totalRounds; i++)
+        {
+            var dot = Instantiate(RoundDotPrefab, RoundProgressContainer);
+            var img = dot.GetComponent<UnityEngine.UI.Image>();
+            img.color = EmptyColor;
+
+            _roundDots.Add(dot);
+        }
+    }
+
+    private void UpdateRoundDots()
+    {
+        for (int i = 0; i < _roundDots.Count; i++)
+        {
+            var img = _roundDots[i].GetComponent<UnityEngine.UI.Image>();
+            img.color = (i < _roundIndex) ? FilledColor : EmptyColor;
         }
     }
 }
