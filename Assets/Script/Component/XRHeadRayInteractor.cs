@@ -10,9 +10,9 @@ using UnityEngine.XR.VisionOS.InputDevices;
 
 public class XRHeadRayInteractor : MonoBehaviour
 {
+    [SerializeField] private Camera _mainCamera; 
+    [SerializeField] private Transform _rayOffsetTransform;
     [SerializeField] private Transform _rayDebugTransform;
-    [SerializeField] private Transform cameraOffset;
-    [SerializeField] private Vector3 _rayPosOffset;
     [SerializeField] private float _rayTime = 1.0f;
     public Action<float> Act_FillGauge;
     private bool _isRayOver;
@@ -23,6 +23,10 @@ public class XRHeadRayInteractor : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void OnEnable()
     {
+        if (_mainCamera == null)
+        {
+            _mainCamera = Camera.main;
+        }
         _pointerInput ??= new PointerInput();
         _pointerInput.Enable();
     }
@@ -53,24 +57,24 @@ public class XRHeadRayInteractor : MonoBehaviour
         else
         {
             _currRayTime = 0.0f;
-            Act_FillGauge?.Invoke(0.0f);
+            Act_FillGauge?.Invoke(0);
         }
-        var defaultActions = _pointerInput.Default;
+        //var defaultActions = _pointerInput.Default;
         #if UNITY_EDITOR
         Debug_RayCast();
+        #else
+        // Vision Pro에서는 PointerInput 대신 HMD의 Center Eye 값을 직접 사용합니다.
+        // 핀치 제스처 시 포인터 입력이 손으로 전환되어 값이 튀는 현상을 방지합니다.
+        // 카메라의 월드 좌표를 기준으로 레이를 계산하여 좌표계 문제를 방지합니다.
+        RayTracking(_mainCamera.transform);
         #endif
-        var eyePos = defaultActions.EyePos.ReadValue<Vector3>();
-        var eyeRot = defaultActions.EyeRot.ReadValue<Quaternion>();
-        RayTracking(eyePos, eyeRot);
     }
 
 
-    private void RayTracking(Vector3 eyePos, Quaternion eyeRot)
+    private void RayTracking(Transform cameraTransform)
     {
-        eyePos += _rayPosOffset;
-        var rayOrigin = cameraOffset.TransformPoint(eyePos);
-        var eyeDirection = eyeRot * Vector3.forward;
-        var rayDirection = cameraOffset.TransformDirection(eyeDirection);
+        var rayOrigin = _rayOffsetTransform.position;// + _rayPosOffset; //+ cameraTransform.TransformDirection(_rayPosOffset);
+        var rayDirection = cameraTransform.forward;
         _rayDebugTransform.SetPositionAndRotation(rayOrigin, Quaternion.LookRotation(rayDirection));
         var ray = new Ray(rayOrigin, rayDirection);
         var hit = Physics.Raycast(ray, out var hitInfo, Mathf.Infinity);
