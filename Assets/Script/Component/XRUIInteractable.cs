@@ -52,13 +52,13 @@ public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
         _defaultTxtColor = _tmp_text.color;
     }
 
-    public void OnRayOut()
+    public void OnRayOver()
     {
         _img_button.color = _hoverImgColor;
         _tmp_text.color = _hoverTxtColor;
     }
 
-    public void OnRayOver()
+    public void OnRayOut()
     {
         _img_button.color = _defaultImgColor;
         _tmp_text.color = _defaultTxtColor;
