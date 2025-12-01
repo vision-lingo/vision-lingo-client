@@ -28,15 +28,11 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable _grab;
     
     private AudioSource _audioSource;
-    private Coroutine _volumeBoostCoroutine;
-    private float _originalMasterVolume; // To store master volume before the sound starts
     private ParticleController _particleController;
 
 
     [Header("Random Audio Loop")]
     [SerializeField] private AudioClip[] clips;
-    [SerializeField] private float baseVolume = 1.0f; // Default volume (adjusted by master volume)
-
 
     [Header("Effects")]
     [SerializeField] private GameObject correctEffectPrefab;
@@ -52,12 +48,9 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     [SerializeField] private Color _wrongGray;
 
     [SerializeField] private bool isHoverable = true;
-    [SerializeField] private bool _isTutorial = false;
 
     // 에디터/PC 테스트용 마우스 클릭 허용
     [SerializeField] private bool enableMouseClick = true;
-
-    private IEnumerator IE_SequenceChangeColor_Handle = null;
 
     private float _hoverScale;
     public SphereState CurrentState
@@ -98,12 +91,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
             OffWaveEffect();
         else
             ResetToDefault();
-        if(IE_SequenceChangeColor_Handle != null)
-            StopCoroutine(IE_SequenceChangeColor_Handle);
-        IE_SequenceChangeColor_Handle = null;
-        if(_volumeBoostCoroutine != null)
-            StopCoroutine(_volumeBoostCoroutine);
-        _volumeBoostCoroutine = null;
+        
     }
 
     private void OnSelectEntered(SelectEnterEventArgs args)
@@ -203,59 +191,11 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     public void TriggerSound()
     {
         SetState(SphereState.SoundTriggered);
-
-        // Store the current master volume before the sound starts
-        _originalMasterVolume = MainSystem.Instance.SoundController.CurrMaxsterVolume;
-
+  
         var pick = UnityEngine.Random.Range(0, clips.Length);
         _audioSource.loop = true;
         _audioSource.clip = clips[pick];
-        // CHECK: 왜 베이스 볼륨을 쓰는거지?
-        // 이 오브젝트에 대한 볼륨
-        _audioSource.volume = baseVolume; // Start with base volume
         _audioSource.Play();
-
-        // Start increasing volume over time
-        if (_volumeBoostCoroutine != null)
-            StopCoroutine(_volumeBoostCoroutine);
-        _volumeBoostCoroutine = StartCoroutine(VolumeBoostOverTime());
-    }
-
-    private IEnumerator VolumeBoostOverTime()
-    {
-        // 1-5 seconds: maintain user settings
-        float timer = 0f;
-        while (timer < 5f)
-        {
-            if (!MainSystem.Instance.IsPause)
-            {
-                timer += Time.deltaTime;
-            }
-            yield return null;
-        }
-
-        if (_audioSource != null && _audioSource.isPlaying)
-        {
-            // 6-10 seconds: master volume x3
-            MainSystem.Instance.SoundController.SetAudioVolume(0, _originalMasterVolume * 3f);
-        }
-        
-        // Wait 5 more seconds (total 10 seconds)
-        timer = 0f;
-        while (timer < 5f)
-        {
-            if (!MainSystem.Instance.IsPause)
-            {
-                timer += Time.deltaTime;
-            }
-            yield return null;
-        }
-
-        if (_audioSource != null && _audioSource.isPlaying)
-        {
-            // After 11 seconds: master volume x5
-            MainSystem.Instance.SoundController.SetAudioVolume(0, _originalMasterVolume * 5f);
-        }
     }
 
     public void OnResume()
@@ -274,16 +214,6 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 
     public void StopSound()
     {
-        // Stop the volume boost coroutine
-        if (_volumeBoostCoroutine != null)
-        {
-            StopCoroutine(_volumeBoostCoroutine);
-            _volumeBoostCoroutine = null;
-        }
-
-        // Restore master volume to its original value
-        MainSystem.Instance.SoundController.SetAudioVolume(0, _originalMasterVolume);
-
         if (_audioSource != null && _audioSource.isPlaying)
         {
             _audioSource.Stop();
@@ -355,20 +285,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     public void OnMarkTimeOver()
     {
         SetState(SphereState.TimeOver);
-        Color[] subColors = null;
-        float[] subTimes = null;
-        if(_isTutorial)
-        {
-            subColors = new Color[]{_timeOverColor * 10};
-            subTimes = new float[] {5.0f};
-        }
-        else
-        {
-            subColors = new Color[]{_timeOverColor * 10, _timeOverColor * 30, _timeOverColor * 50};
-            subTimes = new float[] {5.0f, 5.0f, 10.0f};
-        }
-        
-        SequenceChangeColor(_timeOverColor, subColors, subTimes);
+        SequenceChangeColor(_timeOverColor, _timeOverColor * 10, 2);
     }
     
     public void ResetToDefault()
@@ -383,39 +300,23 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         _meshRenderer.material.SetColor("_emission", finalColor);
     }
 
-    private void SequenceChangeColor(Color startColor, Color[] endColor, float[] maxTime)
+    private void SequenceChangeColor(Color startColor, Color endColor, float maxTime)
     {
-        if(IE_SequenceChangeColor_Handle != null)
-            return;
-        StartCoroutine(IE_SequenceChangeColor_Handle = IE_SequenceChangeColor(startColor, endColor, maxTime));
+        StartCoroutine(IE_SequenceChangeColor(startColor, endColor, maxTime));
     }
 
-    private IEnumerator IE_SequenceChangeColor(Color startColor, Color[] endColor, float[] subTime)
+    private IEnumerator IE_SequenceChangeColor(Color startColor, Color endColor, float maxTime)
     {
+        float currTime = 0.0f;
         Color finalColor = startColor;
-        Color afterColor = startColor;
-        int endColorLength = endColor.Length;
-        int subTimeLength = subTime.Length;
-        MainSystem.Instance.Loggers.LogInfo("InteractiveSphere", "IE_SequenceChangeColor", $"subTimeLength: {subTimeLength}");
-        for(int i = 0; i < subTimeLength; i++)
+        while(maxTime > currTime)
         {
-            float currTime = 0.0f;
-            MainSystem.Instance.Loggers.LogInfo("InteractiveSphere", "IE_SequenceChangeColor", $"subTime[{i}]: {subTime[i]}");
-            MainSystem.Instance.Loggers.LogInfo("InteractiveSphere", "IE_SequenceChangeColor", $"endColor[{i}]: {endColor[i]}");
-            while(subTime[i] > currTime)
-            {
-                if(!MainSystem.Instance.IsPause)
-                    currTime += Time.deltaTime;
-                yield return null;
-                finalColor = afterColor + endColor[i] * (currTime/subTime[i]);
-                _meshRenderer.material.SetColor("_emission", finalColor);
-                //MainSystem.Instance.Loggers.LogInfo("InteractiveSphere", "IE_SequenceChangeColor", $"{i}_finalColor: {finalColor}");
-            }
-            afterColor = finalColor;
-            MainSystem.Instance.Loggers.LogInfo("InteractiveSphere", "IE_SequenceChangeColor", $"end[{i}]");
+            yield return null;
+            currTime += Time.deltaTime;
+            finalColor = endColor * (currTime/maxTime);
+            _meshRenderer.material.SetColor("_emission", finalColor);
         }
-        MainSystem.Instance.Loggers.LogInfo("InteractiveSphere", "IE_SequenceChangeColor", $"end");
-        _meshRenderer.material.SetColor("_emission", endColor[endColorLength - 1]);
+        _meshRenderer.material.SetColor("_emission", endColor);
     }
 
     
