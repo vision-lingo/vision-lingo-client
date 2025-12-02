@@ -101,7 +101,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 5}
-  m_LocalScale: {x: 0.001, y: 0.001, z: 10}
+  m_LocalScale: {x: 0.002, y: 0.002, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 735101520858726763}
@@ -137,7 +137,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: b03a83cdf03d64c9e942ee0ce86f59e0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -284,7 +284,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1414015671520280577}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43bf8bb14a27145468e3ebffdc8cfe7f, type: 3}
   m_Name: 
@@ -2019,8 +2019,9 @@ MonoBehaviour:
   _mainCamera: {fileID: 3427911950599419540}
   _rayOffsetTransform: {fileID: 7254815597832590027}
   _rayDebugTransform: {fileID: 1482916246583774267}
-  _rayPosOffset: {x: 0, y: -0.1, z: 0}
+  _waitRayTime: 0.5
   _rayTime: 1
+  _rayCooltime: 1
 --- !u!1 &4968323061966857425
 GameObject:
   m_ObjectHideFlags: 0
@@ -3513,7 +3514,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 0
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
