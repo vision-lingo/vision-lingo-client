@@ -72,6 +72,8 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         }
     }
 
+    bool IXRHeadInteractable.IsInteractable { get => !_isTutorial; set => _isTutorial = value; }
+
     public event Action<SphereState> StateChanged;
 
     private void Awake()

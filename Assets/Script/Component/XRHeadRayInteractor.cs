@@ -4,6 +4,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.UI;
 using System;
 
+
 #if UNITY_EDITOR || UNITY_VISIONOS
 using UnityEngine.XR.VisionOS.InputDevices;
 #endif
@@ -13,10 +14,15 @@ public class XRHeadRayInteractor : MonoBehaviour
     [SerializeField] private Camera _mainCamera; 
     [SerializeField] private Transform _rayOffsetTransform;
     [SerializeField] private Transform _rayDebugTransform;
+    [SerializeField] private float _waitRayTime = 0.5f;
     [SerializeField] private float _rayTime = 1.0f;
+    [SerializeField] private float _rayCooltime = 1.0f;
     public Action<float> Act_FillGauge;
-    private bool _isRayOver;
+    private float _totalRayTime;
+    private float _currCoolTime = 0.0f;
     private float _currRayTime = 0.0f;
+    private bool _isRayOver;
+    private bool _isRayPossible = true;
 
     private PointerInput _pointerInput;
     private IXRHeadInteractable _lastInteractable = null;
@@ -29,6 +35,7 @@ public class XRHeadRayInteractor : MonoBehaviour
         }
         _pointerInput ??= new PointerInput();
         _pointerInput.Enable();
+        _totalRayTime = _waitRayTime + _rayTime;
     }
 
     void OnDisable()
@@ -39,27 +46,6 @@ public class XRHeadRayInteractor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_isRayOver)
-        {
-            _currRayTime += Time.deltaTime;
-            Act_FillGauge?.Invoke(1 - _currRayTime / _rayTime);
-            if(_currRayTime > _rayTime)
-            {
-                if(_lastInteractable != null)
-                {
-                    _lastInteractable.OnSelect();
-                    _lastInteractable = null;
-                }
-                _currRayTime = 0.0f;
-                _isRayOver = false;
-            }
-        }
-        else
-        {
-            _currRayTime = 0.0f;
-            Act_FillGauge?.Invoke(0);
-        }
-        //var defaultActions = _pointerInput.Default;
         #if UNITY_EDITOR
         Debug_RayCast();
         #else
@@ -68,6 +54,47 @@ public class XRHeadRayInteractor : MonoBehaviour
         // 카메라의 월드 좌표를 기준으로 레이를 계산하여 좌표계 문제를 방지합니다.
         RayTracking(_mainCamera.transform);
         #endif
+        if(!_isRayPossible)
+        {
+            _currCoolTime += Time.deltaTime;
+            if(_currCoolTime >= _rayCooltime)
+            {
+                _isRayPossible = true;
+                _currCoolTime = 0.0f;
+            }
+            return;
+        }
+
+        if(_isRayOver && _isRayPossible)
+        {
+            MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "Update", $"_lastInteractable: {_lastInteractable}");
+            MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "Update", $"_lastInteractable.IsInteractable: {_lastInteractable.IsInteractable}");
+            if(_lastInteractable != null && _lastInteractable.IsInteractable)
+            {
+                _currRayTime += Time.deltaTime;
+                MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "Update", $"_lastInteractable: {_currRayTime}");
+                // _waitRayTime 이후부터 게이지가 차오르도록 계산
+                if (_currRayTime >= _waitRayTime)
+                {
+                    float gaugeValue = (_currRayTime - _waitRayTime) / _rayTime;
+                    Act_FillGauge?.Invoke(Mathf.Clamp01(gaugeValue));
+                    MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "Update", $"gaugeValue: {_currRayTime}");
+                }
+
+                if (_currRayTime >= _totalRayTime)
+                {
+                    _lastInteractable.OnSelect();
+                    _isRayPossible = false; // 쿨다운 시작
+                    ResetRayState(); // 상호작용 후 상태 초기화
+                }
+            }
+        }
+        else
+        {
+            ResetRayState();
+        }
+        //var defaultActions = _pointerInput.Default;
+        
     }
 
 
@@ -128,5 +155,11 @@ public class XRHeadRayInteractor : MonoBehaviour
                 _lastInteractable = null;
             }
         }
+    }
+
+    private void ResetRayState()
+    {
+        _currRayTime = 0.0f;
+        Act_FillGauge?.Invoke(0);
     }
 }

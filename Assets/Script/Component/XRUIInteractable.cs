@@ -12,6 +12,9 @@ public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
     [SerializeField] private Color _hoverTxtColor;
     private Color _defaultImgColor;
     private Color _defaultTxtColor;
+
+    bool IXRHeadInteractable.IsInteractable { get => true; set {} }
+
     private void Awake()
     {
         Init();
@@ -46,7 +49,7 @@ public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
             Debug.LogError($"({gameObject.name})_TextMeshProUGUI is not found");
             return;
         }
-        boxCollider.size = new Vector3(rect.sizeDelta.x * 1.1f, rect.sizeDelta.y * 1.1f, 1.0f);
+        boxCollider.size = new Vector3(rect.sizeDelta.x * 1.1f, rect.sizeDelta.y * 1.1f, rect.sizeDelta.x < 1 ? 0.1f : 1.0f);
 
         _defaultImgColor = _img_button.color;
         _defaultTxtColor = _tmp_text.color;
