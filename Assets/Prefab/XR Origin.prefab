@@ -2020,7 +2020,7 @@ MonoBehaviour:
   _rayOffsetTransform: {fileID: 7254815597832590027}
   _rayDebugTransform: {fileID: 1482916246583774267}
   _waitRayTime: 0.5
-  _rayTime: 1
+  _rayTime: 1.5
   _rayCooltime: 1
 --- !u!1 &4968323061966857425
 GameObject:
