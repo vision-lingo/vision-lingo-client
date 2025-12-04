@@ -84,6 +84,11 @@ public class XRHeadRayInteractor : MonoBehaviour
                 if (_currRayTime >= _totalRayTime)
                 {
                     _lastInteractable.OnSelect();
+                    // tutorial 페이지이면
+                    if(UIPanelFactory.Instance != null)
+                    {
+                        UIPanelFactory.Instance.IsInteract = true;
+                    }
                     _isRayPossible = false; // 쿨다운 시작
                     ResetRayState(); // 상호작용 후 상태 초기화
                 }
@@ -144,6 +149,7 @@ public class XRHeadRayInteractor : MonoBehaviour
                 if(hitInfo.transform.TryGetComponent(out _lastInteractable))
                 {
                     _lastInteractable.OnRayOver();
+                    _isRayOver = true;
                 }
             }
         }
@@ -153,6 +159,7 @@ public class XRHeadRayInteractor : MonoBehaviour
             {
                 _lastInteractable.OnRayOut();
                 _lastInteractable = null;
+                _isRayOver = false;
             }
         }
     }

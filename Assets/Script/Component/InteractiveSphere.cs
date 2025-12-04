@@ -72,9 +72,16 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         }
     }
 
-    bool IXRHeadInteractable.IsInteractable { get => !_isTutorial; set => _isTutorial = value; }
+    /// <summary>
+    /// 특정 상태일 때만 인터렉션할 수 있도록 수정
+    /// </summary>
+    bool IXRHeadInteractable.IsInteractable { get => currentState == SphereState.Default || 
+    currentState == SphereState.SoundTriggered || currentState == SphereState.Wave || 
+    currentState == SphereState.TimeOver;
+     set => isHoverable = value; }
 
     public event Action<SphereState> StateChanged;
+
 
     private void Awake()
     {
@@ -107,7 +114,6 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
             StopCoroutine(_volumeBoostCoroutine);
         _volumeBoostCoroutine = null;
     }
-
     private void OnSelectEntered(SelectEnterEventArgs args)
     {
         OnTouched();
@@ -144,6 +150,14 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 
     public void SetState(SphereState newState) => CurrentState = newState;
 
+    /// <summary>
+    /// 튜토리얼에서 사용할 None 상태 추가 / 인터렉션 되지 않음.
+    /// </summary>
+    public void OnNone()
+    {
+        SetState(SphereState.None);
+        ChangeColor(_defaultColor);
+    }
     public void OnWave()
     {
         SetState(SphereState.Wave);
@@ -162,7 +176,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     {
         if(!isHoverable) return;
         // default 상태일 때만 호버 가능
-        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered)
+        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered || currentState == SphereState.Wave)
         {
             transform.localScale += Vector3.one * _hoverScale;
             ChangeColor(_hoverColor);
@@ -172,7 +186,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     public void OnRayOut()
     {
         if(!isHoverable) return;
-        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered)
+        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered || currentState == SphereState.Wave)
         {
             transform.localScale -= Vector3.one * _hoverScale;
             ChangeColor(_defaultColor);
@@ -187,6 +201,17 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     public void OnCorrect()
     {
         SetState(SphereState.Correct);
+        // 정답을 맞췄을 때, 모든 코루틴 종료
+        if(_volumeBoostCoroutine != null)
+        {
+            StopCoroutine(_volumeBoostCoroutine);
+            _volumeBoostCoroutine = null;
+        }
+        if(IE_SequenceChangeColor_Handle != null)
+        {
+            StopCoroutine(IE_SequenceChangeColor_Handle);
+            IE_SequenceChangeColor_Handle = null;
+        }
         ChangeColor(_correctColor, 2f);
         StopSound();
 
