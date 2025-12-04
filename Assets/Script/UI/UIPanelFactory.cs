@@ -15,6 +15,9 @@ public class UIPanelFactory : MonoBehaviour
 
     public Transform UIParent => uiParent;
     public bool IsIdle { get; private set; } = true;
+    public bool IsInteract {get; set;} = false;
+
+
 
     private void Awake()
     {
@@ -43,11 +46,12 @@ public class UIPanelFactory : MonoBehaviour
         }
         _panelInstance = null;
     }
-
-    public void ShowMessage(string text, bool isCenter = false, Action afterAct = null)
+    // 25/12/04 CY: isUSerInteraction 추가 -> 참여형 튜토리얼 개발을 위한 옵션
+    // isUserInteraction은 MessageGroupData에서 설정할 수 있음.
+    public void ShowMessage(string text, bool isUserInteraction = false, bool isCenter = false, float panelDuration = 2.0f, Action afterAct = null)
     {
         if (Instance == null || panelPrefab == null) return; // 안전 체크
-        StartCoroutine(ShowMessageCoroutine(text, isCenter, afterAct));
+        StartCoroutine(ShowMessageCoroutine(text, isUserInteraction, isCenter, panelDuration, afterAct));
     }
     // 25/10/29 CY: 마지막 메세지는 오버로드된 새로운 Show 메서드 호출
     public GameObject ShowLastMessage(string text, bool isCenter = false)
@@ -61,8 +65,8 @@ public class UIPanelFactory : MonoBehaviour
         panel.Show(text, pos, fade.fadeInTime, null);
         return panel.gameObject;
     }
-
-    private IEnumerator ShowMessageCoroutine(string text, bool isCenter, Action afterAct = null)
+    // 25/12/04 CY: isUSerInteraction 추가 -> 참여형 튜토리얼 개발을 위한 옵션
+    private IEnumerator ShowMessageCoroutine(string text, bool isUserInteraction = false, bool isCenter = false, float panelDuration = 2.0f, Action afterAct = null)
     {
         if(_panelInstance != null)
         {
@@ -76,8 +80,10 @@ public class UIPanelFactory : MonoBehaviour
         var pos = isCenter ? UIPanelSettingsHelper.GetCenterPosition() :
                              UIPanelSettingsHelper.GetUpperPosition(0.5f);
         var fade = UIPanelSettingsHelper.GetDefaultFadeSettings();
-
-        _panelInstance.Show(text, pos, fade.fadeInTime, fade.displayTime, fade.fadeOutTime, afterAct);
+        if(isUserInteraction)
+            _panelInstance.Show(text, pos, IsInteract, fade.fadeInTime, fade.fadeOutTime, afterAct);
+        else
+            _panelInstance.Show(text, pos, fade.fadeInTime, panelDuration, fade.fadeOutTime, afterAct);
 
         MainSystem.Instance.Act_Pause += _panelInstance.OnPause;
         MainSystem.Instance.Act_Resume += _panelInstance.OnResume;

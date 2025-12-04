@@ -117,7 +117,7 @@ public class TutorialSceneUI : MonoBehaviour
                     yield break;
                 }
                 else
-                    UIPanelFactory.Instance.ShowMessage(tutorialSequence[i].messages[j], tutorialSequence[i].isCenter);
+                    UIPanelFactory.Instance.ShowMessage(tutorialSequence[i].messages[j], tutorialSequence[i].isUserInteraction, tutorialSequence[i].isCenter, tutorialSequence[i].panelDuration);
                 yield return new WaitUntil(() => UIPanelFactory.Instance.IsIdle);
                 //SetExtraContent(tutorialSequence[i].extraContent[j].extraContent, false, Vector3.zero, Quaternion.identity);
             }

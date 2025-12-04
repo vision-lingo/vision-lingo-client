@@ -89,7 +89,9 @@ MonoBehaviour:
     - "\uC18C\uB9AC \uC704\uCE58 \uBD84\uBCC4 \uD6C8\uB828\uC5D0 \uC55E\uC11C, \uAC04\uB2E8\uD55C
       \uD29C\uD1A0\uB9AC\uC5BC\uC744 \uC2DC\uC791\uD558\uACA0\uC2B5\uB2C8\uB2E4."
     extraContent: []
+    panelDuration: 2
     isCenter: 1
+    isUserInteraction: 0
   - groupName: "\uACF5 \uD130\uCE58 \uD6C8\uB828 #1"
     messages:
     - "\uACF5\uC744 \uBC14\uB77C\uBD10 \uC8FC\uC138\uC694."
@@ -100,12 +102,25 @@ MonoBehaviour:
       rot: {x: 0, y: 0, z: 0}
       act_Start:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 9066738659683096704}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: OnNone
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    panelDuration: 2
     isCenter: 0
+    isUserInteraction: 0
   - groupName: "\uACF5 \uD130\uCE58 \uD6C8\uB828 #2"
     messages:
-    - "\uACF5\uC744 \uBC14\uB77C\uBCF8 \uC0C1\uD0DC\uC5D0\uC11C \uC5C4\uC9C0\uC640
-      \uAC80\uC9C0\uB97C \uD15D\uD558\uC5EC \uBCF4\uC138\uC694."
+    - "2\uCD08 \uB3D9\uC548 \uBC14\uB77C\uBCF4\uBA74 \uD574\uB2F9 \uACF5\uC774 \uC120\uD0DD\uB429\uB2C8\uB2E4."
     extraContent:
     - extraContent: {fileID: 8831349832884945408}
       extraDuration: 0
@@ -114,17 +129,12 @@ MonoBehaviour:
       act_Start:
         m_PersistentCalls:
           m_Calls: []
-    - extraContent: {fileID: 8458143951711514338}
-      extraDuration: 0
-      pos: {x: 0, y: 0.3, z: 2}
-      rot: {x: 0, y: 0, z: 0}
-      act_Start:
-        m_PersistentCalls:
-          m_Calls: []
+    panelDuration: 2
     isCenter: 0
+    isUserInteraction: 1
   - groupName: "\uACF5 \uD130\uCE58 \uD6C8\uB828 #3"
     messages:
-    - "\uD15D\uC73C\uB85C \uACF5 \uC120\uD0DD\uC774 \uC131\uACF5\uD588\uC2B5\uB2C8\uB2E4!"
+    - "\uD0ED\uC73C\uB85C \uACF5 \uC120\uD0DD\uC774 \uC131\uACF5\uD588\uC2B5\uB2C8\uB2E4!"
     extraContent:
     - extraContent: {fileID: 8831349832884945408}
       extraDuration: 0
@@ -145,12 +155,16 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
+    panelDuration: 2
     isCenter: 0
+    isUserInteraction: 0
   - groupName: "\uC18C\uB9AC \uC704\uCE58 \uD6C8\uB828 #1"
     messages:
     - "\uC18C\uB9AC \uC704\uCE58 \uD6C8\uB828\uC744 \uC54C\uB824\uB4DC\uB9AC\uACA0\uC2B5\uB2C8\uB2E4."
     extraContent: []
+    panelDuration: 2
     isCenter: 1
+    isUserInteraction: 0
   - groupName: "\uC18C\uB9AC \uC704\uCE58 \uD6C8\uB828 #2"
     messages:
     - "\uC18C\uB9AC\uAC00 \uB098\uB294 \uACF5\uC744 \uC120\uD0DD\uD574 \uC8FC\uC138\uC694."
@@ -174,14 +188,40 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
+          - m_Target: {fileID: 9066738659683096704}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: TriggerSound
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
     - extraContent: {fileID: 6758227649741004261}
       extraDuration: 0
       pos: {x: 0.5, y: 1, z: 2}
       rot: {x: 0, y: 0, z: 0}
       act_Start:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 6527628021173536613}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: OnNone
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    panelDuration: 2
     isCenter: 0
+    isUserInteraction: 1
   - groupName: "\uC18C\uB9AC \uC704\uCE58 \uD6C8\uB828 #3"
     messages:
     - "\uC54C\uB9DE\uC740 \uACF5\uC744 \uC120\uD0DD\uD558\uBA74 \uACF5\uC774 \uBC1D\uAC8C
@@ -194,6 +234,30 @@ MonoBehaviour:
       act_Start:
         m_PersistentCalls:
           m_Calls:
+          - m_Target: {fileID: 9066738659683096704}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: OffWaveEffect
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 9066738659683096704}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: StopSound
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
           - m_Target: {fileID: 9066738659683096704}
             m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
             m_MethodName: OnCorrect
@@ -212,8 +276,22 @@ MonoBehaviour:
       rot: {x: 0, y: 0, z: 0}
       act_Start:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 6527628021173536613}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: OnNone
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    panelDuration: 2
     isCenter: 0
+    isUserInteraction: 0
   - groupName: "\uC18C\uB9AC \uC704\uCE58 \uD6C8\uB828 #4"
     messages:
     - "\uC18C\uB9AC\uAC00 \uB098\uC9C0 \uC54A\uB294 \uACF5\uC744 \uC120\uD0DD\uD574
@@ -238,14 +316,52 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
+          - m_Target: {fileID: 9066738659683096704}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: TriggerSound
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 9066738659683096704}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: OnNone
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
     - extraContent: {fileID: 6758227649741004261}
       extraDuration: 0
       pos: {x: 0.5, y: 1, z: 2}
       rot: {x: 0, y: 0, z: 0}
       act_Start:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 6527628021173536613}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: ResetToDefault
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    panelDuration: 0
     isCenter: 0
+    isUserInteraction: 1
   - groupName: "\uC18C\uB9AC \uC704\uCE58 \uD6C8\uB828 #5"
     messages:
     - "\uC798\uBABB\uB41C \uACF5\uC744 \uC120\uD0DD\uD558\uBA74 \uACF5\uC774 \uD68C\uC0C9\uC73C\uB85C
@@ -257,7 +373,43 @@ MonoBehaviour:
       rot: {x: 0, y: 0, z: 0}
       act_Start:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 9066738659683096704}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: OffWaveEffect
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 9066738659683096704}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: StopSound
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 9066738659683096704}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: OnNone
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
     - extraContent: {fileID: 6758227649741004261}
       extraDuration: 0
       pos: {x: 0.5, y: 1, z: 2}
@@ -277,7 +429,9 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
+    panelDuration: 2
     isCenter: 0
+    isUserInteraction: 0
   - groupName: "\uC18C\uB9AC \uC704\uCE58 \uD6C8\uB828 #6"
     messages:
     - "\uACF5\uC744 \uC120\uD0DD\uD558\uC9C0 \uC54A\uACE0 10\uCD08\uAC00 \uC9C0\uB098\uBA74,
@@ -291,6 +445,18 @@ MonoBehaviour:
       act_Start:
         m_PersistentCalls:
           m_Calls:
+          - m_Target: {fileID: 9066738659683096704}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: TriggerSound
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
           - m_Target: {fileID: 9066738659683096704}
             m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
             m_MethodName: OnMarkTimeOver
@@ -309,8 +475,22 @@ MonoBehaviour:
       rot: {x: 0, y: 0, z: 0}
       act_Start:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 6527628021173536613}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: OnNone
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+    panelDuration: 10
     isCenter: 0
+    isUserInteraction: 0
   - groupName: "\uC18C\uB9AC \uC704\uCE58 \uD6C8\uB828 #7"
     messages:
     - "\uACF5\uC744 \uC120\uD0DD\uD558\uBA74 \uBCC0\uD654\uB41C \uC0C9\uC740 \uC0AC\uB77C\uC9C0\uAC8C
@@ -335,6 +515,18 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
+          - m_Target: {fileID: 9066738659683096704}
+            m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
+            m_MethodName: StopSound
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
     - extraContent: {fileID: 6758227649741004261}
       extraDuration: 0
       pos: {x: 0.5, y: 1, z: 2}
@@ -342,13 +534,17 @@ MonoBehaviour:
       act_Start:
         m_PersistentCalls:
           m_Calls: []
+    panelDuration: 2
     isCenter: 0
+    isUserInteraction: 0
   - groupName: "\uC74C\uB7C9 \uC870\uC808 #1"
     messages:
     - "\uC2A4\uC2A4\uB85C\uC5D0\uAC8C \uC54C\uB9DE\uAC8C \uB4E4\uB9AC\uB294 \uC74C\uB7C9\uC73C\uB85C
       \uC870\uC808\uD574 \uC8FC\uC138\uC694."
     extraContent: []
+    panelDuration: 2
     isCenter: 1
+    isUserInteraction: 0
   - groupName: "\uC74C\uB7C9 \uC870\uC808 #2"
     messages:
     - "\uC74C\uB7C9 \uC870\uC808 \uC190\uC7A1\uC774\uB97C \uC7A1\uC544 \uB04C\uBA70
@@ -362,7 +558,9 @@ MonoBehaviour:
       act_Start:
         m_PersistentCalls:
           m_Calls: []
+    panelDuration: 2
     isCenter: 0
+    isUserInteraction: 0
   - groupName: "\uC74C\uB7C9 \uC870\uC808 #3"
     messages:
     - "\uC74C\uB7C9 \uC870\uC808 \uC190\uC7A1\uC774\uB97C \uC7A1\uC544 \uB4DC\uB798\uADF8\uD558\uBA70
@@ -375,7 +573,9 @@ MonoBehaviour:
       act_Start:
         m_PersistentCalls:
           m_Calls: []
+    panelDuration: 2
     isCenter: 0
+    isUserInteraction: 0
   _btn_GotoTrainingScene: {fileID: 9053268852360265208}
   _volumeSlider: {fileID: 707361177446896261}
   _sliderHandle: {fileID: 616588631054153513}
@@ -503,7 +703,7 @@ PrefabInstance:
     - target: {fileID: -7754014678051161828, guid: 46efdc747f8bf4a1897dadfe4a16e23f,
         type: 3}
       propertyPath: isHoverable
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1385124752032408476, guid: 46efdc747f8bf4a1897dadfe4a16e23f,
         type: 3}
@@ -615,7 +815,7 @@ PrefabInstance:
     - target: {fileID: -7754014678051161828, guid: 46efdc747f8bf4a1897dadfe4a16e23f,
         type: 3}
       propertyPath: isHoverable
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1385124752032408476, guid: 46efdc747f8bf4a1897dadfe4a16e23f,
         type: 3}
@@ -754,6 +954,21 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3505174865508116807, guid: c9ebb374d05fd4a8fb915cf511521341,
+        type: 3}
+      propertyPath: _tmp_text
+      value: 
+      objectReference: {fileID: 8568271045984810440}
+    - target: {fileID: 3505174865508116807, guid: c9ebb374d05fd4a8fb915cf511521341,
+        type: 3}
+      propertyPath: _img_button
+      value: 
+      objectReference: {fileID: 1236853091983606272}
+    - target: {fileID: 3505174865508116807, guid: c9ebb374d05fd4a8fb915cf511521341,
+        type: 3}
+      propertyPath: _btn_interaction
+      value: 
+      objectReference: {fileID: 9053268852360265208}
     - target: {fileID: 3505174865508116807, guid: c9ebb374d05fd4a8fb915cf511521341,
         type: 3}
       propertyPath: _hoverImgColor.a
@@ -992,6 +1207,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1236853091983606272 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8957179697078398495, guid: c9ebb374d05fd4a8fb915cf511521341,
+    type: 3}
+  m_PrefabInstance: {fileID: 7882535403829603359}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &3497414745629505601 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6768122997862667358, guid: c9ebb374d05fd4a8fb915cf511521341,
@@ -1016,6 +1243,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7882535403829603359}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8568271045984810440 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1985235524906146263, guid: c9ebb374d05fd4a8fb915cf511521341,
+    type: 3}
+  m_PrefabInstance: {fileID: 7882535403829603359}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &9008351397506369309 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1180070583828146946, guid: c9ebb374d05fd4a8fb915cf511521341,

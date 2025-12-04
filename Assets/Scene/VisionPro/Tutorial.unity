@@ -539,10 +539,110 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 246598943075220748, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 0.768
+      objectReference: {fileID: 0}
+    - target: {fileID: 246598943075220748, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 0.2496
+      objectReference: {fileID: 0}
+    - target: {fileID: 246598943075220748, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 246598943075220748, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_Center.x
+      value: -0.38
+      objectReference: {fileID: 0}
+    - target: {fileID: 246598943075220748, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 616588631054153513, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616588631054153513, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616588631054153513, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 616588631054153513, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.050000012
+      objectReference: {fileID: 0}
+    - target: {fileID: 3582313028367851384, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3582313028367851384, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3582313028367851384, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3582313028367851384, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3582313028367851384, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0.76799995
+      objectReference: {fileID: 0}
+    - target: {fileID: 3582313028367851384, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 1.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 3582313028367851384, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.93
+      objectReference: {fileID: 0}
     - target: {fileID: 4058310214924928999, guid: 43ae06e0419574d559f3ea0670c31331,
         type: 3}
       propertyPath: m_Name
       value: TutorialUIManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 6755546602683303256, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: _hoverImgColor.a
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6755546602683303256, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: _hoverImgColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6755546602683303256, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: _hoverImgColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6755546602683303256, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: _hoverImgColor.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7627900508211043400, guid: 43ae06e0419574d559f3ea0670c31331,
         type: 3}
@@ -592,6 +692,21 @@ PrefabInstance:
     - target: {fileID: 7627900508211043400, guid: 43ae06e0419574d559f3ea0670c31331,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8268006117337020635, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8268006117337020635, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8554735839770459197, guid: 43ae06e0419574d559f3ea0670c31331,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
