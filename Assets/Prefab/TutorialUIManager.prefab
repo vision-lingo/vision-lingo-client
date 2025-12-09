@@ -90,7 +90,7 @@ MonoBehaviour:
       \uD29C\uD1A0\uB9AC\uC5BC\uC744 \uC2DC\uC791\uD558\uACA0\uC2B5\uB2C8\uB2E4."
     extraContent: []
     panelDuration: 2
-    isCenter: 1
+    isCenter: 0
     isUserInteraction: 0
   - groupName: "\uACF5 \uD130\uCE58 \uD6C8\uB828 #1"
     messages:
@@ -163,7 +163,7 @@ MonoBehaviour:
     - "\uC18C\uB9AC \uC704\uCE58 \uD6C8\uB828\uC744 \uC54C\uB824\uB4DC\uB9AC\uACA0\uC2B5\uB2C8\uB2E4."
     extraContent: []
     panelDuration: 2
-    isCenter: 1
+    isCenter: 0
     isUserInteraction: 0
   - groupName: "\uC18C\uB9AC \uC704\uCE58 \uD6C8\uB828 #2"
     messages:
@@ -543,7 +543,7 @@ MonoBehaviour:
       \uC870\uC808\uD574 \uC8FC\uC138\uC694."
     extraContent: []
     panelDuration: 2
-    isCenter: 1
+    isCenter: 0
     isUserInteraction: 0
   - groupName: "\uC74C\uB7C9 \uC870\uC808 #2"
     messages:
