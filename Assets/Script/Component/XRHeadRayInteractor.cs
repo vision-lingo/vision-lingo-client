@@ -83,12 +83,24 @@ public class XRHeadRayInteractor : MonoBehaviour
 
                 if (_currRayTime >= _totalRayTime)
                 {
-                    _lastInteractable.OnSelect();
                     // tutorial 페이지이면
                     if(UIPanelFactory.Instance != null)
                     {
-                        UIPanelFactory.Instance.IsInteract = true;
+                        InteractiveSphere sphere = (InteractiveSphere)_lastInteractable;
+                        if(sphere != null)
+                        {
+                            if(sphere.CurrentState == InteractiveSphere.SphereState.Tutorial_WrongSelect)
+                            {
+                                UIPanelFactory.Instance.ShakeUI(0.12f, 0.7f);
+                            }
+                            else
+                            {
+                                UIPanelFactory.Instance.IsInteract = true;
+                            }
+                        }
                     }
+                    else
+                        _lastInteractable.OnSelect();
                     _isRayPossible = false; // 쿨다운 시작
                     ResetRayState(); // 상호작용 후 상태 초기화
                 }

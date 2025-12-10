@@ -209,7 +209,7 @@ MonoBehaviour:
           m_Calls:
           - m_Target: {fileID: 6527628021173536613}
             m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
-            m_MethodName: OnNone
+            m_MethodName: Tutorial_WrongSelect
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
@@ -330,7 +330,7 @@ MonoBehaviour:
             m_CallState: 2
           - m_Target: {fileID: 9066738659683096704}
             m_TargetAssemblyTypeName: InteractiveSphere, Assembly-CSharp
-            m_MethodName: OnNone
+            m_MethodName: Tutorial_WrongSelect
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
@@ -1157,7 +1157,7 @@ PrefabInstance:
     - target: {fileID: 7256821898714807962, guid: c9ebb374d05fd4a8fb915cf511521341,
         type: 3}
       propertyPath: m_Value
-      value: 0.127
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 7343950665417415478, guid: c9ebb374d05fd4a8fb915cf511521341,
         type: 3}

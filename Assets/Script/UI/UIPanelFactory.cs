@@ -46,6 +46,13 @@ public class UIPanelFactory : MonoBehaviour
         }
         _panelInstance = null;
     }
+    public void ShakeUI(float strength, float duration)
+    {
+        if (_panelInstance != null)
+        {
+            _panelInstance.ShakeUI(strength, duration);
+        }
+    }
     // 25/12/04 CY: isUSerInteraction 추가 -> 참여형 튜토리얼 개발을 위한 옵션
     // isUserInteraction은 MessageGroupData에서 설정할 수 있음.
     public void ShowMessage(string text, bool isUserInteraction = false, bool isCenter = false, float panelDuration = 2.0f, Action afterAct = null)

@@ -30,6 +30,28 @@ public class UIPanel : MonoBehaviour
         _sequence.Play();
     }   
 
+    public void ShakeUI(float strength, float duration)
+    {
+        _lastAnchoredPosition = _rectTransform.anchoredPosition;
+        StartCoroutine(IE_ShakeUI_Handle = IE_ShakeUI(strength, duration));
+    }
+
+    private IEnumerator IE_ShakeUI(float strength, float duration)
+    {
+        float currTime = 0.0f;
+        
+        while(currTime < duration)
+        {
+            if(!MainSystem.Instance.IsPause)    
+                currTime += Time.deltaTime;
+            yield return null;
+            _rectTransform.anchoredPosition = 
+            new Vector2(_lastAnchoredPosition.x + UnityEngine.Random.Range(-strength, strength), 
+                        _lastAnchoredPosition.y + UnityEngine.Random.Range(-strength, strength));
+        }
+        _rectTransform.anchoredPosition = _lastAnchoredPosition;
+
+    }
 
     // 25/10/29 CY: 자동으로 비활성화 되지 않는 UI 호출 시 사용.
     public void Show(string message, Vector2 anchoredPosition, float fadeInTime = 0.8f, Action onComplete = null)
