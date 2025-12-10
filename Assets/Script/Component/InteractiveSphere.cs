@@ -95,6 +95,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     {
         if (_grab != null)
             _grab.selectEntered.AddListener(OnSelectEntered);
+        _originalMasterVolume = MainSystem.Instance.SoundController.CurrMaxsterVolume;
     }
 
     private void OnDisable()
