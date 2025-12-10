@@ -77,7 +77,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     /// </summary>
     bool IXRHeadInteractable.IsInteractable { get => currentState == SphereState.Default || 
     currentState == SphereState.SoundTriggered || currentState == SphereState.Wave || 
-    currentState == SphereState.TimeOver;
+    currentState == SphereState.TimeOver || currentState == SphereState.Tutorial_WrongSelect;
      set => isHoverable = value; }
 
     public event Action<SphereState> StateChanged;
@@ -158,6 +158,14 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         SetState(SphereState.None);
         ChangeColor(_defaultColor);
     }
+    /// <summary>
+    /// 튜토리얼에서 이 상태인 공을 선택하면 UI가 흔들린다.
+    /// </summary>
+    public void Tutorial_WrongSelect()
+    {
+        SetState(SphereState.Tutorial_WrongSelect);
+    }
+
     public void OnWave()
     {
         SetState(SphereState.Wave);
@@ -176,9 +184,10 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     {
         if(!isHoverable) return;
         // default 상태일 때만 호버 가능
-        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered || currentState == SphereState.Wave)
+        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered || currentState == SphereState.Wave || currentState == SphereState.Tutorial_WrongSelect)
         {
-            transform.localScale += Vector3.one * _hoverScale;
+            //transform.localScale += Vector3.one * _hoverScale;
+            transform.localScale = Vector3.one * _scaleUpSize;
             ChangeColor(_hoverColor);
         }
     }
@@ -186,9 +195,10 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     public void OnRayOut()
     {
         if(!isHoverable) return;
-        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered || currentState == SphereState.Wave)
+        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered || currentState == SphereState.Wave || currentState == SphereState.Tutorial_WrongSelect) 
         {
-            transform.localScale -= Vector3.one * _hoverScale;
+            //transform.localScale -= Vector3.one * _hoverScale;
+            transform.localScale = Vector3.one * _originSize;
             ChangeColor(_defaultColor);
         }
     }
