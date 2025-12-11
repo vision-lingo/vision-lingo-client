@@ -402,7 +402,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         }
         else
         {
-            subColors = new Color[]{_timeOverColor * 10, _timeOverColor * 30, _timeOverColor * 50};
+            subColors = new Color[]{_timeOverColor * 10, _timeOverColor * 30, _timeOverColor * 60};
             subTimes = new float[] {5.0f, 5.0f, 10.0f};
         }
         
