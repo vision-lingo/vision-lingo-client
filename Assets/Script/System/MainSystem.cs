@@ -18,12 +18,12 @@ public class MainSystem : SingletonT<MainSystem>
     public float CurrMusicVolume
     {
         get { return _soundController.AudioMusic.volume; }
-        set { _soundController.SetAudioVolume(0, value); }
+        set { _soundController.SetAudioVolume(1, value); }
     }
     public float CurrSfxVolume 
     { 
         get { return _soundController.AudioSfx.volume; } 
-        set { _soundController.SetAudioVolume(1, value); } 
+        set { _soundController.SetAudioVolume(2, value); } 
     }
     public bool IsPause { get; private set; }
     public bool IsDev => _isDev;
@@ -87,6 +87,7 @@ public class MainSystem : SingletonT<MainSystem>
         _loggers.IsDebug = _isDebug;
         Act_Pause += OnPause;
         Act_Resume += OnResume;
+        _soundController.SetAudioVolume(0, 0.3f);
     }
 
     private void OnPause()
