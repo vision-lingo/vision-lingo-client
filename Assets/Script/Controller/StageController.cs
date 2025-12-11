@@ -3,9 +3,63 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.UI;
+
 
 public class StageController : MonoBehaviour
 {
+
+    private enum RoundState
+    {
+        Complete = 0,
+        Current = 1,
+        Remain = 2
+    }
+    [Serializable]
+    private class TrainingRound
+    {
+        [SerializeField] private TextMeshProUGUI _text_currRound;
+        [SerializeField] private Image[] _img_roundBg;
+        [SerializeField] private TextMeshProUGUI[] _txt_round;
+        [SerializeField] private Image[] _img_checkIcon;
+        [SerializeField] private Color _currColor;
+        [SerializeField] private Color _completeColor;
+        [SerializeField] private Color _remainColor;
+
+        public void Init()
+        {
+            _text_currRound.text = "1";
+            _img_roundBg[0].color = _currColor;
+            _txt_round[0].gameObject.SetActive(true);
+            _img_checkIcon[0].gameObject.SetActive(false);
+        }
+        public void SetUI(int currIdx)
+        {
+            int length = _img_roundBg.Length;
+
+            _text_currRound.text = (currIdx + 1).ToString();
+            _img_roundBg[currIdx].color = _currColor;
+
+            // 이전
+            for(int i = currIdx - 1; i >= 0; i--)
+            {
+                _txt_round[i].gameObject.SetActive(false);
+                _img_checkIcon[i].gameObject.SetActive(true);
+                _img_roundBg[i].color = _completeColor;
+            }
+            // 다음
+            for(int i = currIdx + 1; i < length; i++)
+            {
+                _txt_round[i].gameObject.SetActive(true);
+                _img_roundBg[i].color = _remainColor;
+            }
+        }
+    }
+
+    [Header("Round 표시_CY")]
+    [SerializeField] private TrainingRound _trainingRound;
+
+
     [Header("Refs")]
     [Tooltip("StageSpawner 컴포넌트 (필수)")]
     public StageSpawner spawner;
@@ -321,7 +375,8 @@ public class StageController : MonoBehaviour
             float timeToCorrect = Time.time - _roundStartTime;
 
             _roundIndex++;
-            UpdateRoundDots();
+            //UpdateRoundDots();
+            _trainingRound.SetUI(_roundIndex);
 
             return;
         }
@@ -448,17 +503,21 @@ public class StageController : MonoBehaviour
         _totalRounds = (LastStage - FirstStage + 1) * RoundsPerStage;
         _roundIndex = 0;
 
-        BuildRoundDotsUI();
-        UpdateRoundDots();
-        RoundProgressContainer.gameObject.SetActive(false);
+        //BuildRoundDotsUI();
+        //UpdateRoundDots();
+        _trainingRound.Init();
+        //RoundProgressContainer.gameObject.SetActive(false);
     }
 
     private void ShowRoundProgress(bool update = true)
     {
         if (update)
-            UpdateRoundDots();
+        {
+            _trainingRound.SetUI(_roundIndex);
+            //UpdateRoundDots();
+        }
 
-        RoundProgressContainer.gameObject.SetActive(true);
+        //RoundProgressContainer.gameObject.SetActive(true);
     }
 
     private void HideRoundProgress()
