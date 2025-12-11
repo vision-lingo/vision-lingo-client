@@ -15,7 +15,8 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         Correct = 3,
         Touched = 4,
         Wrong = 5,
-        TimeOver = 6
+        TimeOver = 6,
+        Tutorial_WrongSelect = 7,
     }
 
     [SerializeField]
@@ -58,7 +59,8 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     [SerializeField] private bool enableMouseClick = true;
 
     private IEnumerator IE_SequenceChangeColor_Handle = null;
-
+    private float _originSize;
+    private float _scaleUpSize;
     private float _hoverScale;
     public SphereState CurrentState
     {
@@ -89,6 +91,8 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         if (_audioSource == null) _audioSource = GetComponent<AudioSource>(); 
         if (_meshRenderer == null) _meshRenderer = GetComponent<MeshRenderer>();
         _hoverScale = transform.localScale.x * _scaleFactor;
+        _originSize = transform.localScale.x;
+        _scaleUpSize = _originSize + _hoverScale;
     }
 
     private void OnEnable()

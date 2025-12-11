@@ -58,7 +58,8 @@ public class UIPanelFactory : MonoBehaviour
     public void ShowMessage(string text, bool isUserInteraction = false, bool isCenter = false, float panelDuration = 2.0f, Action afterAct = null)
     {
         if (Instance == null || panelPrefab == null) return; // 안전 체크
-        StartCoroutine(ShowMessageCoroutine(text, isUserInteraction, isCenter, panelDuration, afterAct));
+        IsInteract = isUserInteraction;
+        StartCoroutine(ShowMessageCoroutine(text, isCenter, panelDuration, afterAct));
     }
     // 25/10/29 CY: 마지막 메세지는 오버로드된 새로운 Show 메서드 호출
     public GameObject ShowLastMessage(string text, bool isCenter = false)
@@ -73,7 +74,7 @@ public class UIPanelFactory : MonoBehaviour
         return panel.gameObject;
     }
     // 25/12/04 CY: isUSerInteraction 추가 -> 참여형 튜토리얼 개발을 위한 옵션
-    private IEnumerator ShowMessageCoroutine(string text, bool isUserInteraction = false, bool isCenter = false, float panelDuration = 2.0f, Action afterAct = null)
+    private IEnumerator ShowMessageCoroutine(string text, bool isCenter = false, float panelDuration = 2.0f, Action afterAct = null)
     {
         if(_panelInstance != null)
         {
@@ -87,8 +88,8 @@ public class UIPanelFactory : MonoBehaviour
         var pos = isCenter ? UIPanelSettingsHelper.GetCenterPosition() :
                              UIPanelSettingsHelper.GetUpperPosition(0.5f);
         var fade = UIPanelSettingsHelper.GetDefaultFadeSettings();
-        if(isUserInteraction)
-            _panelInstance.Show(text, pos, IsInteract, fade.fadeInTime, fade.fadeOutTime, afterAct);
+        if(IsInteract)
+            _panelInstance.Show(text, pos, fade.fadeInTime, fade.fadeOutTime, afterAct);
         else
             _panelInstance.Show(text, pos, fade.fadeInTime, panelDuration, fade.fadeOutTime, afterAct);
 
