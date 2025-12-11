@@ -84,7 +84,8 @@ public class XRHeadRayInteractor : MonoBehaviour
                 if (_currRayTime >= _totalRayTime)
                 {
                     // tutorial 페이지이면
-                    if(UIPanelFactory.Instance != null)
+                    // TODO: 추후에 반드시 바꿔야 함.. string 말고 int나 enum으로 교체해야 함.
+                    if(SceneLoader.Instance.CurrentScene == "Tutorial")
                     {
                         InteractiveSphere sphere = (InteractiveSphere)_lastInteractable;
                         if(sphere != null)

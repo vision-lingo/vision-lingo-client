@@ -13,6 +13,7 @@ public sealed class SceneLoader : MonoBehaviour
     public Action Act_SceneLoadStart {get; private set;}
     public Action Act_SceneLoadCompleted {get; private set;}
 
+    public string CurrentScene => SceneManager.GetActiveScene().name;
     private IEnumerator IE_LoadSceneHandle = null;
     private void Awake()
     {
@@ -29,8 +30,8 @@ public sealed class SceneLoader : MonoBehaviour
     private void Start()
     {
         // 게임 시작 시 자동으로 Tutorial 씬으로 이동
-        LoadTutorial();
-        //LoadMain();
+        LoadTraining();
+        //LoadLobby();
     }
     public void SetLoadSceneAct(Action actSceneLoadStart, Action actSceneLoadCompleted)
     {
