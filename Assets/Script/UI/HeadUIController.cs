@@ -35,7 +35,7 @@ public class HeadUIController : MonoBehaviour
     private void SetAdjustVolumeUI()
     {
         // 25/10/29 CY: 튜토리얼 Scene에서만 쓰이는 UI 액션 할당
-        MainSystem.Instance.SoundController.SetAudioVolume(0, _volumeSlider.value);
+        //MainSystem.Instance.SoundController.SetAudioVolume(0, _volumeSlider.value);
         _volumeSlider.onValueChanged.AddListener(OnControlVolume);
     }
 
@@ -59,6 +59,7 @@ public class HeadUIController : MonoBehaviour
     public void ShowAdjustVolumeWindow()
     {
         _dimObj.SetActive(true);
+        _volumeSlider.value = MainSystem.Instance.SoundController.CurrMaxsterVolume;
         MainSystem.Instance.Act_Pause?.Invoke();
         _volumeAdjustWindow.SetActive(true);
     }
