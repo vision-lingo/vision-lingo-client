@@ -10,8 +10,8 @@ public sealed class SceneLoader : MonoBehaviour
 
     public static SceneLoader Instance => _instance ?? throw new System.Exception("SceneLoader is not initialized.");
 
-    public Action Act_SceneLoadStart {get; private set;}
-    public Action Act_SceneLoadCompleted {get; private set;}
+    public Action Act_SceneLoadStart { get; private set; }
+    public Action Act_SceneLoadCompleted { get; private set; }
 
     public string CurrentScene => SceneManager.GetActiveScene().name;
     private IEnumerator IE_LoadSceneHandle = null;
@@ -30,14 +30,14 @@ public sealed class SceneLoader : MonoBehaviour
     private void Start()
     {
         // 게임 시작 시 자동으로 Tutorial 씬으로 이동
-        LoadTraining();
-        //LoadLobby();
+        //LoadTraining();
+        LoadLobby();
     }
     public void SetLoadSceneAct(Action actSceneLoadStart, Action actSceneLoadCompleted)
     {
-        if(actSceneLoadStart != null)
+        if (actSceneLoadStart != null)
             Act_SceneLoadStart += actSceneLoadStart;
-        if(actSceneLoadCompleted != null)
+        if (actSceneLoadCompleted != null)
             Act_SceneLoadCompleted += actSceneLoadCompleted;
     }
     /// <summary>
@@ -45,7 +45,7 @@ public sealed class SceneLoader : MonoBehaviour
     /// </summary>
     public void LoadScene(string sceneName)
     {
-        if(IE_LoadSceneHandle != null)
+        if (IE_LoadSceneHandle != null)
             return;
         StartCoroutine(IE_LoadSceneHandle = IE_LoadScene(sceneName));
     }
@@ -55,7 +55,7 @@ public sealed class SceneLoader : MonoBehaviour
         Debug.Log("Act_SceneLoadStart");
         Act_SceneLoadStart?.Invoke();
         AsyncOperation sceneLoadHanldle = SceneManager.LoadSceneAsync(sceneName);
-        while(!sceneLoadHanldle.isDone)
+        while (!sceneLoadHanldle.isDone)
             yield return null;
         Debug.Log("Act_SceneLoadCompleted");
         Act_SceneLoadCompleted?.Invoke();
