@@ -1,103 +1,129 @@
-# Vision Lingo Client
+# 온소리 Sphere: Vision Pro 기반 공간청각·감각통합 XR 청능재활 시스템
 
-Apple Vision Pro를 위한 Unity 기반의 VR 어플리케이션 프로젝트입니다.
+[![Unity](https://img.shields.io/badge/Unity-6000.0.58f1-black.svg?style=flat&logo=unity)](https://unity.com/releases/editor/whats-new/6000.0.58f1)
+[![Platform](https://img.shields.io/badge/platform-visionOS_2.4.1-lightgrey?logo=apple)](https://developer.apple.com/visionos/)
+[![Pipeline](https://img.shields.io/badge/RenderPipeline-URP-orange)]()
 
----
-
-## 1. Environment
-
-### Unity Version
-- **Version**: 6000.0.58f1
-
-### Target Platform
-- **Device**: Apple Vision Pro
-- **OS Version**: visionOS 2.4.1
-- **RenderPipeline**: Universal Render Pipeline (URP)
-### Key Packages
-- **com.unity.xr.visionos**: 2.3.1
-- **com.unity.xr.hands**: 1.5.1
-- **com.unity.xr.interaction.toolkit**: 3.0.8
-- **com.unity.render-pipelines.universal**: 17.0.4
-- **com.unity.inputsystem**: 1.14.2
+## 📝 Introduction
+이 프로젝트는 **Apple Vision Pro**를 위한 Unity 기반의 VR 어플리케이션으로, **Metal Rendering with Compositor Services**를 활용하여 고품질의 공간 오디오와 시각적 몰입감을 제공하는 청능재활 및 감각통합 시스템입니다.
 
 ---
 
-## 2. Project Structure
+## 🛠 Development Environment
 
-### Root `Assets` Structure
-*   `Scene`: Contains sub-folders for development environments.
-    *   `Dev`: Scenes for PC debugging (Simulator/Editor).
-    *   `VisionPro`: Production scenes optimized for the device.
-*   `Script`: Source code organized by architecture layer (`Controller`, `System`, `UI`, `Component` etc.).
-*   `Art`: Art assets including textures, materials, and models.
-*   `Prefab`: Reusable game objects for UI, Interactors, and Environment logic.
-*   `ExternalResources`: Imported third-party assets and fonts.
-*   `XR`: XR-specific configuration settings and profiles.
+### Core Requirements
+Unity 프로젝트 버전 호환성 및 Vision Pro 빌드를 위해 아래 명시된 환경을 권장합니다.
 
----
+| Component | Version | Details |
+| :--- | :--- | :--- |
+| **Unity Editor** | `6000.0.58f1` | (필수) visionOS 빌드 지원 버전 |
+| **Target Platform** | Apple Vision Pro | visionOS 2.4.1 |
+| **Render Pipeline** | URP | Universal Render Pipeline |
+| **App Mode** | Metal (VR) | RealityKit(PolySpatial) 미사용 |
 
-## 3. Development Workflow & Methodology
+### Dependencies & Packages
+이 프로젝트는 다음의 핵심 패키지들을 사용합니다.
 
-### Dual-Scene Development Architecture
-
-본 프로젝트는 Apple Vision Pro 기기가 없는 환경에서도 원활한 개발 및 테스트가 가능하도록 **이원화된 씬(Scene) 관리 구조**를 채택했습니다.
-
-#### 1. Development Mode (`_Dev` Logic)
-*   **Scene Naming Convention**: `SceneName_Dev` (e.g., `Lobby_Dev`, `Tutorial_Dev`).
-*   **Purpose**: PC(Editor/Simulator) 환경에서의 빠른 로직 검증 및 디버깅.
-*   **Target Audience**: Vision Pro 기기를 보유하지 않은 개발자.
-*   **Logic Implementation**:
-    *   `MainSystem.Instance.IsDev` 플래그(Inspector 설정)에 따라 `SceneLoader`가 자동으로 적절한 씬을 로드합니다.
-    *   `SceneLoader.cs`는 `LoadLobby()` 호출 시 `IsDev`가 `true`이면 `Lobby_Dev`를, `false`이면 `Lobby`를 로드하도록 분기 처리되어 있습니다.
-
-#### 2. Production Mode (Vision Pro Logic)
-*   **Scene Naming Convention**: Standard Name (e.g., `Lobby`, `Tutorial`).
-*   **Purpose**: 실제 기기 빌드 및 최종 퀄리티 검증.
-*   **Target Audience**: Vision Pro 기기를 보유한 개발자 및 빌드 머신.
-*   **Logic Implementation**:
-    *   `MainSystem` 프리팹 혹은 씬 내 `MainSystem` 객체의 `IsDev` 체크박스를 `false`로 설정하여 빌드합니다.
-    *   Metal Rendering 및 VisionOS 전용 기능들이 활성화된 상태로 동작합니다.
-
-### Code-Level Scene Management
-*   **`MainSystem.cs`**: 전역 시스템 관리자로서 `IsDev` 변수를 관리합니다.
-*   **`SceneLoader.cs`**: 씬 전환 요청을 중재하며, `IsDev` 값에 따라 동적으로 타겟 씬 이름을 결정합니다.
-*   **`Bootstrap` Scene**: 앱 실행 시 가장 먼저 로드되는 진입점(Entry Point)으로, 여기서 `MainSystem`이 초기화되고 환경에 맞는 첫 번째 씬(`LoadLobby` or `LoadTutorial`)으로 분기합니다.
-
-```csharp
-// Example Logic in SceneLoader.cs
-public void LoadLobby() => LoadScene(MainSystem.Instance.IsDev ? "Lobby_Dev" : "Lobby");
-```
+| Package Name | Version | Note |
+| :--- | :--- | :--- |
+| **com.unity.xr.visionos** | `2.3.1` | VisionOS 플랫폼 지원 |
+| **com.unity.xr.hands** | `1.5.1` | 핸드 트래킹 |
+| **com.unity.xr.interaction.toolkit** | `3.0.8` | XRI 상호작용 시스템 |
+| **com.unity.render-pipelines.universal** | `17.0.4` | 렌더링 파이프라인 |
+| **com.unity.inputsystem** | `1.14.2` | 입력 시스템 |
 
 ---
 
-## 4. App Mode: Metal API (VR)
+## 📂 Project Structure
 
-본 프로젝트는 Apple Vision Pro의 **Metal Rendering with Compositor Services (Metal 모드)** 를 기반으로 개발되었습니다. RealityKit 모드(PolySpatial) 대신 Metal API를 선택한 주요 이유는 다음과 같습니다.
+> **📝 Naming Convention Rule**
+> * 구조 외의 파일 네이밍은 자유롭게 가능합니다.
+> * 단, 순서도가 있는 항목(Scene 등)은 `숫자_` prefix를 사용하여 정렬합니다.
+> * 그 외에는 자유롭게 작성하되, 팀 내 합의된 규칙을 따릅니다.
 
-### 선정 이유
+### 🎨 Art
+아트 리소스들을 담습니다.
 
-1.  **공간 오디오 (Spatial Audio) 지원**
-    *   RealityKit 기반의 PolySpatial 모드에서는 Unity의 오디오 기능을 온전히 사용하는 데 제약이 존재합니다.
-    *   Metal 모드를 사용함으로써 Unity의 Audio system과 공간 오디오 기능을 완벽하게 지원하며, 몰입감 있는 사운드 환경을 제공합니다.
+> **📂 상세 구조**
+> * **Animation**
+>   * `Animation`: 작동하는 Animation 파일을 담는다. (`.anim`)
+>   * `Animator`: Animation을 동작 시키는 Animator를 담는다. (`.animator`)
+> * **Font**: Font 파일을 담는다. (`.ttf`, `*SDF.asset`)
+> * **Material**: Material 파일을 담는다. (`.mat`)
+> * **Mesh**: 3D mesh 파일을 담는다. (`.fbx`)
+> * **Settings**: URP Graphics Setting 파일들을 담는다. (`.asset`)
+> * **ShaderGraph**: ShaderGraph 파일들을 담는다. (`.shadergraph`)
+> * **Sound**
+>   * `Music`: 음악 파일을 담는다. (`.mp3`, `.wav` 등)
+>   * `SFX`: 효과음 파일을 담는다. (`.mp3`, `.wav` 등)
+> * **Sprite**: Sprite로 변환된 파일들을 담는다. (`.jpg`, `.png` + `.meta`)
+> * **Texture**: Sprite로 변환되지 않는 이미지 파일들을 담는다. (`.jpg`, `.png`)
 
-2.  **원활한 렌더링 및 그래픽 제어**
-    *   Metal API를 직접 활용하여 GPU 성능을 최대로 이끌어내며, RealityKit 레이어를 거치지 않아 오버헤드가 적고 더 안정적인 프레임레이트를 확보할 수 있습니다.
-    *   **커스텀 쉐이더 호환성**: RealityKit 변환 과정에서 일부 쉐이더가 깨지거나 작동하지 않는 문제를 방지하고, Unity의 쉐이더 그래프 및 커스텀 쉐이더를 그대로 사용할 수 있습니다.
-    *   전체적으로 더 깔끔하고 의도한 대로 렌더링 품질을 보장합니다.
+### 📦 ExternalResources
+외부 라이브러리를 담습니다.
+* *예시: Newtonsoft JSON, UniRX*
 
-3.  **Post Processing 완벽 지원**
-    *   Unity의 URP(Universal Render Pipeline) 기반 Post Processing Stack(Bloom, Color Grading 등)을 제한 없이 사용할 수 있어, 시각적 완성도를 높일 수 있습니다.
+### 🧱 Prefab
+재사용 가능한 GameObject를 담습니다.
 
-4.  **HDR (High Dynamic Range) 지원**
-    *   Vision Pro의 뛰어난 디스플레이 성능을 활용하기 위해 HDR 렌더링을 지원하여 더 풍부한 색감과 명암비를 표현합니다.
+> **📂 상세 구조**
+> * **Popup**: (런타임 후) 재사용되는 Popup을 담는다. (*예: `Popup_Setting.prefab`, `Popup_Noti.prefab`*)
+> * **VFX**: 이펙트 프리팹을 담는다. (*예: `Spark.prefab`, `Starlight.prefab`*)
+> * **UI**: (런타임 전) 재사용되는 UICanvas와 UI를 담는다.
+
+### 🗂 Resources
+런타임에 Asset을 불러오기 위한 폴더입니다. (권장되지 않음)
+* *예시: `Sound/sfx/sfx_01.mp3`*
+
+### 🎬 Scene
+Scene 파일들을 담습니다. (*순서가 필요한 경우 숫자 Prefix 사용*)
+
+### 📜 Script
+소스 코드를 담습니다.
+
+> **📂 상세 구조**
+> * **Editor**: Editor 환경에서만 작동하는 스크립트들을 담는다.
+> * **Runtime**
+>   * `Component`: 재사용 가능한 Prefab의 스크립트들을 담는다.
+>   * `Controller`: 하나의 Scene에서 개별적으로 동작하는 요소들을 넣는다.
+>   * `System`: 하나의 Scene을 관장하는 스크립트나 전역으로 관리되는 스크립트들을 담는다.
+>   * `UI`: UI 동작 관련 스크립트들을 담는다.
+
+### 💾 ScriptableObject
+ScriptableObject 데이터를 담습니다 (`.asset`).
+
+### 🧪 TestFiles
+Git에 올리지 않을 Local Test File들을 담습니다. (Feature 브랜치엔 업로드 가능, Main 병합 시 삭제)
+* *예시: `CYArt/Script`, `JSArt/Script`*
+
+### 📄 Text
+텍스트 파일을 담습니다 (`.json`, `.xml` 등).
 
 ---
 
-## 5. 시선 기반 인터렉션 (Gaze-based Interaction)
+## 📊 System Architecture & Methodology
 
-본 프로젝트는 손 제스처가 아닌, **사용자의 시선(Head Gaze)과 체류 시간(Dwell Time)** 을 기반으로 한 인터렉션 시스템을 채택했습니다.
+### 1. Dual-Scene Development Architecture
+Apple Vision Pro 기기 없이도 원활한 개발이 가능하도록 **이원화된 씬(Scene) 관리 구조**를 채택했습니다.
 
-### 구현 이유
+| Mode | Scene Naming | Purpose | Logic |
+| :--- | :--- | :--- | :--- |
+| **Dev Mode** | `SceneName_Dev` | PC(Editor) 내 로직 검증 | `MainSystem.Instance.IsDev = true` 시 로드 |
+| **Prod Mode** | `SceneName` | 실기기 빌드 및 최종 검증 | `IsDev = false` 설정, Metal/VisionOS 기능 활성화 |
+
+* **Logic Implementation**: `SceneLoader.cs`는 `MainSystem`의 `IsDev` 플래그에 따라 타겟 씬(`Lobby` vs `Lobby_Dev`)을 동적으로 결정하여 로드합니다.
+
+### 2. Metal API (VR) Implementation
+RealityKit(PolySpatial) 대신 **Metal Rendering** 모드를 사용하여 다음 기능을 극대화했습니다.
+
+* **Spatial Audio**: Unity Audio System 완전 호환을 통한 고도화된 공간 음향 제공.
+* **Rendering Control**: RealityKit 레이어 오버헤드 제거를 통한 안정적 프레임 및 커스텀 쉐이더 호환성 확보.
+* **Post Processing**: URP 기반의 Bloom, Color Grading 등 후처리 효과 제한 없이 사용.
+* **HDR**: Vision Pro 디스플레이 성능을 활용한 High Dynamic Range 렌더링 지원.
+
+### 3. Gaze-based Interaction
+접근성 향상 및 오동작 방지를 위해 **시선(Head Gaze) + 체류 시간(Dwell Time)** 방식을 사용합니다.
+#### 구현 이유
 
 1.  **사용성 개선 (접근성)**
     *   기존의 제스처(Pinch, Gaze & Pinch) 기반 인터렉션은 어린 아이나 VR 기기에 익숙하지 않은 사용자에게 진입 장벽이 높았습니다.
@@ -107,39 +133,16 @@ public void LoadLobby() => LoadScene(MainSystem.Instance.IsDev ? "Lobby_Dev" : "
 2.  **기술적 제약 사항 극복**
     *   Unity의 **Metal App Mode (Immersive Space)** 에서는 개인정보 보호 정책 등으로 인해 실시간 눈동자 추적(Eye Tracking) 데이터에 직접 접근하는 API가 제한(Block)되어 있습니다.
     *   이에 따라 Vision Pro의 정밀한 아이트래킹을 사용하는 대신, **HMD의 정면 벡터(Head Forward)** 를 활용한 유사 시선 추적 방식을 구현하여 이에 대응하였습니다.
+#### 구현 내용
+* **Raycasting**: `Camera.main` (HMD)의 정면 벡터(`transform.forward`)를 기준으로 Raycasting 수행.
+* **Dwell Time**:
+    * **Wait Time**: 실수로 스쳐 지나가는 입력을 방지하기 위한 대기 시간.
+    * **Fill Time**: 일정 시간 응시 시 게이지가 차오르며 `OnSelect()` 이벤트 발생.
+* **Feedback**: 잘못된 선택 시 UI 흔들림(`ShakeUI`) 효과 등으로 직관적인 피드백 제공.
 
-### 세부 구현 내용 (`XRHeadRayInteractor`)
+### 4. UI System (Factory Pattern)
+* **Structure**: `UIPanelFactory` (Singleton)를 통한 중앙 집중식 팝업 관리.
+* **Lifecycle**: 씬 전환 시 `SceneLoader`와 연동하여 잔여 팝업 자동 정리(`ClearPopup`).
+* **Sync**: 시스템 일시정지(`Act_Pause`) 시 UI 애니메이션 및 타이머 동기화.
 
-*   **Raycasting 매커니즘**:
-    *   `Camera.main` (HMD)의 정면 방향(`transform.forward`)으로 Ray를 발사하여 오브젝트를 탐지합니다.
-    *   Vision Pro 핸드 트래킹의 핀치 제스처 시 포인터 입력이 튀는 현상을 방지하기 위해, 컨트롤러 포인터 대신 HMD 자체의 회전값을 기준으로 좌표를 계산합니다.
-
-*   **인터렉션 로직**:
-    *   `IXRHeadInteractable` 인터페이스를 상속받은 객체(`IsInteractable` 체크)에 대해 상호작용을 수행합니다.
-    *   **Dwell Time (체류 시간) 시스템**:
-        *   **Wait Time (`_waitRayTime`)**: 사용자가 오브젝트를 실수로 스쳐 지나갈 때 쿨타임을 두어 오작동을 방지합니다 (기본 0.5초).
-        *   **Fill Time (`_rayTime`)**: 일정 시간 이상 바라보고 있으면 게이지가 차오르며, 완료 시 `OnSelect()` 이벤트가 발생합니다.
-    *   **쿨타임 관리**: 상호작용 후 `_rayCooltime` 동안 추가 입력을 막아 중복 실행을 방지합니다.
-
-*   **피드백**:
-    *   튜토리얼 등 특정 상황에서 잘못된 선택을 할 경우 UI 흔들림(`ShakeUI`) 효과 등을 통해 직관적인 피드백을 제공합니다.
-
----
-
-## 6. 세부 구현 사항
-
-### 팩토리 메서드 기반 팝업 관리 시스템 (`UIPanelFactory`)
-
-전역적인 UI 팝업 및 메시지 관리를 위해 **팩토리/싱글톤 패턴**을 활용한 관리 시스템을 구축했습니다.
-
-*   **중앙 집중식 관리**:
-    *   `UIPanelFactory.Instance`를 통해 어디서든 팝업을 호출할 수 있습니다.
-    *   `ShowMessage`, `ShowLastMessage` 등의 메서드로 일관된 UI 생성 인터페이스를 제공합니다.
-
-*   **생명주기 및 씬 관리**:
-    *   씬 전환 시 `SceneLoader`와 연동하여 자동으로 잔여 팝업을 정리(`ClearPopup`)하고 UI 진행 상태를 초기화합니다.
-    *   `DontDestroyOnLoad`를 통해 씬이 변경되어도 매니저가 유지되도록 설계되었습니다.
-
-*   **일시정지 연동**:
-    *   `MainSystem`의 `Act_Pause`, `Act_Resume` 이벤트에 자동으로 구독/해지되어, 게임 일시정지 시 팝업의 타이머나 애니메이션도 함께 제어됩니다.
 
