@@ -2,363 +2,365 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Hands;
-using UnityEngine.XR.VisionOS;
 #if INCLUDE_UNITY_XR_HANDS && (UNITY_VISIONOS || UNITY_EDITOR)
+using UnityEngine.XR.VisionOS;
 using System.Collections.Generic;
 using UnityEngine.XR.Hands;
 #endif
 
+#if INCLUDE_UNITY_XR_HANDS && (UNITY_VISIONOS || UNITY_EDITOR)
 public class HandVisualizer_CY : MonoBehaviour
+{
+    [SerializeField]
+    GameObject m_JointVisualsPrefab;
+    // custom
+    [SerializeField] private GameObject _leftUIObj;
+    //private GameObject _leftUIInstance;
+    //~custom
+    XRHandSubsystem m_Subsystem;
+    HandGameObjects m_LeftHandGameObjects;
+    HandGameObjects m_RightHandGameObjects;
+
+
+    static readonly List<XRHandSubsystem> k_SubsystemsReuse = new();
+
+    protected void OnEnable()
     {
-        [SerializeField]
-        GameObject m_JointVisualsPrefab;
-        // custom
-        [SerializeField] private GameObject _leftUIObj;
-        //private GameObject _leftUIInstance;
-        //~custom
-        XRHandSubsystem m_Subsystem;
-        HandGameObjects m_LeftHandGameObjects;
-        HandGameObjects m_RightHandGameObjects;
-        
+        if (m_Subsystem == null)
+            return;
 
-        static readonly List<XRHandSubsystem> k_SubsystemsReuse = new();
+        UpdateRenderingVisibility(m_LeftHandGameObjects, m_Subsystem.leftHand.isTracked);
+        UpdateRenderingVisibility(m_RightHandGameObjects, m_Subsystem.rightHand.isTracked);
+    }
 
-        protected void OnEnable()
+    protected void OnDisable()
+    {
+        if (m_Subsystem != null)
+            UnsubscribeSubsystem();
+
+        UpdateRenderingVisibility(m_LeftHandGameObjects, false);
+        UpdateRenderingVisibility(m_RightHandGameObjects, false);
+    }
+
+    void UnsubscribeSubsystem()
+    {
+        m_Subsystem.trackingAcquired -= OnTrackingAcquired;
+        m_Subsystem.trackingLost -= OnTrackingLost;
+        m_Subsystem.updatedHands -= OnUpdatedHands;
+        m_Subsystem = null;
+    }
+
+    protected void OnDestroy()
+    {
+        if (m_LeftHandGameObjects != null)
         {
-            if (m_Subsystem == null)
-                return;
-
-            UpdateRenderingVisibility(m_LeftHandGameObjects, m_Subsystem.leftHand.isTracked);
-            UpdateRenderingVisibility(m_RightHandGameObjects, m_Subsystem.rightHand.isTracked);
+            m_LeftHandGameObjects.OnDestroy();
+            m_LeftHandGameObjects = null;
         }
 
-        protected void OnDisable()
+        if (m_RightHandGameObjects != null)
         {
-            if (m_Subsystem != null)
-                UnsubscribeSubsystem();
+            m_RightHandGameObjects.OnDestroy();
+            m_RightHandGameObjects = null;
+        }
+    }
 
+    protected void Update()
+    {
+        if (m_Subsystem != null)
+        {
+            if (m_Subsystem.running)
+                return;
+
+            UnsubscribeSubsystem();
             UpdateRenderingVisibility(m_LeftHandGameObjects, false);
             UpdateRenderingVisibility(m_RightHandGameObjects, false);
+            return;
         }
 
-        void UnsubscribeSubsystem()
+        SubsystemManager.GetSubsystems(k_SubsystemsReuse);
+        for (var i = 0; i < k_SubsystemsReuse.Count; ++i)
         {
-            m_Subsystem.trackingAcquired -= OnTrackingAcquired;
-            m_Subsystem.trackingLost -= OnTrackingLost;
-            m_Subsystem.updatedHands -= OnUpdatedHands;
-            m_Subsystem = null;
-        }
-
-        protected void OnDestroy()
-        {
-            if (m_LeftHandGameObjects != null)
+            var handSubsystem = k_SubsystemsReuse[i];
+            if (handSubsystem.running)
             {
-                m_LeftHandGameObjects.OnDestroy();
-                m_LeftHandGameObjects = null;
-            }
-
-            if (m_RightHandGameObjects != null)
-            {
-                m_RightHandGameObjects.OnDestroy();
-                m_RightHandGameObjects = null;
+                UnsubscribeHandSubsystem();
+                m_Subsystem = handSubsystem;
+                break;
             }
         }
 
-        protected void Update()
-        {
-            if (m_Subsystem != null)
-            {
-                if (m_Subsystem.running)
-                    return;
+        if (m_Subsystem == null)
+            return;
 
-                UnsubscribeSubsystem();
+        if (m_LeftHandGameObjects == null)
+        {
+            m_LeftHandGameObjects = new HandGameObjects(
+                Handedness.Left,
+                transform,
+                m_JointVisualsPrefab,
+                _leftUIObj);
+        }
+
+        if (m_RightHandGameObjects == null)
+        {
+            m_RightHandGameObjects = new HandGameObjects(
+                Handedness.Right,
+                transform,
+                m_JointVisualsPrefab,
+                null);
+        }
+
+        UpdateRenderingVisibility(m_LeftHandGameObjects, m_Subsystem.leftHand.isTracked);
+        UpdateRenderingVisibility(m_RightHandGameObjects, m_Subsystem.rightHand.isTracked);
+
+        SubscribeHandSubsystem();
+    }
+
+    void SubscribeHandSubsystem()
+    {
+        if (m_Subsystem == null)
+            return;
+
+        m_Subsystem.trackingAcquired += OnTrackingAcquired;
+        m_Subsystem.trackingLost += OnTrackingLost;
+        m_Subsystem.updatedHands += OnUpdatedHands;
+    }
+
+    void UnsubscribeHandSubsystem()
+    {
+        if (m_Subsystem == null)
+            return;
+
+        m_Subsystem.trackingAcquired -= OnTrackingAcquired;
+        m_Subsystem.trackingLost -= OnTrackingLost;
+        m_Subsystem.updatedHands -= OnUpdatedHands;
+    }
+
+    static void UpdateRenderingVisibility(HandGameObjects handGameObjects, bool isTracked)
+    {
+        if (handGameObjects == null)
+            return;
+
+        handGameObjects.SetHandActive(isTracked);
+    }
+
+    void OnTrackingAcquired(XRHand hand)
+    {
+        switch (hand.handedness)
+        {
+            case Handedness.Left:
+                UpdateRenderingVisibility(m_LeftHandGameObjects, true);
+                break;
+
+            case Handedness.Right:
+                UpdateRenderingVisibility(m_RightHandGameObjects, true);
+                break;
+        }
+    }
+
+    void OnTrackingLost(XRHand hand)
+    {
+        switch (hand.handedness)
+        {
+            case Handedness.Left:
                 UpdateRenderingVisibility(m_LeftHandGameObjects, false);
+                break;
+
+            case Handedness.Right:
                 UpdateRenderingVisibility(m_RightHandGameObjects, false);
-                return;
+                break;
+        }
+    }
+
+    void OnUpdatedHands(XRHandSubsystem subsystem, XRHandSubsystem.UpdateSuccessFlags updateSuccessFlags, XRHandSubsystem.UpdateType updateType)
+    {
+        // We have no game logic depending on the Transforms, so early out here
+        // (add game logic before this return here, directly querying from
+        // subsystem.leftHand and subsystem.rightHand using GetJoint on each hand)
+        if (updateType == XRHandSubsystem.UpdateType.Dynamic)
+            return;
+
+        m_LeftHandGameObjects.UpdateJoints(
+            subsystem.leftHand,
+            (updateSuccessFlags & XRHandSubsystem.UpdateSuccessFlags.LeftHandJoints) != 0);
+
+        m_RightHandGameObjects.UpdateJoints(
+            subsystem.rightHand,
+            (updateSuccessFlags & XRHandSubsystem.UpdateSuccessFlags.RightHandJoints) != 0);
+    }
+
+    class HandGameObjects
+    {
+        GameObject m_JointVisualsParent;
+
+        readonly JointVisuals_CY[] m_JointVisuals = new JointVisuals_CY[XRHandJointID.EndMarker.ToIndex() + VisionOSHandExtensions.NumVisionOSJoints];
+
+        static Vector3[] s_LinePointsReuse = new Vector3[2];
+        const float k_LineWidth = 0.005f;
+
+        //custom
+        GameObject _wristObj;
+        //~custom
+
+        public HandGameObjects(
+            Handedness handedness,
+            Transform parent,
+            GameObject jointVisualsPrefab,
+            GameObject wristObj)
+        {
+            void AssignJoint(
+                XRHandJointID jointID,
+                Transform drawJointsParent)
+            {
+                var jointIndex = jointID.ToIndex();
+                var jointVisualsObject = Instantiate(jointVisualsPrefab, drawJointsParent, false);
+                var jointName = jointID < XRHandJointID.EndMarker ? jointID.ToString() : ((VisionOSHandJointID)jointID).ToString();
+                jointVisualsObject.name = $"{jointName}";
+                var jointVisuals = jointVisualsObject.GetComponent<JointVisuals_CY>();
+
+                var line = jointVisuals.Line;
+                line.startWidth = line.endWidth = k_LineWidth;
+                s_LinePointsReuse[0] = s_LinePointsReuse[1] = jointVisuals.transform.position;
+                line.SetPositions(s_LinePointsReuse);
+
+                m_JointVisuals[jointIndex] = jointVisuals;
             }
 
-            SubsystemManager.GetSubsystems(k_SubsystemsReuse);
-            for (var i = 0; i < k_SubsystemsReuse.Count; ++i)
+            m_JointVisualsParent = new GameObject();
+            var parentTransform = m_JointVisualsParent.transform;
+            parentTransform.parent = parent;
+            parentTransform.localPosition = Vector3.zero;
+            parentTransform.localRotation = Quaternion.identity;
+            m_JointVisualsParent.name = $"{handedness} Hand Joints";
+
+            AssignJoint(XRHandJointID.Wrist, parentTransform);
+            AssignJoint(XRHandJointID.Palm, parentTransform);
+
+            for (var fingerIndex = (int)XRHandFingerID.Thumb;
+                 fingerIndex <= (int)XRHandFingerID.Little;
+                 ++fingerIndex)
             {
-                var handSubsystem = k_SubsystemsReuse[i];
-                if (handSubsystem.running)
+                var fingerId = (XRHandFingerID)fingerIndex;
+                var jointIndexBack = fingerId.GetBackJointID().ToIndex();
+                for (var jointIndex = fingerId.GetFrontJointID().ToIndex();
+                     jointIndex <= jointIndexBack;
+                     ++jointIndex)
                 {
-                    UnsubscribeHandSubsystem();
-                    m_Subsystem = handSubsystem;
-                    break;
+                    AssignJoint(XRHandJointIDUtility.FromIndex(jointIndex), parentTransform);
                 }
             }
 
-            if (m_Subsystem == null)
-                return;
+            AssignJoint((XRHandJointID)VisionOSHandJointID.ForearmWrist, parentTransform);
+            AssignJoint((XRHandJointID)VisionOSHandJointID.ForearmArm, parentTransform);
 
-            if (m_LeftHandGameObjects == null)
-            {
-                m_LeftHandGameObjects = new HandGameObjects(
-                    Handedness.Left,
-                    transform,
-                    m_JointVisualsPrefab,
-                    _leftUIObj);
-            }
-
-            if (m_RightHandGameObjects == null)
-            {
-                m_RightHandGameObjects = new HandGameObjects(
-                    Handedness.Right,
-                    transform,
-                    m_JointVisualsPrefab,
-                    null);
-            }
-
-            UpdateRenderingVisibility(m_LeftHandGameObjects, m_Subsystem.leftHand.isTracked);
-            UpdateRenderingVisibility(m_RightHandGameObjects, m_Subsystem.rightHand.isTracked);
-
-            SubscribeHandSubsystem();
-        }
-
-        void SubscribeHandSubsystem()
-        {
-            if (m_Subsystem == null)
-                return;
-
-            m_Subsystem.trackingAcquired += OnTrackingAcquired;
-            m_Subsystem.trackingLost += OnTrackingLost;
-            m_Subsystem.updatedHands += OnUpdatedHands;
-        }
-
-        void UnsubscribeHandSubsystem()
-        {
-            if (m_Subsystem == null)
-                return;
-
-            m_Subsystem.trackingAcquired -= OnTrackingAcquired;
-            m_Subsystem.trackingLost -= OnTrackingLost;
-            m_Subsystem.updatedHands -= OnUpdatedHands;
-        }
-
-        static void UpdateRenderingVisibility(HandGameObjects handGameObjects, bool isTracked)
-        {
-            if (handGameObjects == null)
-                return;
-
-            handGameObjects.SetHandActive(isTracked);
-        }
-
-        void OnTrackingAcquired(XRHand hand)
-        {
-            switch (hand.handedness)
-            {
-                case Handedness.Left:
-                    UpdateRenderingVisibility(m_LeftHandGameObjects, true);
-                    break;
-
-                case Handedness.Right:
-                    UpdateRenderingVisibility(m_RightHandGameObjects, true);
-                    break;
-            }
-        }
-
-        void OnTrackingLost(XRHand hand)
-        {
-            switch (hand.handedness)
-            {
-                case Handedness.Left:
-                    UpdateRenderingVisibility(m_LeftHandGameObjects, false);
-                    break;
-
-                case Handedness.Right:
-                    UpdateRenderingVisibility(m_RightHandGameObjects, false);
-                    break;
-            }
-        }
-
-        void OnUpdatedHands(XRHandSubsystem subsystem, XRHandSubsystem.UpdateSuccessFlags updateSuccessFlags, XRHandSubsystem.UpdateType updateType)
-        {
-            // We have no game logic depending on the Transforms, so early out here
-            // (add game logic before this return here, directly querying from
-            // subsystem.leftHand and subsystem.rightHand using GetJoint on each hand)
-            if (updateType == XRHandSubsystem.UpdateType.Dynamic)
-                return;
-
-            m_LeftHandGameObjects.UpdateJoints(
-                subsystem.leftHand,
-                (updateSuccessFlags & XRHandSubsystem.UpdateSuccessFlags.LeftHandJoints) != 0);
-
-            m_RightHandGameObjects.UpdateJoints(
-                subsystem.rightHand,
-                (updateSuccessFlags & XRHandSubsystem.UpdateSuccessFlags.RightHandJoints) != 0);
-        }
-
-        class HandGameObjects
-        {
-            GameObject m_JointVisualsParent;
-
-            readonly JointVisuals_CY[] m_JointVisuals = new JointVisuals_CY[XRHandJointID.EndMarker.ToIndex() + VisionOSHandExtensions.NumVisionOSJoints];
-
-            static Vector3[] s_LinePointsReuse = new Vector3[2];
-            const float k_LineWidth = 0.005f;
-            
-            //custom
-            GameObject _wristObj;
+            // custom
+            if (wristObj != null)
+                _wristObj = Instantiate(wristObj);
             //~custom
+        }
 
-            public HandGameObjects(
-                Handedness handedness,
-                Transform parent,
-                GameObject jointVisualsPrefab,
-                GameObject wristObj)
+        public void OnDestroy()
+        {
+            var length = m_JointVisuals.Length;
+            for (var jointIndex = 0; jointIndex < length; ++jointIndex)
             {
-                void AssignJoint(
-                    XRHandJointID jointID,
-                    Transform drawJointsParent)
-                {
-                    var jointIndex = jointID.ToIndex();
-                    var jointVisualsObject = Instantiate(jointVisualsPrefab, drawJointsParent, false);
-                    var jointName = jointID < XRHandJointID.EndMarker ? jointID.ToString() : ((VisionOSHandJointID)jointID).ToString();
-                    jointVisualsObject.name = $"{jointName}";
-                    var jointVisuals = jointVisualsObject.GetComponent<JointVisuals_CY>();
-
-                    var line = jointVisuals.Line;
-                    line.startWidth = line.endWidth = k_LineWidth;
-                    s_LinePointsReuse[0] = s_LinePointsReuse[1] = jointVisuals.transform.position;
-                    line.SetPositions(s_LinePointsReuse);
-
-                    m_JointVisuals[jointIndex] = jointVisuals;
-                }
-
-                m_JointVisualsParent = new GameObject();
-                var parentTransform = m_JointVisualsParent.transform;
-                parentTransform.parent = parent;
-                parentTransform.localPosition = Vector3.zero;
-                parentTransform.localRotation = Quaternion.identity;
-                m_JointVisualsParent.name = $"{handedness} Hand Joints";
-
-                AssignJoint(XRHandJointID.Wrist, parentTransform);
-                AssignJoint(XRHandJointID.Palm, parentTransform);
-
-                for (var fingerIndex = (int)XRHandFingerID.Thumb;
-                     fingerIndex <= (int)XRHandFingerID.Little;
-                     ++fingerIndex)
-                {
-                    var fingerId = (XRHandFingerID)fingerIndex;
-                    var jointIndexBack = fingerId.GetBackJointID().ToIndex();
-                    for (var jointIndex = fingerId.GetFrontJointID().ToIndex();
-                         jointIndex <= jointIndexBack;
-                         ++jointIndex)
-                    {
-                        AssignJoint(XRHandJointIDUtility.FromIndex(jointIndex), parentTransform);
-                    }
-                }
-
-                AssignJoint((XRHandJointID)VisionOSHandJointID.ForearmWrist, parentTransform);
-                AssignJoint((XRHandJointID)VisionOSHandJointID.ForearmArm, parentTransform);
-
-                // custom
-                if(wristObj != null)
-                    _wristObj = Instantiate(wristObj);
-                //~custom
-            }
-
-            public void OnDestroy()
-            {
-                var length = m_JointVisuals.Length;
-                for (var jointIndex = 0; jointIndex < length; ++jointIndex)
-                {
-                    var visuals = m_JointVisuals[jointIndex];
-                    Destroy(visuals.gameObject);
-                    m_JointVisuals[jointIndex] = default;
-                }
-
-                Destroy(m_JointVisualsParent);
-                m_JointVisualsParent = null;
-            }
-
-            public void SetHandActive(bool isActive)
-            {
-                m_JointVisualsParent.SetActive(isActive);
-            }
-            
-
-            public void UpdateJoints(
-                XRHand hand,
-                bool areJointsTracked)
-            {
-                if (!areJointsTracked)
-                    return;
-
-                var wristPose = Pose.identity;
-                var parentIndex = XRHandJointID.Wrist.ToIndex();
-                UpdateJoint(hand.GetJoint(XRHandJointID.Wrist), ref wristPose, ref parentIndex);
-                UpdateJoint(hand.GetJoint(XRHandJointID.Palm), ref wristPose, ref parentIndex, false);
-                
-                for (var fingerIndex = (int)XRHandFingerID.Thumb;
-                    fingerIndex <= (int)XRHandFingerID.Little;
-                    ++fingerIndex)
-                {
-                    var parentPose = wristPose;
-                    var fingerId = (XRHandFingerID)fingerIndex;
-                    parentIndex = XRHandJointID.Wrist.ToIndex();
-
-                    var jointIndexBack = fingerId.GetBackJointID().ToIndex();
-                    for (var jointIndex = fingerId.GetFrontJointID().ToIndex();
-                        jointIndex <= jointIndexBack;
-                        ++jointIndex)
-                    {
-                        UpdateJoint(hand.GetJoint(XRHandJointIDUtility.FromIndex(jointIndex)), ref parentPose, ref parentIndex);
-                    }
-                }
-
-                parentIndex = XRHandJointID.Wrist.ToIndex();
-                UpdateJoint(hand.GetVisionOSJoint(VisionOSHandJointID.ForearmWrist), ref wristPose, ref parentIndex);
-                UpdateJoint(hand.GetVisionOSJoint(VisionOSHandJointID.ForearmArm), ref wristPose, ref parentIndex);
-            }
-
-            void UpdateJoint(
-                XRHandJoint joint,
-                ref Pose parentPose,
-                ref int parentIndex,
-                bool cacheParentPose = true)
-            {
-                if (joint.id == XRHandJointID.Invalid)
-                    return;
-
-                var jointIndex = joint.id.ToIndex();
                 var visuals = m_JointVisuals[jointIndex];
-                if (!joint.TryGetPose(out var pose))
-                {
-                    visuals.gameObject.SetActive(false);
-                    return;
-                }
-                if(joint.handedness == Handedness.Left)
-                {
-                    if (joint.id == XRHandJointID.Wrist)
-                    {
-                        Vector3 setPos = visuals.transform.position;
-                        setPos.y += 0.1f;
-                        _wristObj.transform.position = setPos;
-                        // 1. Y축으로 45도 회전하는 '델타(delta)' 쿼터니언을 만듭니다.
-                        Quaternion deltaRotation = Quaternion.Euler(0f, -60f, 0f);
-                        _wristObj.transform.rotation = visuals.transform.rotation * deltaRotation;
-                    }
-                }
-                joint.TryGetVisionOSTrackingState(out var trackingState);
-                visuals.SetIsTracked(trackingState);
-                var visualsTransform = visuals.transform;
-                visualsTransform.SetLocalPositionAndRotation(pose.position, pose.rotation);
+                Destroy(visuals.gameObject);
+                m_JointVisuals[jointIndex] = default;
+            }
 
-                if (joint.id != XRHandJointID.Wrist)
-                {
-                    var parentVisuals = m_JointVisuals[parentIndex];
-                    s_LinePointsReuse[0] = parentVisuals.transform.position;
-                    s_LinePointsReuse[1] = visualsTransform.position;
-                    visuals.Line.SetPositions(s_LinePointsReuse);
-                }
+            Destroy(m_JointVisualsParent);
+            m_JointVisualsParent = null;
+        }
 
-                if (cacheParentPose)
+        public void SetHandActive(bool isActive)
+        {
+            m_JointVisualsParent.SetActive(isActive);
+        }
+
+
+        public void UpdateJoints(
+            XRHand hand,
+            bool areJointsTracked)
+        {
+            if (!areJointsTracked)
+                return;
+
+            var wristPose = Pose.identity;
+            var parentIndex = XRHandJointID.Wrist.ToIndex();
+            UpdateJoint(hand.GetJoint(XRHandJointID.Wrist), ref wristPose, ref parentIndex);
+            UpdateJoint(hand.GetJoint(XRHandJointID.Palm), ref wristPose, ref parentIndex, false);
+
+            for (var fingerIndex = (int)XRHandFingerID.Thumb;
+                fingerIndex <= (int)XRHandFingerID.Little;
+                ++fingerIndex)
+            {
+                var parentPose = wristPose;
+                var fingerId = (XRHandFingerID)fingerIndex;
+                parentIndex = XRHandJointID.Wrist.ToIndex();
+
+                var jointIndexBack = fingerId.GetBackJointID().ToIndex();
+                for (var jointIndex = fingerId.GetFrontJointID().ToIndex();
+                    jointIndex <= jointIndexBack;
+                    ++jointIndex)
                 {
-                    parentPose = pose;
-                    parentIndex = jointIndex;
+                    UpdateJoint(hand.GetJoint(XRHandJointIDUtility.FromIndex(jointIndex)), ref parentPose, ref parentIndex);
                 }
+            }
+
+            parentIndex = XRHandJointID.Wrist.ToIndex();
+            UpdateJoint(hand.GetVisionOSJoint(VisionOSHandJointID.ForearmWrist), ref wristPose, ref parentIndex);
+            UpdateJoint(hand.GetVisionOSJoint(VisionOSHandJointID.ForearmArm), ref wristPose, ref parentIndex);
+        }
+
+        void UpdateJoint(
+            XRHandJoint joint,
+            ref Pose parentPose,
+            ref int parentIndex,
+            bool cacheParentPose = true)
+        {
+            if (joint.id == XRHandJointID.Invalid)
+                return;
+
+            var jointIndex = joint.id.ToIndex();
+            var visuals = m_JointVisuals[jointIndex];
+            if (!joint.TryGetPose(out var pose))
+            {
+                visuals.gameObject.SetActive(false);
+                return;
+            }
+            if (joint.handedness == Handedness.Left)
+            {
+                if (joint.id == XRHandJointID.Wrist)
+                {
+                    Vector3 setPos = visuals.transform.position;
+                    setPos.y += 0.1f;
+                    _wristObj.transform.position = setPos;
+                    // 1. Y축으로 45도 회전하는 '델타(delta)' 쿼터니언을 만듭니다.
+                    Quaternion deltaRotation = Quaternion.Euler(0f, -60f, 0f);
+                    _wristObj.transform.rotation = visuals.transform.rotation * deltaRotation;
+                }
+            }
+            joint.TryGetVisionOSTrackingState(out var trackingState);
+            visuals.SetIsTracked(trackingState);
+            var visualsTransform = visuals.transform;
+            visualsTransform.SetLocalPositionAndRotation(pose.position, pose.rotation);
+
+            if (joint.id != XRHandJointID.Wrist)
+            {
+                var parentVisuals = m_JointVisuals[parentIndex];
+                s_LinePointsReuse[0] = parentVisuals.transform.position;
+                s_LinePointsReuse[1] = visualsTransform.position;
+                visuals.Line.SetPositions(s_LinePointsReuse);
+            }
+
+            if (cacheParentPose)
+            {
+                parentPose = pose;
+                parentIndex = jointIndex;
             }
         }
     }
+}
+#endif

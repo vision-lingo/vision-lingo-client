@@ -18,12 +18,12 @@ public class MainSystem : SingletonT<MainSystem>
     public float CurrMusicVolume
     {
         get { return _soundController.AudioMusic.volume; }
-        set { _soundController.SetAudioVolume(0, value); }
+        set { _soundController.SetAudioVolume(1, value); }
     }
     public float CurrSfxVolume 
     { 
         get { return _soundController.AudioSfx.volume; } 
-        set { _soundController.SetAudioVolume(1, value); } 
+        set { _soundController.SetAudioVolume(2, value); } 
     }
     public bool IsPause { get; private set; }
     public bool IsDev => _isDev;
@@ -52,27 +52,27 @@ public class MainSystem : SingletonT<MainSystem>
         // 부스 운영 시 사용해야될 수도 있으므로 따로 전처리문을 작성하지 않았음.
         if(Input.GetKeyDown(KeyCode.A))
         {
-            Debug.Log("Input.GetKeyDown(KeyCode.Keypad0)");
+            Loggers.LogInfo("MainSystem", "Update", "Input.GetKeyDown(KeyCode.Keypad0)");
             SceneLoader.Instance.LoadLobby();
         }
         if(Input.GetKeyDown(KeyCode.S))
         {
-            Debug.Log("Input.GetKeyDown(KeyCode.Keypad1)");
+            Loggers.LogInfo("MainSystem", "Update", "Input.GetKeyDown(KeyCode.Keypad1)");
             SceneLoader.Instance.LoadTutorial();
         }
         if(Input.GetKeyDown(KeyCode.D))
         {
-            Debug.Log("Input.GetKeyDown(KeyCode.Keypad2)");
+            Loggers.LogInfo("MainSystem", "Update", "Input.GetKeyDown(KeyCode.Keypad2)");
             SceneLoader.Instance.LoadTraining();
         }
         if(Input.GetKeyDown(KeyCode.Q))
         {
-            Debug.Log("IsPause");
+            Loggers.LogInfo("MainSystem", "Update", "IsPause");
             MainSystem.Instance.Act_Pause();
         }
         if(Input.GetKeyDown(KeyCode.W))
         {
-            Debug.Log("IsResume");
+            Loggers.LogInfo("MainSystem", "Update", "IsResume");
             MainSystem.Instance.Act_Resume();
         }
 
@@ -87,6 +87,7 @@ public class MainSystem : SingletonT<MainSystem>
         _loggers.IsDebug = _isDebug;
         Act_Pause += OnPause;
         Act_Resume += OnResume;
+        _soundController.SetAudioVolume(0, 0.3f);
     }
 
     private void OnPause()

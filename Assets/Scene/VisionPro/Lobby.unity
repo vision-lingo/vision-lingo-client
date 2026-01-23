@@ -163,7 +163,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dc3698f623354f7597cf93a50042f8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mainCanvas: {fileID: 0}
   _btnGotoTraining: {fileID: 717739201}
   _btnGotoTutorial: {fileID: 557394026}
   _btnQuitGame: {fileID: 1595484023}
@@ -549,11 +548,41 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 27950639330160850, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 450
+      objectReference: {fileID: 0}
+    - target: {fileID: 27950639330160850, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 120
+      objectReference: {fileID: 0}
     - target: {fileID: 995722599873268595, guid: b38a0ce8345d742d287ebaa1960a15f3,
         type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1983314343}
+    - target: {fileID: 2567030890511081311, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: _btn_interaction
+      value: 
+      objectReference: {fileID: 1595484023}
+    - target: {fileID: 2567030890511081311, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: _hoverImgColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2567030890511081311, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: _hoverImgColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2567030890511081311, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: _hoverImgColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2677750296870859508, guid: b38a0ce8345d742d287ebaa1960a15f3,
         type: 3}
       propertyPath: m_Pivot.x
@@ -659,10 +688,80 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5515034361996476920, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758387266106559669, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 190
+      objectReference: {fileID: 0}
+    - target: {fileID: 5758387266106559669, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 6487844785087482121, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: _btn_interaction
+      value: 
+      objectReference: {fileID: 557394026}
+    - target: {fileID: 6487844785087482121, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: _hoverImgColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6487844785087482121, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: _hoverImgColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6487844785087482121, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: _hoverImgColor.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7316196782710173876, guid: b38a0ce8345d742d287ebaa1960a15f3,
         type: 3}
       propertyPath: m_Name
       value: LobbyCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7743646937389231966, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 450
+      objectReference: {fileID: 0}
+    - target: {fileID: 7743646937389231966, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 9170903270466406759, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: _btn_interaction
+      value: 
+      objectReference: {fileID: 717739201}
+    - target: {fileID: 9170903270466406759, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: _hoverImgColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9170903270466406759, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: _hoverImgColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9170903270466406759, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: _hoverImgColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9170903270466406759, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: _hoverTxtColor.a
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

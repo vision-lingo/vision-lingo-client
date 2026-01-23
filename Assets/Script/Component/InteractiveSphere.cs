@@ -15,7 +15,8 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         Correct = 3,
         Touched = 4,
         Wrong = 5,
-        TimeOver = 6
+        TimeOver = 6,
+        Tutorial_WrongSelect = 7,
     }
 
     [SerializeField]
@@ -58,7 +59,8 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     [SerializeField] private bool enableMouseClick = true;
 
     private IEnumerator IE_SequenceChangeColor_Handle = null;
-
+    private float _originSize;
+    private float _scaleUpSize;
     private float _hoverScale;
     public SphereState CurrentState
     {
@@ -77,7 +79,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     /// </summary>
     bool IXRHeadInteractable.IsInteractable { get => currentState == SphereState.Default || 
     currentState == SphereState.SoundTriggered || currentState == SphereState.Wave || 
-    currentState == SphereState.TimeOver;
+    currentState == SphereState.TimeOver || currentState == SphereState.Tutorial_WrongSelect;
      set => isHoverable = value; }
 
     public event Action<SphereState> StateChanged;
@@ -89,17 +91,20 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         if (_audioSource == null) _audioSource = GetComponent<AudioSource>(); 
         if (_meshRenderer == null) _meshRenderer = GetComponent<MeshRenderer>();
         _hoverScale = transform.localScale.x * _scaleFactor;
+        _originSize = transform.localScale.x;
+        _scaleUpSize = _originSize + _hoverScale;
     }
 
     private void OnEnable()
     {
         if (_grab != null)
             _grab.selectEntered.AddListener(OnSelectEntered);
+        _originalMasterVolume = MainSystem.Instance.SoundController.CurrMaxsterVolume;
     }
 
     private void OnDisable()
     {
-        Debug.Log("Sphere::::OnDisable");
+        MainSystem.Instance.Loggers.LogInfo("InteractiveSphere", "OnDisable", "Sphere::::OnDisable");
         if (_grab != null)
             _grab.selectEntered.RemoveListener(OnSelectEntered);
         
@@ -140,7 +145,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 
     private void OnStateChanged(SphereState newState)
     {
-        Debug.Log($"[InteractiveSphere] State changed to: {newState}");
+        MainSystem.Instance.Loggers.LogInfo("InteractiveSphere", "OnStateChanged", $"State changed to: {newState}");
         StateChanged?.Invoke(newState);
 
         // TODO: 상태별 시각/사운드 처리
@@ -158,6 +163,14 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         SetState(SphereState.None);
         ChangeColor(_defaultColor);
     }
+    /// <summary>
+    /// 튜토리얼에서 이 상태인 공을 선택하면 UI가 흔들린다.
+    /// </summary>
+    public void Tutorial_WrongSelect()
+    {
+        SetState(SphereState.Tutorial_WrongSelect);
+    }
+
     public void OnWave()
     {
         SetState(SphereState.Wave);
@@ -176,9 +189,10 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     {
         if(!isHoverable) return;
         // default 상태일 때만 호버 가능
-        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered || currentState == SphereState.Wave)
+        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered || currentState == SphereState.Wave || currentState == SphereState.Tutorial_WrongSelect)
         {
-            transform.localScale += Vector3.one * _hoverScale;
+            //transform.localScale += Vector3.one * _hoverScale;
+            transform.localScale = Vector3.one * _scaleUpSize;
             ChangeColor(_hoverColor);
         }
     }
@@ -186,9 +200,10 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
     public void OnRayOut()
     {
         if(!isHoverable) return;
-        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered || currentState == SphereState.Wave)
+        if(currentState == SphereState.Default || currentState == SphereState.SoundTriggered || currentState == SphereState.Wave || currentState == SphereState.Tutorial_WrongSelect) 
         {
-            transform.localScale -= Vector3.one * _hoverScale;
+            //transform.localScale -= Vector3.one * _hoverScale;
+            transform.localScale = Vector3.one * _originSize;
             ChangeColor(_defaultColor);
         }
     }
@@ -391,7 +406,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         }
         else
         {
-            subColors = new Color[]{_timeOverColor * 10, _timeOverColor * 30, _timeOverColor * 50};
+            subColors = new Color[]{_timeOverColor * 10, _timeOverColor * 30, _timeOverColor * 60};
             subTimes = new float[] {5.0f, 5.0f, 10.0f};
         }
         

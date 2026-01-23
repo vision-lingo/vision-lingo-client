@@ -59,12 +59,12 @@ public class StageSpawner : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[StageSpawner] HeadCamera가 설정되지 않았습니다.");
+            MainSystem.Instance.Loggers.LogWarning("StageSpawner", "Start", "HeadCamera is not set.");
         }
 
         if (TargetPrefab == null)
         {
-            Debug.LogError("[StageSpawner] Target Prefab을 지정하세요.");
+            MainSystem.Instance.Loggers.LogError("StageSpawner", "Start", "Target Prefab is not set.");
             enabled = false;
         }
     }
@@ -73,7 +73,7 @@ public class StageSpawner : MonoBehaviour
     {
         if (TargetPrefab == null)
         {
-            Debug.LogError("[StageSpawner] TargetPrefab이 지정되지 않았습니다.");
+            MainSystem.Instance.Loggers.LogError("StageSpawner", "SpawnSet", "TargetPrefab is not set.");
             return new List<GameObject>();
         }
 
@@ -90,7 +90,7 @@ public class StageSpawner : MonoBehaviour
 
         if (stageData == null)
         {
-            Debug.LogError($"[StageSpawner] Stage {StageNumber}는 정의되어 있지 않습니다.");
+            MainSystem.Instance.Loggers.LogError("StageSpawner", "SpawnSet", $"Stage {StageNumber} is not defined.");
             return new List<GameObject>();
         }
 
@@ -111,8 +111,8 @@ public class StageSpawner : MonoBehaviour
 
             if (LogOnSpawn)
             {
-                Debug.Log(
-                    $"[StageSpawner] Stage {StageNumber} object idx {i} | az={az}°, el={el}°, r={Distance}m " +
+                MainSystem.Instance.Loggers.LogInfo("StageSpawner", "SpawnSet",
+                    $"Stage {StageNumber} object idx {i} | az={az}°, el={el}°, r={Distance}m " +
                     $"| localDir={localDir} | worldPos={worldPos}"
                 );
             }
@@ -147,7 +147,7 @@ public class StageSpawner : MonoBehaviour
 
         if (!found)
         {
-            Debug.LogError($"[StageSpawner] Stage {stage} 없음");
+            MainSystem.Instance.Loggers.LogError("StageSpawner", "SetStage", $"Stage {stage} not found");
             return;
         }
 
