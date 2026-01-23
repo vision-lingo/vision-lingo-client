@@ -13,7 +13,7 @@ public sealed class SceneLoader : MonoBehaviour
     public Action Act_SceneLoadStart { get; private set; }
     public Action Act_SceneLoadCompleted { get; private set; }
 
-    public string CurrentScene => SceneManager.GetActiveScene().name;
+    public bool IsTutorialScene { get; private set; }  
     private IEnumerator IE_LoadSceneHandle = null;
     private void Awake()
     {
@@ -54,6 +54,7 @@ public sealed class SceneLoader : MonoBehaviour
     {
         MainSystem.Instance.Loggers.LogInfo("SceneLoader", "IE_LoadScene", "Act_SceneLoadStart");
         Act_SceneLoadStart?.Invoke();
+        IsTutorialScene = sceneName.Contains("Tutorial");
         AsyncOperation sceneLoadHanldle = SceneManager.LoadSceneAsync(sceneName);
         while (!sceneLoadHanldle.isDone)
             yield return null;
