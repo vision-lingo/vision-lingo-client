@@ -112,12 +112,6 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
             OffWaveEffect();
         else
             ResetToDefault();
-        if(IE_SequenceChangeColor_Handle != null)
-            StopCoroutine(IE_SequenceChangeColor_Handle);
-        IE_SequenceChangeColor_Handle = null;
-        if(_volumeBoostCoroutine != null)
-            StopCoroutine(_volumeBoostCoroutine);
-        _volumeBoostCoroutine = null;
     }
     private void OnSelectEntered(SelectEnterEventArgs args)
     {
@@ -412,11 +406,15 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
         
         SequenceChangeColor(_timeOverColor, subColors, subTimes);
     }
-    
+
     public void ResetToDefault()
     {
         SetState(SphereState.Default);
         ChangeColor(_defaultColor);
+        if(IE_SequenceChangeColor_Handle != null)
+            StopCoroutine(IE_SequenceChangeColor_Handle);
+        IE_SequenceChangeColor_Handle = null;
+        StopSound();
     }
 
     public void ChangeColor(Color color, float intensity = 1)
