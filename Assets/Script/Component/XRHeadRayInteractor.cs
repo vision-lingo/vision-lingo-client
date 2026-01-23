@@ -47,13 +47,16 @@ public class XRHeadRayInteractor : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR
-        Debug_RayCast();
+        Vector3 rayOrigin = transform.position;
+        Vector3 rayDirection = transform.forward;
+        Debug.DrawRay(rayOrigin, rayDirection, Color.blue);
 #else
         // Vision Pro에서는 PointerInput 대신 HMD의 Center Eye 값을 직접 사용합니다.
-        // 핀치 제스처 시 포인터 입력이 손으로 전환되어 값이 튀는 현상을 방지합니다.
         // 카메라의 월드 좌표를 기준으로 레이를 계산하여 좌표계 문제를 방지합니다.
-        RayTracking(_mainCamera.transform);
+        Vector3 rayOrigin = _rayOffsetTransform.position;
+        Vector3 rayDirection = _mainCamera.transform.forward;
 #endif
+        PerformRaycast(rayOrigin, rayDirection);
         if (!_isRayPossible)
         {
             _currCoolTime += Time.deltaTime;
@@ -65,12 +68,12 @@ public class XRHeadRayInteractor : MonoBehaviour
             return;
         }
 
-        if (_isRayOver && _isRayPossible)
+        if (_isRayOver && _isRayPossible && _lastInteractable != null && (_lastInteractable as UnityEngine.Object) != null)
         {
-            MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "Update", $"_lastInteractable: {_lastInteractable}");
-            MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "Update", $"_lastInteractable.IsInteractable: {_lastInteractable.IsInteractable}");
-            if (_lastInteractable != null && _lastInteractable.IsInteractable)
+            if (_lastInteractable.IsInteractable)
             {
+                MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "Update", $"_lastInteractable: {_lastInteractable}");
+                MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "Update", $"_lastInteractable.IsInteractable: {_lastInteractable.IsInteractable}");
                 _currRayTime += Time.deltaTime;
                 MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "Update", $"_lastInteractable: {_currRayTime}");
                 // _waitRayTime 이후부터 게이지가 차오르도록 계산
@@ -83,11 +86,9 @@ public class XRHeadRayInteractor : MonoBehaviour
 
                 if (_currRayTime >= _totalRayTime)
                 {
-                    // tutorial 페이지이면
-                    // TODO: 추후에 반드시 바꿔야 함.. string 말고 int나 enum으로 교체해야 함.
-                    if (SceneLoader.Instance.CurrentScene == "Tutorial")
+                    if (SceneLoader.Instance.IsTutorialScene)
                     {
-                        InteractiveSphere sphere = (InteractiveSphere)_lastInteractable;
+                        InteractiveSphere sphere = _lastInteractable as InteractiveSphere;
                         if (sphere != null)
                         {
                             if (sphere.CurrentState == InteractiveSphere.SphereState.Tutorial_WrongSelect)
@@ -96,12 +97,23 @@ public class XRHeadRayInteractor : MonoBehaviour
                             }
                             else
                             {
+                                _lastInteractable.OnSelect();
+                                _lastInteractable = null;
                                 UIPanelFactory.Instance.IsInteract = true;
                             }
                         }
+                        else
+                        {
+                            _lastInteractable.OnSelect();
+                            _lastInteractable = null;
+                            MainSystem.Instance.Loggers.LogWarning("XRHeadRayInteractor", "Update", "sphere is null");
+                        }
                     }
                     else
+                    {
                         _lastInteractable.OnSelect();
+                        _lastInteractable = null;
+                    }
                     _isRayPossible = false; // 쿨다운 시작
                     ResetRayState(); // 상호작용 후 상태 초기화
                 }
@@ -111,53 +123,25 @@ public class XRHeadRayInteractor : MonoBehaviour
         {
             ResetRayState();
         }
-        //var defaultActions = _pointerInput.Default;
 
     }
 
 
-    private void RayTracking(Transform cameraTransform)
+    private void PerformRaycast(Vector3 origin, Vector3 direction)
     {
-        var rayOrigin = _rayOffsetTransform.position;// + _rayPosOffset; //+ cameraTransform.TransformDirection(_rayPosOffset);
-        var rayDirection = cameraTransform.forward;
-        _rayDebugTransform.SetPositionAndRotation(rayOrigin, Quaternion.LookRotation(rayDirection));
-        var ray = new Ray(rayOrigin, rayDirection);
+        _rayDebugTransform.SetPositionAndRotation(origin, Quaternion.LookRotation(direction));
+        var ray = new Ray(origin, direction);
         var hit = Physics.Raycast(ray, out var hitInfo, Mathf.Infinity);
-        if (hit)
-        {
-            MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "RayTracking", $"hitInfo: {hitInfo.transform.gameObject.name}");
-            if (_lastInteractable == null)
-            {
-                if (hitInfo.transform.TryGetComponent(out _lastInteractable))
-                {
-                    _lastInteractable.OnRayOver();
-                    _isRayOver = true;
-                }
-            }
 
-        }
-        else
-        {
-            if (_lastInteractable != null)
-            {
-                _lastInteractable.OnRayOut();
-                _isRayOver = false;
-                _lastInteractable = null;
-            }
-        }
-    }
-    private void Debug_RayCast()
-    {
-        Vector3 rayOrigin = transform.position;
-        Vector3 rayDirection = transform.forward;
-        Debug.DrawRay(rayOrigin, rayDirection, Color.blue);
-        _rayDebugTransform.SetPositionAndRotation(rayOrigin, Quaternion.LookRotation(rayDirection));
-        var ray = new Ray(rayOrigin, rayDirection);
-        var hit = Physics.Raycast(ray, out var hitInfo, Mathf.Infinity);
+        // 인터페이스 타입은 유니티의 == null 오버라이딩이 동작하지 않으므로 직접 캐스팅하여 확인
+        bool isLastValid = _lastInteractable != null && (_lastInteractable as UnityEngine.Object) != null;
+
         if (hit)
         {
-            // MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "Debug_RayCast", $"hitInfo: {hitInfo.transform.gameObject.name}");
-            if (_lastInteractable == null)
+#if !UNITY_EDITOR
+            MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "PerformRaycast", $"hitInfo: {hitInfo.transform.gameObject.name}");
+#endif
+            if (!isLastValid)
             {
                 if (hitInfo.transform.TryGetComponent(out _lastInteractable))
                 {
@@ -168,12 +152,12 @@ public class XRHeadRayInteractor : MonoBehaviour
         }
         else
         {
-            if (_lastInteractable != null)
+            if (isLastValid)
             {
                 _lastInteractable.OnRayOut();
-                _lastInteractable = null;
-                _isRayOver = false;
             }
+            _isRayOver = false;
+            _lastInteractable = null;
         }
     }
 
