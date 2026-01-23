@@ -284,14 +284,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1414015671520280577}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43bf8bb14a27145468e3ebffdc8cfe7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_JointVisualsPrefab: {fileID: 6507399986997092475, guid: 2ec558db75ef84ca8a02b07201393d56,
-    type: 3}
-  _leftUIObj: {fileID: 1505370421470186890, guid: e773bf9f306ea4765bf3edb2371dc071,
     type: 3}
 --- !u!1 &1657907641598919732
 GameObject:
@@ -805,7 +803,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1908343271470385740
 Transform:
   m_ObjectHideFlags: 0
@@ -1873,7 +1871,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4453621399388328074}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
   m_Name: 

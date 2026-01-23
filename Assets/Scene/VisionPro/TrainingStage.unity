@@ -689,6 +689,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2654109244290695533, guid: 26f7c075eddb142569dde73f6e34430c,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2843072557265681414, guid: 26f7c075eddb142569dde73f6e34430c,
         type: 3}
       propertyPath: m_Camera
@@ -3134,6 +3139,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnReturnToMainButton
       objectReference: {fileID: 0}
+    - target: {fileID: 2192194865575211342, guid: 6f0ec0d14950744d0b0384847dad0822,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5853461867858058876, guid: 6f0ec0d14950744d0b0384847dad0822,
         type: 3}
       propertyPath: m_Pivot.x
@@ -3592,7 +3602,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1505370421164059670}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7951c64acb0fa62458bf30a60089fe2d, type: 3}
   m_Name: 
