@@ -49,68 +49,68 @@ public class XRHandStateChecker : MonoBehaviour
     }
     void OnLeftPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log("[InputTest]::::OnLeftPerformed");
+        MainSystem.Instance.Loggers.LogInfo("XRHandStateChecker", "OnLeftPerformed", "OnLeftPerformed");
         IsLeftHandPinch = true;
             //m_CurrentPosition = context.ReadValue<Vector3>();
     }
     void OnLeftCanceled(InputAction.CallbackContext context)
     {
-        Debug.Log("[InputTest]::::OnLeftCanceled");
+        MainSystem.Instance.Loggers.LogInfo("XRHandStateChecker", "OnLeftCanceled", "OnLeftCanceled");
         IsLeftHandPinch = false;
             //m_CurrentPosition = context.ReadValue<Vector3>();
     }
     void OnRightPerformed(InputAction.CallbackContext context)
     {
-        Debug.Log("[InputTest]::::OnRightPerformed");
+        MainSystem.Instance.Loggers.LogInfo("XRHandStateChecker", "OnRightPerformed", "OnRightPerformed");
         IsRightHandPinch = true;
             //m_CurrentPosition = context.ReadValue<Vector3>();
     }
     void OnRightCanceled(InputAction.CallbackContext context)
     {
-        Debug.Log("[InputTest]::::OnRightCanceled");
+        MainSystem.Instance.Loggers.LogInfo("XRHandStateChecker", "OnRightCanceled", "OnRightCanceled");
         IsRightHandPinch = false;
             //m_CurrentPosition = context.ReadValue<Vector3>();
     }
 
     private void OnLeftPinch(SelectEnterEventArgs selectEnterEventArgs)
     {
-        Debug.Log("[InputTest]::::OnLeftPinch");
+        MainSystem.Instance.Loggers.LogInfo("XRHandStateChecker", "OnLeftPinch", "OnLeftPinch");
         IsLeftHandPinch = true;
     }
     private void OnLeftPinchOut(SelectExitEventArgs selectEnterEventArgs)
     {
-        Debug.Log("[InputTest]::::OnLeftPinchOut");
+        MainSystem.Instance.Loggers.LogInfo("XRHandStateChecker", "OnLeftPinchOut", "OnLeftPinchOut");
         IsLeftHandPinch = false;
     }
      private void OnRightPinch(SelectEnterEventArgs selectEnterEventArgs)
     {
-        Debug.Log("[InputTest]::::OnRightPinch");
+        MainSystem.Instance.Loggers.LogInfo("XRHandStateChecker", "OnRightPinch", "OnRightPinch");
         IsRightHandPinch = true;
     }
     private void OnRightPinchOut(SelectExitEventArgs selectEnterEventArgs)
     {
-        Debug.Log("[InputTest]::::OnRightPinchOut");
+        MainSystem.Instance.Loggers.LogInfo("XRHandStateChecker", "OnRightPinchOut", "OnRightPinchOut");
         IsRightHandPinch = false;
     }
 
     private void OnLeftPinch_H(HoverEnterEventArgs selectEnterEventArgs)
     {
-        Debug.Log("[InputTest]::::OnLeftPinch");
+        MainSystem.Instance.Loggers.LogInfo("XRHandStateChecker", "OnLeftPinch_H", "OnLeftPinch");
         IsLeftHandPinch = true;
     }
     private void OnLeftPinchOut_H(HoverExitEventArgs selectEnterEventArgs)
     {
-        Debug.Log("[InputTest]::::OnLeftPinchOut");
+        MainSystem.Instance.Loggers.LogInfo("XRHandStateChecker", "OnLeftPinchOut_H", "OnLeftPinchOut");
         IsLeftHandPinch = false;
     }
      private void OnRightPinch_H(HoverEnterEventArgs selectEnterEventArgs)
     {
-        Debug.Log("[InputTest]::::OnRightPinch");
+        MainSystem.Instance.Loggers.LogInfo("XRHandStateChecker", "OnRightPinch_H", "OnRightPinch");
         IsRightHandPinch = true;
     }
     private void OnRightPinchOut_H(HoverExitEventArgs selectEnterEventArgs)
     {
-        Debug.Log("[InputTest]::::OnRightPinchOut");
+        MainSystem.Instance.Loggers.LogInfo("XRHandStateChecker", "OnRightPinchOut_H", "OnRightPinchOut");
         IsRightHandPinch = false;
     }
 }

@@ -104,7 +104,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 
     private void OnDisable()
     {
-        Debug.Log("Sphere::::OnDisable");
+        MainSystem.Instance.Loggers.LogInfo("InteractiveSphere", "OnDisable", "Sphere::::OnDisable");
         if (_grab != null)
             _grab.selectEntered.RemoveListener(OnSelectEntered);
         
@@ -145,7 +145,7 @@ public class InteractiveSphere : MonoBehaviour, IXRHeadInteractable
 
     private void OnStateChanged(SphereState newState)
     {
-        Debug.Log($"[InteractiveSphere] State changed to: {newState}");
+        MainSystem.Instance.Loggers.LogInfo("InteractiveSphere", "OnStateChanged", $"State changed to: {newState}");
         StateChanged?.Invoke(newState);
 
         // TODO: 상태별 시각/사운드 처리

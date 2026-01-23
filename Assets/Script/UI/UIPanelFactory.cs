@@ -84,7 +84,7 @@ public class UIPanelFactory : MonoBehaviour
         IsIdle = false;
 
         _panelInstance = Instantiate(panelPrefab, uiParent);
-        Debug.Log($"panel: {_panelInstance}");
+        MainSystem.Instance.Loggers.LogInfo("UIPanelFactory", "ShowMessageCoroutine", $"panel: {_panelInstance}");
         var pos = isCenter ? UIPanelSettingsHelper.GetCenterPosition() :
                              UIPanelSettingsHelper.GetUpperPosition(0.5f);
         var fade = UIPanelSettingsHelper.GetDefaultFadeSettings();
@@ -97,7 +97,7 @@ public class UIPanelFactory : MonoBehaviour
         MainSystem.Instance.Act_Resume += _panelInstance.OnResume;
 
 
-        Debug.Log($"panel.gameObject: {_panelInstance.gameObject}");
+        MainSystem.Instance.Loggers.LogInfo("UIPanelFactory", "ShowMessageCoroutine", $"panel.gameObject: {_panelInstance.gameObject}");
         // gameObject.activeSelf 메서드는 매우 불안정함.
         while (/*panel.gameObject.activeSelf*/ !_panelInstance.IsCompleted)
             yield return null;

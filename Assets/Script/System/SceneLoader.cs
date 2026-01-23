@@ -52,12 +52,12 @@ public sealed class SceneLoader : MonoBehaviour
 
     private IEnumerator IE_LoadScene(string sceneName)
     {
-        Debug.Log("Act_SceneLoadStart");
+        MainSystem.Instance.Loggers.LogInfo("SceneLoader", "IE_LoadScene", "Act_SceneLoadStart");
         Act_SceneLoadStart?.Invoke();
         AsyncOperation sceneLoadHanldle = SceneManager.LoadSceneAsync(sceneName);
         while (!sceneLoadHanldle.isDone)
             yield return null;
-        Debug.Log("Act_SceneLoadCompleted");
+        MainSystem.Instance.Loggers.LogInfo("SceneLoader", "IE_LoadScene", "Act_SceneLoadCompleted");
         Act_SceneLoadCompleted?.Invoke();
         IE_LoadSceneHandle = null;
     }

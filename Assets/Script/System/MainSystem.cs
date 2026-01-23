@@ -52,27 +52,27 @@ public class MainSystem : SingletonT<MainSystem>
         // 부스 운영 시 사용해야될 수도 있으므로 따로 전처리문을 작성하지 않았음.
         if(Input.GetKeyDown(KeyCode.A))
         {
-            Debug.Log("Input.GetKeyDown(KeyCode.Keypad0)");
+            Loggers.LogInfo("MainSystem", "Update", "Input.GetKeyDown(KeyCode.Keypad0)");
             SceneLoader.Instance.LoadLobby();
         }
         if(Input.GetKeyDown(KeyCode.S))
         {
-            Debug.Log("Input.GetKeyDown(KeyCode.Keypad1)");
+            Loggers.LogInfo("MainSystem", "Update", "Input.GetKeyDown(KeyCode.Keypad1)");
             SceneLoader.Instance.LoadTutorial();
         }
         if(Input.GetKeyDown(KeyCode.D))
         {
-            Debug.Log("Input.GetKeyDown(KeyCode.Keypad2)");
+            Loggers.LogInfo("MainSystem", "Update", "Input.GetKeyDown(KeyCode.Keypad2)");
             SceneLoader.Instance.LoadTraining();
         }
         if(Input.GetKeyDown(KeyCode.Q))
         {
-            Debug.Log("IsPause");
+            Loggers.LogInfo("MainSystem", "Update", "IsPause");
             MainSystem.Instance.Act_Pause();
         }
         if(Input.GetKeyDown(KeyCode.W))
         {
-            Debug.Log("IsResume");
+            Loggers.LogInfo("MainSystem", "Update", "IsResume");
             MainSystem.Instance.Act_Resume();
         }
 

@@ -142,7 +142,7 @@ public class StageController : MonoBehaviour
         if (!HeadCamera) HeadCamera = Camera.main;
         if (!spawner || !HeadCamera || !UIPanel || !UIText)
         {
-            Debug.LogError("[StageController] 레퍼런스가 비었습니다.");
+            MainSystem.Instance.Loggers.LogError("StageController", "Start", "References are missing.");
             enabled = false;
             return;
         }
@@ -224,7 +224,8 @@ public class StageController : MonoBehaviour
         yield return StartCoroutine(ShowFade(IntroPanel, IntroText, "소리 위치 분별 훈련을 종료하겠습니다.", 0.4f, 3f, 0.8f));
 
         if (EnableLogging)
-            Debug.Log("모든 스테이지 완료!");
+        if (EnableLogging)
+            MainSystem.Instance.Loggers.LogInfo("StageController", "RunAllStages", "All stages completed!");
 
         SceneLoader.Instance.LoadLobby();
     }
@@ -245,7 +246,7 @@ public class StageController : MonoBehaviour
         ToggleInteractivity(_activeBalls, false); // 소리나기 전에는 선택할 수 없도록
         if (_activeBalls == null || _activeBalls.Count == 0)
         {
-            Debug.LogError("[StageController] 스폰 실패");
+            MainSystem.Instance.Loggers.LogError("StageController", "RunOneRound", "Spawn failed");
             yield break;
         }
         _wrongAttemptsThisRound = 0;
@@ -272,7 +273,7 @@ public class StageController : MonoBehaviour
         _roundStartTime = Time.time;
 
         if (EnableLogging)
-            Debug.Log($"[Round] Stage {stage} Round {round}: 소리 발생 - 정답 구 {_correctBall.name}");
+            MainSystem.Instance.Loggers.LogInfo("StageController", "RunOneRound", $"[Round] Stage {stage} Round {round}: Sound Triggered - Correct Sphere {_correctBall.name}");
 
         _selectedBall = null;
         _isAwaitingSelection = true;
@@ -295,7 +296,7 @@ public class StageController : MonoBehaviour
         string msg = isLastRound ? "정답입니다!" : "정답입니다! 다음 문제가 곧 진행됩니다.";
 
         if (EnableLogging)
-            Debug.Log("[Round] 결과: 정답");
+            MainSystem.Instance.Loggers.LogInfo("StageController", "RunOneRound", "[Round] Result: Correct");
         ShowRoundProgress(update: true);
 
         yield return StartCoroutine(ShowFade(UIPanel, UIText, msg, 0.2f, 3f, 0.3f));
@@ -322,7 +323,7 @@ public class StageController : MonoBehaviour
         {
             correct.GetComponent<InteractiveSphere>()?.OnMarkTimeOver();
             if (EnableLogging)
-                Debug.Log("[Round] 정답 구 빛남(힌트)");
+                MainSystem.Instance.Loggers.LogInfo("StageController", "HintAfterDelay", "[Round] Correct sphere glowing (Hint)");
         }
     }
 

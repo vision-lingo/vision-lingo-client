@@ -125,7 +125,7 @@ public class XRHeadRayInteractor : MonoBehaviour
         var hit = Physics.Raycast(ray, out var hitInfo, Mathf.Infinity);
         if (hit)
         {
-            Debug.Log($"[EYETEST]::::hitInfo: {hitInfo.transform.gameObject.name}");
+            MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "RayTracking", $"hitInfo: {hitInfo.transform.gameObject.name}");
             if (_lastInteractable == null)
             {
                 if (hitInfo.transform.TryGetComponent(out _lastInteractable))
@@ -156,7 +156,7 @@ public class XRHeadRayInteractor : MonoBehaviour
         var hit = Physics.Raycast(ray, out var hitInfo, Mathf.Infinity);
         if (hit)
         {
-            Debug.Log($"[EYETEST]::::hitInfo: {hitInfo.transform.gameObject.name}");
+            // MainSystem.Instance.Loggers.LogInfo("XRHeadRayInteractor", "Debug_RayCast", $"hitInfo: {hitInfo.transform.gameObject.name}");
             if (_lastInteractable == null)
             {
                 if (hitInfo.transform.TryGetComponent(out _lastInteractable))
