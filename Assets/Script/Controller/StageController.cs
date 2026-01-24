@@ -35,7 +35,15 @@ public class StageController : MonoBehaviour
         }
         public void SetUI(int currIdx)
         {
+            if (currIdx < 0) return;
             int length = _img_roundBg.Length;
+            if (currIdx >= length)
+            {
+                _txt_round[length - 1].gameObject.SetActive(false);
+                _img_checkIcon[length - 1].gameObject.SetActive(true);
+                _img_roundBg[length - 1].color = _completeColor;
+                return;
+            }
 
             _text_currRound.text = (currIdx + 1).ToString();
             _img_roundBg[currIdx].color = _currColor;
