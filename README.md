@@ -103,15 +103,18 @@ Git에 올리지 않을 Local Test File들을 담습니다. (Feature 브랜치�
 
 ## 📊 System Architecture & Methodology
 
-### 1. Dual-Scene Development Architecture
-Apple Vision Pro 기기 없이도 원활한 개발이 가능하도록 **이원화된 씬(Scene) 관리 구조**를 채택했습니다.
+~~### 1. Dual-Scene Development Architecture~~
+~~Apple Vision Pro 기기 없이도 원활한 개발이 가능하도록 **이원화된 씬(Scene) 관리 구조**를 채택했습니다.~~
 
-| Mode | Scene Naming | Purpose | Logic |
-| :--- | :--- | :--- | :--- |
-| **Dev Mode** | `SceneName_Dev` | PC(Editor) 내 로직 검증 | `MainSystem.Instance.IsDev = true` 시 로드 |
-| **Prod Mode** | `SceneName` | 실기기 빌드 및 최종 검증 | `IsDev = false` 설정, Metal/VisionOS 기능 활성화 |
+~~| Mode | Scene Naming | Purpose | Logic |~~
+~~| :--- | :--- | :--- | :--- |~~
+~~| **Dev Mode** | `SceneName_Dev` | PC(Editor) 내 로직 검증 | `MainSystem.Instance.IsDev = true` 시 로드 |~~
+~~| **Prod Mode** | `SceneName` | 실기기 빌드 및 최종 검증 | `IsDev = false` 설정, Metal/VisionOS 기능 활성화 |~~
 
-* **Logic Implementation**: `SceneLoader.cs`는 `MainSystem`의 `IsDev` 플래그에 따라 타겟 씬(`Lobby` vs `Lobby_Dev`)을 동적으로 결정하여 로드합니다.
+~~* **Logic Implementation**: `SceneLoader.cs`는 `MainSystem`의 `IsDev` 플래그에 따라 타겟 씬(`Lobby` vs `Lobby_Dev`)을 동적으로 결정하여 로드합니다.~~
+-> [2026.01.25](Update) Scene/VisionPro 폴더 내에서도 에디터로 테스트 및 개발 가능할 수 있게 수정했습니다.
+- 시선 기반 인터렉션을 동일하게 사용 -> XR Origin -> Camera Offset -> Main Camera를 이동, 회전하며 조작할 수 있음.
+- 볼륨 조절 인터렉션은 마우스로 조작 가능.
 
 ### 2. Metal API (VR) Implementation
 RealityKit(PolySpatial) 대신 **Metal Rendering** 모드를 사용하여 다음 기능을 극대화했습니다.
