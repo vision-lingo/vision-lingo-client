@@ -992,6 +992,54 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b38a0ce8345d742d287ebaa1960a15f3, type: 3}
+--- !u!114 &477165145 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7447113876354479169, guid: b38a0ce8345d742d287ebaa1960a15f3,
+    type: 3}
+  m_PrefabInstance: {fileID: 477165144}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &477165146 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1504479690046224751, guid: b38a0ce8345d742d287ebaa1960a15f3,
+    type: 3}
+  m_PrefabInstance: {fileID: 477165144}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &477165147 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8028449170996061863, guid: b38a0ce8345d742d287ebaa1960a15f3,
+    type: 3}
+  m_PrefabInstance: {fileID: 477165144}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &477165148 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8229826850102295994, guid: b38a0ce8345d742d287ebaa1960a15f3,
+    type: 3}
+  m_PrefabInstance: {fileID: 477165144}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &490266614
 GameObject:
   m_ObjectHideFlags: 0
@@ -1021,11 +1069,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dc3698f623354f7597cf93a50042f8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mainCanvas: {fileID: 88935332}
-  _btnGotoTraining: {fileID: 0}
-  _btnGotoTutorial: {fileID: 0}
-  _btnQuitGame: {fileID: 0}
-  _btnGotoCredit: {fileID: 0}
+  _btnGotoTraining: {fileID: 477165148}
+  _btnGotoTutorial: {fileID: 477165147}
+  _btnQuitGame: {fileID: 477165145}
+  _btnGotoCredit: {fileID: 477165146}
 --- !u!4 &490266616
 Transform:
   m_ObjectHideFlags: 0

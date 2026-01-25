@@ -66,13 +66,13 @@ public sealed class SceneLoader : MonoBehaviour
     /// <summary>
     /// Tutorial 씬으로 이동
     /// </summary>
-    public void LoadTutorial() => LoadScene(MainSystem.Instance.IsDev ? "Tutorial_Dev" : "Tutorial");
+    public void LoadTutorial() => LoadScene("Tutorial");
 
     /// <summary>
     /// Main 씬으로 이동
     /// </summary>
-    public void LoadLobby() => LoadScene(MainSystem.Instance.IsDev ? "Lobby_Dev" : "Lobby");
+    public void LoadLobby() => LoadScene("Lobby");
 
-    public void LoadTraining() => LoadScene(MainSystem.Instance.IsDev ? "TrainingStage_Dev" : "TrainingStage");
+    public void LoadTraining() => LoadScene("TrainingStage");
 
 }

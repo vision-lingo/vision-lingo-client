@@ -33,8 +33,7 @@ public sealed class LobbyController : MonoBehaviour
 
     public void OnGoToScene(string sceneName)
     {
-        string loadSceneName = MainSystem.Instance.IsDev ? $"{sceneName}_Dev" : sceneName;
-        SceneLoader.Instance.LoadScene(loadSceneName);
+        SceneLoader.Instance.LoadScene(sceneName);
     }
 
 }
