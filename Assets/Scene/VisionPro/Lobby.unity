@@ -688,6 +688,11 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4653963416212924291, guid: b38a0ce8345d742d287ebaa1960a15f3,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5515034361996476920, guid: b38a0ce8345d742d287ebaa1960a15f3,
         type: 3}
       propertyPath: m_IsActive

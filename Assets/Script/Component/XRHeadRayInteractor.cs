@@ -47,12 +47,10 @@ public class XRHeadRayInteractor : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR
-        Vector3 rayOrigin = transform.position;
-        Vector3 rayDirection = transform.forward;
+        Vector3 rayOrigin = _mainCamera.transform.position;
+        Vector3 rayDirection = _mainCamera.transform.forward;
         Debug.DrawRay(rayOrigin, rayDirection, Color.blue);
 #else
-        // Vision Pro에서는 PointerInput 대신 HMD의 Center Eye 값을 직접 사용합니다.
-        // 카메라의 월드 좌표를 기준으로 레이를 계산하여 좌표계 문제를 방지합니다.
         Vector3 rayOrigin = _rayOffsetTransform.position;
         Vector3 rayDirection = _mainCamera.transform.forward;
 #endif
@@ -131,7 +129,17 @@ public class XRHeadRayInteractor : MonoBehaviour
     {
         _rayDebugTransform.SetPositionAndRotation(origin, Quaternion.LookRotation(direction));
         var ray = new Ray(origin, direction);
-        var hit = Physics.Raycast(ray, out var hitInfo, Mathf.Infinity);
+        bool hit;
+        RaycastHit hitInfo;
+        // 일시정지(WorldFixUI가 활성화) 상태일 때 OverlayUI 레이어만 충돌하도록 설정
+        if (MainSystem.Instance.IsPause)
+        {
+            hit = Physics.Raycast(ray, out hitInfo, Mathf.Infinity, 1 << 6);
+        }
+        else
+        {
+            hit = Physics.Raycast(ray, out hitInfo, Mathf.Infinity);
+        }
 
         // 인터페이스 타입은 유니티의 == null 오버라이딩이 동작하지 않으므로 직접 캐스팅하여 확인
         bool isLastValid = _lastInteractable != null && (_lastInteractable as UnityEngine.Object) != null;

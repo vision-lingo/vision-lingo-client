@@ -13,7 +13,11 @@ public class HandVisualizer_CY : MonoBehaviour
     [SerializeField] private WorldFixPopupController _worldFixPopupController;
     [SerializeField] private float _clapThreshold = 0.15f;
     [SerializeField] private float _clapCooltime = 2.0f;
+    [SerializeField] private float _clapVelocityThreshold = -1.8f;
     private float _currClapCooltime = 0.0f;
+    private float _prevDist = 0.0f;
+    private bool _isGetPrevDist = false;
+    private float _velocity;
     [SerializeField]
 #if UNITY_VISIONOS
     GameObject m_JointVisualsPrefab;
@@ -135,6 +139,7 @@ public class HandVisualizer_CY : MonoBehaviour
 #endif
     }
 #if UNITY_VISIONOS
+    
     private void CheckClap(XRHandSubsystem subsystem)
     {
         if (_currClapCooltime < _clapCooltime)
@@ -162,7 +167,18 @@ public class HandVisualizer_CY : MonoBehaviour
             {
                 float distance = Vector3.Distance(leftPose.position, rightPose.position);
                 MainSystem.Instance.Loggers.LogInfo("HandVisualizer_CY", "CheckClap", $"distance: {distance}");
-                if (distance <= _clapThreshold)
+                if (Time.deltaTime > 0)
+                {
+                    // 속도 체크(이전 프레임과 현재 프레임간의 차이(거리))
+                    if (_isGetPrevDist)
+                    {
+                        _velocity = (distance - _prevDist) / Time.deltaTime;
+                        if (_velocity < 0)
+                            MainSystem.Instance.Loggers.LogInfo("HandVisualizer_CY", "CheckClap", $"velocity: {_velocity}");
+                    }
+                    _isGetPrevDist = true;
+                }
+                if (distance <= _clapThreshold && _velocity < _clapVelocityThreshold)
                 {
                     if (_currClapCooltime >= _clapCooltime)
                     {
@@ -174,7 +190,14 @@ public class HandVisualizer_CY : MonoBehaviour
                         MainSystem.Instance.Loggers.LogInfo("HandVisualizer_CY", "CheckClap", $"Clap Detected! UI Active: {_worldFixPopupController.IsActiveCanvas}");
                     }
                 }
+                _prevDist = distance;
+                _isGetPrevDist = true;
             }
+        }
+        else
+        {
+            _prevDist = 0.0f;
+            _isGetPrevDist = false;
         }
     }
 

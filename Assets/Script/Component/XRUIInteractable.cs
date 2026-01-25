@@ -10,8 +10,8 @@ public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
     [SerializeField] private Color _hoverImgColor;
     [SerializeField] private TextMeshProUGUI _tmp_text;
     [SerializeField] private Color _hoverTxtColor;
-    private Color _defaultImgColor;
-    private Color _defaultTxtColor;
+    private Color _defaultImgColor = Color.white;
+    private Color _defaultTxtColor = Color.white;
 
     bool IXRHeadInteractable.IsInteractable { get => true; set {} }
 
@@ -43,28 +43,36 @@ public class XRUIInteractable : MonoBehaviour, IXRHeadInteractable
             Debug.LogError("_btn_interaction is not found");
             return;
         }
+
         _tmp_text = GetComponentInChildren<TextMeshProUGUI>();
-        if(_tmp_text == null)
+        if (_tmp_text == null)
         {
-            Debug.LogError($"({gameObject.name})_TextMeshProUGUI is not found");
-            return;
+            Debug.LogWarning($"({gameObject.name})_TextMeshProUGUI is not found");
+            //return;
+        }
+        else
+        {
+            _defaultTxtColor = _tmp_text.color;
         }
         boxCollider.size = new Vector3(rect.sizeDelta.x * 1.1f, rect.sizeDelta.y * 1.1f, rect.sizeDelta.x < 1 ? 0.1f : 1.0f);
-
-        _defaultImgColor = _img_button.color;
-        _defaultTxtColor = _tmp_text.color;
+        if(_img_button != null)
+            _defaultImgColor = _img_button.color;
     }
 
     public void OnRayOver()
     {
-        _img_button.color = _hoverImgColor;
-        _tmp_text.color = _hoverTxtColor;
+        if (_img_button != null)
+            _img_button.color = _hoverImgColor;
+        if(_tmp_text != null)
+            _tmp_text.color = _hoverTxtColor;
     }
 
     public void OnRayOut()
     {
-        _img_button.color = _defaultImgColor;
-        _tmp_text.color = _defaultTxtColor;
+        if (_img_button != null)
+            _img_button.color = _defaultImgColor;
+        if(_tmp_text != null)
+            _tmp_text.color = _defaultTxtColor;
     }
 
     public void OnSelect()
