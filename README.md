@@ -112,7 +112,8 @@ Git에 올리지 않을 Local Test File들을 담습니다. (Feature 브랜치�
 ~~| **Prod Mode** | `SceneName` | 실기기 빌드 및 최종 검증 | `IsDev = false` 설정, Metal/VisionOS 기능 활성화 |~~
 
 ~~* **Logic Implementation**: `SceneLoader.cs`는 `MainSystem`의 `IsDev` 플래그에 따라 타겟 씬(`Lobby` vs `Lobby_Dev`)을 동적으로 결정하여 로드합니다.~~
--> [2026.01.25](Update) Scene/VisionPro 폴더 내에서도 에디터로 테스트 및 개발 가능할 수 있게 수정했습니다.
+
+-> [2026.01.25] Scene/VisionPro 폴더 내에서도 에디터로 테스트 및 개발 가능할 수 있게 수정했습니다.
 - 시선 기반 인터렉션을 동일하게 사용 -> XR Origin -> Camera Offset -> Main Camera를 이동, 회전하며 조작할 수 있음.
 - 볼륨 조절 인터렉션은 마우스로 조작 가능.
 
@@ -136,6 +137,8 @@ RealityKit(PolySpatial) 대신 **Metal Rendering** 모드를 사용하여 다음
 2.  **기술적 제약 사항 극복**
     *   Unity의 **Metal App Mode (Immersive Space)** 에서는 개인정보 보호 정책 등으로 인해 실시간 눈동자 추적(Eye Tracking) 데이터에 직접 접근하는 API가 제한(Block)되어 있습니다.
     *   이에 따라 Vision Pro의 정밀한 아이트래킹을 사용하는 대신, **HMD의 정면 벡터(Head Forward)** 를 활용한 유사 시선 추적 방식을 구현하여 이에 대응하였습니다.
+
+
 #### 구현 내용
 * **Raycasting**: `Camera.main` (HMD)의 정면 벡터(`transform.forward`)를 기준으로 Raycasting 수행.
 * **Dwell Time**:
@@ -147,5 +150,25 @@ RealityKit(PolySpatial) 대신 **Metal Rendering** 모드를 사용하여 다음
 * **Structure**: `UIPanelFactory` (Singleton)를 통한 중앙 집중식 팝업 관리.
 * **Lifecycle**: 씬 전환 시 `SceneLoader`와 연동하여 잔여 팝업 자동 정리(`ClearPopup`).
 * **Sync**: 시스템 일시정지(`Act_Pause`) 시 UI 애니메이션 및 타이머 동기화.
+
+
+### 5. 싱글톤 패턴 (`SingletonT<T>`)
+*  씬(Scene) 전반에 걸쳐 지속되는 전역 시스템에 사용됩니다.
+* 주요 시스템: `MainSystem`, `SceneLoader`, `SoundController`.
+* 전역 상태에 쉽게 접근할 수 있게 합니다 (예: `MainSystem.Instance.Loggers.LogInfo(...)`).
+
+### 6. 컨트롤러-뷰 (MVC/MVP 하이브리드)
+* **Controller**: `StageController`, `TrainingHeadUIController`는 로직, 흐름 및 사용자 입력 처리를 담당합니다.
+* **View**: `Popup_Training`, `UIPanel`, `InteractiveSphere`는 시각적 표현 및 원시 입력 이벤트를 처리합니다.
+* **Model**: `TrainingRound` (`StageController` 내부) 및 `MessageGroupData`와 같은 데이터 구조입니다.
+
+### 7. 옵저버 패턴 (이벤트 주도)
+* 시스템 전반의 상태 변화를 알리기 위해 C# Action (`Act_Pause`, `Act_Resume`)을 사용합니다.
+* 상호작용 객체의 피드백을 위해 델리게이트 콜백을 사용합니다 (예: `sphere.StateChanged += handler`).
+
+### 8. 코루틴 흐름 제어
+* `StageController`는 훈련 세션의 시간적 로직(지연, 타임아웃, 순차적 단계)을 관리하기 위해 코루틴(`RunAllStages`, `RunOneRound`)을 활용합니다.
+
+---
 
 
